@@ -1,0 +1,7 @@
+Django
+SemanticScholar
+python-dotenv
+neomodel
+neo4j
+spacy
+rdflib
