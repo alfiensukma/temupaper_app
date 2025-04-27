@@ -10,5 +10,8 @@
 ## install kamus spacy
 python -m spacy download en_core_web_lg
 
+## create component
+python manage.py startunicorn papers navbar
+
 ## run project
 python manage.py runserver
