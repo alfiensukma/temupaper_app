@@ -1,0 +1,41 @@
+{% load unicorn %}
+
+<p class="text-4xl font-semibold py-6">Berdasarkan <span class="text-[#4787FA]">Institusi Sejawat</span></p>
+{% unicorn "info-alert" title_alert='Informasi' content_alert='Rekomendasi diberikan berdasarkan karya ilmiah yang <span class="text-[#4787FA] font-bold">paling banyak diakses</span> oleh <span class="text-[#4787FA] font-bold">pengguna</span> dari <span class="text-[#4787FA] font-bold">institusi</span> Anda, namun <span class="text-[#4787FA] font-bold">belum Anda baca</span>.' %}
+
+<div class="grid gap-6">
+    {% for paper in page_obj %}
+        {% unicorn "paper-item" title=paper.title authors=paper.authors date=paper.date abstract=paper.abstract %}
+    {% empty %}
+        <p class="text-center text-gray-500 text-xl mt-3">Tidak ada hasil ditemukan.</p>
+    {% endfor %}
+</div>
+
+<div class="mt-10 flex justify-start items-center gap-2 font-semibold">
+    {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}"
+            class="px-4 py-2 bg-white border border-gray-300 rounded hover:bg-gray-100">
+            <svg width="8" height="24" viewBox="0 0 9 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M8.16003 1.41L3.58003 6L8.16003 10.59L6.75003 12L0.750034 6L6.75003 0L8.16003 1.41Z"
+                    fill="#C4CDD5" />
+            </svg>
+        </a>
+    {% endif %}
+
+    {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+            <span class="px-4 py-2 bg-white text-[#4787FA] rounded border-2 border-[#4787FA]">{{ num }}</span>
+        {% else %}
+            <a href="?page={{ num }}" class="px-4 py-2 bg-white border border-gray-300 rounded hover:bg-gray-100">{{ num }}</a>
+        {% endif %}
+    {% endfor %}
+
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}"
+            class="px-4 py-2 bg-white border border-gray-300 rounded hover:bg-gray-100">
+            <svg width="9" height="24" viewBox="0 0 9 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0.839966 1.41L5.41997 6L0.839966 10.59L2.24997 12L8.24997 6L2.24997 0L0.839966 1.41Z" fill="#C4CDD5"/>
+            </svg>                
+        </a>
+    {% endif %}
+</div>

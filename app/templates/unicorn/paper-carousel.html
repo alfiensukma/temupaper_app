@@ -1,0 +1,66 @@
+<div class="relative w-full my-6">
+    <!-- Carousel wrapper -->
+    <div class="relative h-auto overflow-hidden rounded-lg">
+        {% if papers %}
+            {% for paper in papers %}
+                <div class="{% if forloop.counter0 == current_slide %}block{% else %}hidden{% endif %} duration-700 ease-in-out px-10" data-carousel-item>
+                    <div class="p-6 bg-white rounded-xl">
+                        <a href="/papers/detail/{{ paper.id }}" class="text-justify text-[25px] font-semibold text-[#4787FA] no-underline hover:underline">
+                            {{ paper.title }}
+                        </a>
+                        <div class="flex items-center gap-2 mt-2 mb-1 flex-wrap">
+                            {% for author in paper.authors %}
+                                <span class="px-3 py-1 bg-gray-100 text-[#4787FA] text-normal rounded-md">
+                                    {{ author }}
+                                </span>
+                            {% endfor %}
+                            <span class="text-normal text-gray-800">
+                                {{ paper.date }}
+                            </span>
+                        </div>
+                        <p class="text-gray-800 mt-2 text-normal line-clamp-3 text-justify">
+                            {{ paper.abstract }}
+                        </p>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="block text-center p-6 text-gray-500">
+                Tidak ada rekomendasi karya ilmiah ditemukan.
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Slider controls -->
+    {% if papers|length > 1 %}
+        <!-- Previous Button -->
+        <button unicorn:click="prev_slide"
+                class="absolute top-0 left-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none">
+            <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gray-200 group-hover:bg-gray-300 group-focus:ring-4 group-focus:ring-white">
+                <svg class="w-4 h-4 text-[#4787FA]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                </svg>
+            </span>
+        </button>
+
+        <!-- Next Button -->
+        <button unicorn:click="next_slide"
+                class="absolute top-0 right-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none">
+            <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gray-200 group-hover:bg-gray-300 group-focus:ring-4 group-focus:ring-white">
+                <svg class="w-4 h-4 text-[#4787FA]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                </svg>
+            </span>
+        </button>
+
+        <!-- Indicators -->
+        <div class="absolute z-30 flex space-x-3 -translate-x-1/2 bottom-5 left-1/2">
+            {% for paper in papers %}
+                <button type="button" 
+                        unicorn:click="go_to_slide({{ forloop.counter0 }})"
+                        class="w-3 h-3 rounded-full {% if forloop.counter0 == current_slide %}bg-[#4787FA]{% else %}bg-gray-300{% endif %}">
+                </button>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>

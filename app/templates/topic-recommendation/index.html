@@ -1,0 +1,12 @@
+{% load unicorn %}
+
+<p class="text-4xl font-semibold py-6">Berdasarkan Popularitas per <span class="text-[#4787FA]">Topik</span></p>
+{% unicorn "info-alert" title_alert='Informasi' content_alert='Rekomendasi diberikan per topik dari bidang Ilmu Komputer berdasarkan popularitas dari <span class="text-[#4787FA] font-bold">jumlah sitasi</span>.' %}
+
+<div class="grid gap-6">
+    {% for topic in topic %}
+        {% unicorn "topic-item" topic=topic %}
+    {% empty %}
+        <p class="text-center text-gray-500 text-xl mt-3">Tidak ada hasil ditemukan.</p>
+    {% endfor %}
+</div>

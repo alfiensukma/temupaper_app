@@ -1,0 +1,72 @@
+{% load unicorn %}
+<div x-data="{ open: false }" @keydown.escape.window="open = false">
+    <!-- Trigger Button -->
+    <button type="button"
+        @click="open = true"
+        class="mt-6 text-white bg-[#4787FA] hover:bg-blue-600 hover:cursor-pointer focus:ring-2 focus:outline-none focus:ring-blue-300 font-xl rounded-2xl text-medium px-5 py-2.5 text-center">
+        Ubah Data
+    </button>
+
+    <!-- Modal -->
+    <div x-show="open"
+        x-cloak
+        class="fixed inset-0 z-50 overflow-y-auto"
+        x-transition:enter="transition ease-out duration-300"
+        x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100"
+        x-transition:leave="transition ease-in duration-200"
+        x-transition:leave-start="opacity-100"
+        x-transition:leave-end="opacity-0">
+        
+        <!-- Backdrop -->
+        <div x-show="open" 
+            class="fixed inset-0 bg-gray-700/50"
+            @click="open = false">
+        </div>
+
+        <!-- Modal Content -->
+        <div class="relative min-h-screen flex items-center justify-center p-4">
+            <div class="relative bg-gray-50 rounded-2xl max-w-xl w-full p-8"
+                @click.stop>
+                <!-- Modal Content -->
+                <div class="space-y-6">
+                    <p class="text-2xl font-semibold text-center">Data Diri</p>
+                    
+                    {% unicorn 'input-field' label="Nama Lengkap" type="text" name="username" placeholder="Masukkan Nama Lengkap" value=username %}
+
+                    <div>
+                        <label class="block text-lg font-medium mb-2">Password</label>
+                        <span>Lakukan verifikasi email untuk mengubah password <a href="/verification-email" class="text-[#4787FA] hover:cursor-pointer no-underline hover:underline">disini</a>.</span>
+                    </div>
+                </div>
+
+                <!-- Data Afiliasi Section -->
+                <div class="mt-8 space-y-6">
+                    <p class="text-2xl font-semibold text-center">Data Afiliasi</p>
+                    
+                    {% unicorn 'searchable-dropdown' name="institution" label="Asal Instansi" placeholder="Pilih Institusi" options=institutions selected=institution %}
+                    
+                    {% unicorn 'searchable-dropdown' name="major" label="Jurusan" placeholder="Pilih Jurusan" options=majors selected=major %}
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex justify-center mt-8 w-full">
+                    <button type="button"
+                        @click="$wire.save_profile(); open = false"
+                        class="w-full px-6 py-3 text-white bg-[#4787FA] hover:bg-blue-600 font-medium rounded-xl">
+                        Simpan Perubahan
+                    </button>
+                </div>
+
+                <!-- Close Button -->
+                <button 
+                    @click="open = false"
+                    class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,12 @@
+<div class="mb-4">
+    {% if label %}
+        <label class="block text-gray-800 text-xl mb-2 font-medium">{{ label }}</label>
+    {% endif %}
+    <input 
+        type="{{ type }}"
+        name="{{ name }}"
+        placeholder="{{ placeholder }}"
+        unicorn:model.defer="value"
+        class="w-full p-4 bg-white rounded-xl outline-none transition-all duration-300 focus:ring-2 focus:ring-[#4787FA] focus:ring-offset-0 shadow-md"
+    >
+</div>

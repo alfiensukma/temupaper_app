@@ -1,0 +1,20 @@
+{% load unicorn %}
+
+<p class="text-4xl font-semibold py-6">Berdasarkan <span class="text-[#4787FA]">Riwayat Akses</span></p>
+{% unicorn "info-alert" title_alert='Informasi' content_alert='Rekomendasi diberikan berdasarkan <span class="text-[#4787FA] font-bold">kelompok riwayat akses</span>, namun Anda <span class="text-[#4787FA] font-bold">dapat memodifikasinya</span> untuk hanya menampilkan rekomendasi dari <span class="text-[#4787FA] font-bold">riwayat akses tertentu</span> jika hasil rekomendasi saat ini dirasa kurang sesuai.' %}
+
+{% unicorn "topic-history-modal" id="topic-modal" key="topic-modal" %}
+
+<div class="grid grid-cols-4 gap-4">
+    <div class="col-span-3">
+        <div class="grid gap-6">
+            {% for t in topics %}
+                {% unicorn "access-history-item" topic=t modal_id="topic-modal" %}
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="col-span-1">
+        {% unicorn "result-confirmation" %}
+    </div>
+</div>

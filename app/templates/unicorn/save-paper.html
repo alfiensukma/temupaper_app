@@ -1,0 +1,26 @@
+<div>
+    <div x-data="{ showNotification: false }">
+        <button
+            unicorn:click="save_paper"
+            x-on:click="showNotification = true; setTimeout(() => showNotification = false, 5000)"
+            class="inline-flex items-center gap-2 {% if is_saved %}bg-[#4787FA] text-white{% else %}text-[#4787FA] bg-transparent{% endif %} border border-[#4787FA] hover:bg-blue-600 hover:text-white focus:ring-2 focus:outline-none focus:ring-blue-300 font-xl rounded-2xl text-xl px-5 py-2.5">
+            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path d="M5 6.2C5 5.07989 5 4.51984 5.21799 4.09202C5.40973 3.71569 5.71569 3.40973 6.09202 3.21799C6.51984 3 7.07989 3 8.2 3H15.8C16.9201 3 17.4802 3 17.908 3.21799C18.2843 3.40973 18.5903 3.71569 18.782 4.09202C19 4.51984 19 5.07989 19 6.2V21L12 16L5 21V6.2Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+            </svg>                                             
+            <span>Simpan Karya Ilmiah</span>
+        </button>
+
+        <!-- Notification -->
+        <div 
+            x-show="showNotification"
+            x-cloak
+            class="fixed bottom-5 right-5 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50">
+            <div class="flex items-center gap-2">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+                <span>Karya ilmiah berhasil disimpan!</span>
+            </div>
+        </div>
+    </div>
+</div>
