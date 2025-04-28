@@ -10,7 +10,7 @@
             
             <div class="flex flex-wrap items-center gap-2">
                 {% for author in visible_authors %}
-                    <span class="px-3 py-1 bg-gray-200 text-[#4787FA] text-normal rounded-md">{{ author }}</span>
+                    <span class="px-3 py-1 bg-gray-200 text-[#4787FA] text-normal rounded-md">{{ author.name }}</span>
                 {% endfor %}
             </div>
     
@@ -26,7 +26,7 @@
                 <div x-show="showAllAuthors" class="w-full">
                     <div class="flex flex-wrap items-center gap-2">
                         {% for author in remaining_authors %}
-                            <span class="px-3 py-1 bg-gray-200 text-[#4787FA] text-normal rounded-md">{{ author }}</span>
+                            <span class="px-3 py-1 bg-gray-200 text-[#4787FA] text-normal rounded-md">{{ author.name }}</span>
                         {% endfor %}
                     </div>
                     <button 

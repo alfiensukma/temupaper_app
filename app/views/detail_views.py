@@ -11,9 +11,8 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 load_dotenv()
 
-def get_recommendation(request):
-    paperId = request.GET.get('paper_id')
-    if not paperId:
+def get_recommendation(paper_id):
+    if not paper_id:
         return JsonResponse({'error': 'Missing paperId'}, status=400)
 
     driver = None
@@ -64,22 +63,48 @@ def get_recommendation(request):
                 })
                 YIELD node1, node2, similarity
                 WHERE node1 = targetId
-                RETURN gds.util.asNode(node2).title AS title, similarity
+                WITH gds.util.asNode(node2) AS recommendedPaper, similarity
+                OPTIONAL MATCH (recommendedPaper)-[:AUTHORED_BY]->(author:Author)
+                RETURN 
+                    recommendedPaper.paperId AS paperId,
+                    recommendedPaper.title AS title, 
+                    recommendedPaper.publicationDate AS date,
+                    recommendedPaper.abstract AS abstract,
+                    recommendedPaper.year AS year,
+                    similarity,
+                    collect({name: author.name, id: author.authorId}) AS authors
                 ORDER BY similarity DESC
-            """, paperId=paperId)
-            data = [{"title": record["title"], "similarity": record["similarity"]} for record in result]
+            """, paperId=paper_id)
 
-        return JsonResponse(data, safe=False)
+            data = [{
+                "paperId": record["paperId"],
+                "title": record["title"],
+                "date": record["date"],
+                "similarity": record["similarity"],
+                "abstract": record["abstract"],
+                "authors": record["authors"]
+            } for record in result]
+
+            # Format dates for each result
+            for paper in data:
+                if paper["date"]:
+                    dt = datetime.strptime(paper["date"], "%Y-%m-%d %H:%M:%S")
+                    paper["date"] = dt.strftime("%d %B %Y")
+                else:
+                    paper["date"] = paper["year"]
+                    
+        return data
 
     except Exception as e:
-        return JsonResponse({"error": str(e)}, status=500)
+        print(f"Error in get_recommendation: {str(e)}")
+        return []
     finally:
         if driver:
             driver.close()
 
-def get_detail_json(request):
-    paperId = request.GET.get('paper_id')
-    if not paperId:
+def get_detail_json(request, paper_id):
+    # paperId = request.GET.get('paper_id')
+    if not paper_id:
         return JsonResponse({'error': 'Missing paper_id'}, status=400)
 
     driver = None
@@ -92,11 +117,12 @@ def get_detail_json(request):
                 OPTIONAL MATCH (p)-[:AUTHORED_BY]->(a:Author)
                 RETURN p.title as title, 
                     p.abstract as abstract,
-                    p.publicationDate as pubDate,
+                    p.publicationDate as date,
+                    p.year as year,
                     p.doi as doi,
                     p.url as url,
                     collect({name: a.name, id: a.authorId}) as authors
-            """, paperId=paperId)
+            """, paperId=paper_id)
             
             # Ambil hasil dari query
             record = result.single()
@@ -106,22 +132,39 @@ def get_detail_json(request):
                 return JsonResponse({'error': 'Paper not found'}, status=404)
                 
             # Parsing data dari record
-            data = {
+            paper = {
                 "title": record["title"],
                 "abstract": record["abstract"],
-                "pubDate": record["pubDate"],
+                "date": record["date"],
                 "doi": record["doi"],
                 "url": record["url"],
                 "authors": record["authors"]
             }
 
-        return JsonResponse(data, safe=False)
+            if paper["date"]:
+                dt = datetime.strptime(paper["date"], "%Y-%m-%d %H:%M:%S")
+                paper["date"] = dt.strftime("%d %B %Y")
+        
+        driver.close()
+
+        paper_recommendation = get_recommendation(paper_id)
+
+        return render(request, "base.html", {
+            "content_template": "detail-paper/index.html",
+            "body_class": "bg-gray-100",
+            "show_search_form": True,
+            "paper": paper,
+            "paper_recommendation": paper_recommendation
+        })
 
     except Exception as e:
-        return JsonResponse({"error": str(e)}, status=500)
-    finally:
-        if driver:
-            driver.close()
+        logger.error(f"Error getting paper detail: {str(e)}")
+        return render(request, "base.html", {
+            "content_template": "detail-paper/index.html",
+            "body_class": "bg-gray-100",
+            "show_search_form": True,
+            "error": f"An error occurred: {str(e)}"
+        })
 
 def get_paper_detail(request, paper_id):
     try:

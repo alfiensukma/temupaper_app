@@ -23,7 +23,7 @@ urlpatterns = [
     path("generate-knowledge-graph/", generate_knowledge_graph, name="generate_knowledge_graph"),
 
     path('search/', search, name='search'),
-    path('papers/detail/<str:paper_id>/', get_paper_detail, name='paper_detail'),
+    path('papers/detail/<str:paper_id>/', get_detail_json, name='paper_detail'),
     path('topic-recommendation/', topic_list, name='topic_list'),
     path("topic-recommendation/<str:topic>", topic_result, name="topic_result"),
     path('peer-institution-recommendation/', peer_institution, name='peer_institution'),
