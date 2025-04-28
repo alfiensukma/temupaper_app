@@ -5,7 +5,7 @@
 
 <div class="grid gap-6">
     {% for paper in page_obj %}
-        {% unicorn "paper-item" title=paper.title authors=paper.authors date=paper.date abstract=paper.abstract %}
+        {% unicorn "paper-item" title=paper.title authors=paper.author_names date=paper.date abstract=paper.abstract %}
     {% empty %}
         <p class="text-center text-gray-500 text-xl mt-3">Tidak ada hasil ditemukan.</p>
     {% endfor %}
