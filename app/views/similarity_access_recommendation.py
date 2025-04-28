@@ -1,97 +1,128 @@
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
 from datetime import datetime
+from app.utils.neo4j_connection import get_neo4j_driver
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 
 def similarity_access(request):
-    papers = [
-        {
-            "title": "In silico exploration of the fructose-6-phosphate phosphorylation step in glycolysis: genomic evidence of the coexistence of an atypical ATP-dependent along with a PPi-dependent phosphofructokinase in Propionibacterium freudenreichii subsp. shermanii",
-            "authors": ["Alice", "Bob"],
-            "date": "2023-10-12",
-            "abstract": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur vitae sem mollis ligula semper ornare eu et sem. Cras sodales dapibus nunc, eu lobortis nunc condimentum ac. Integer quis semper ante, sed suscipit libero. Maecenas consectetur neque a eleifend laoreet. Ut id commodo risus. Mauris porttitor nibh eu turpis dignissim, vitae egestas nibh scelerisque. Vivamus sit amet feugiat lacus. Quisque tincidunt, mi at tincidunt vestibulum, augue lacus interdum justo, id blandit sapien tellus eget enim. Nulla facilisi. Curabitur nisl orci, vehicula eu felis quis, sollicitudin consequat lectus. Morbi convallis nunc eget mi elementum, ac dictum erat eleifend. Donec at lectus consectetur magna porta consequat. In dignissim pellentesque magna, non interdum purus pretium at. Suspendisse eleifend lacus mollis odio varius viverra. Curabitur in imperdiet magna, congue bibendum magna. Vivamus eget dui sodales, auctor neque sed, vehicula arcu. Nunc sed turpis vel sem tempor commodo in at velit. Etiam rhoncus leo at varius varius. Proin eget nunc et nisi suscipit ultricies. Nullam pulvinar, massa nec tempus accumsan, lacus ligula vestibulum eros, facilisis tempor erat magna nec odio. Aenean mattis lectus eu augue interdum fringilla. Aenean sed ullamcorper ligula. Proin vel est feugiat sapien pellentesque suscipit. In blandit, tortor a bibendum bibendum, diam mauris pretium sem, non faucibus augue tortor ac orci. Aliquam vel metus purus. Praesent iaculis libero erat."
-        },
-        {
-            "title": "In silico exploration of the fructose-6-phosphate phosphorylation step in glycolysis: genomic evidence of the coexistence of an atypical ATP-dependent along with a PPi-dependent phosphofructokinase in Propionibacterium freudenreichii subsp. shermanii",
-            "authors": ["Alice", "Bob"],
-            "date": "2023-10-12",
-            "abstract": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur vitae sem mollis ligula semper ornare eu et sem. Cras sodales dapibus nunc, eu lobortis nunc condimentum ac. Integer quis semper ante, sed suscipit libero. Maecenas consectetur neque a eleifend laoreet. Ut id commodo risus. Mauris porttitor nibh eu turpis dignissim, vitae egestas nibh scelerisque. Vivamus sit amet feugiat lacus. Quisque tincidunt, mi at tincidunt vestibulum, augue lacus interdum justo, id blandit sapien tellus eget enim. Nulla facilisi. Curabitur nisl orci, vehicula eu felis quis, sollicitudin consequat lectus. Morbi convallis nunc eget mi elementum, ac dictum erat eleifend. Donec at lectus consectetur magna porta consequat. In dignissim pellentesque magna, non interdum purus pretium at. Suspendisse eleifend lacus mollis odio varius viverra. Curabitur in imperdiet magna, congue bibendum magna. Vivamus eget dui sodales, auctor neque sed, vehicula arcu. Nunc sed turpis vel sem tempor commodo in at velit. Etiam rhoncus leo at varius varius. Proin eget nunc et nisi suscipit ultricies. Nullam pulvinar, massa nec tempus accumsan, lacus ligula vestibulum eros, facilisis tempor erat magna nec odio. Aenean mattis lectus eu augue interdum fringilla. Aenean sed ullamcorper ligula. Proin vel est feugiat sapien pellentesque suscipit. In blandit, tortor a bibendum bibendum, diam mauris pretium sem, non faucibus augue tortor ac orci. Aliquam vel metus purus. Praesent iaculis libero erat."
-        },
-        {
-            "title": "In silico exploration of the fructose-6-phosphate phosphorylation step in glycolysis: genomic evidence of the coexistence of an atypical ATP-dependent along with a PPi-dependent phosphofructokinase in Propionibacterium freudenreichii subsp. shermanii",
-            "authors": ["Alice", "Bob"],
-            "date": "2023-10-12",
-            "abstract": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur vitae sem mollis ligula semper ornare eu et sem. Cras sodales dapibus nunc, eu lobortis nunc condimentum ac. Integer quis semper ante, sed suscipit libero. Maecenas consectetur neque a eleifend laoreet. Ut id commodo risus. Mauris porttitor nibh eu turpis dignissim, vitae egestas nibh scelerisque. Vivamus sit amet feugiat lacus. Quisque tincidunt, mi at tincidunt vestibulum, augue lacus interdum justo, id blandit sapien tellus eget enim. Nulla facilisi. Curabitur nisl orci, vehicula eu felis quis, sollicitudin consequat lectus. Morbi convallis nunc eget mi elementum, ac dictum erat eleifend. Donec at lectus consectetur magna porta consequat. In dignissim pellentesque magna, non interdum purus pretium at. Suspendisse eleifend lacus mollis odio varius viverra. Curabitur in imperdiet magna, congue bibendum magna. Vivamus eget dui sodales, auctor neque sed, vehicula arcu. Nunc sed turpis vel sem tempor commodo in at velit. Etiam rhoncus leo at varius varius. Proin eget nunc et nisi suscipit ultricies. Nullam pulvinar, massa nec tempus accumsan, lacus ligula vestibulum eros, facilisis tempor erat magna nec odio. Aenean mattis lectus eu augue interdum fringilla. Aenean sed ullamcorper ligula. Proin vel est feugiat sapien pellentesque suscipit. In blandit, tortor a bibendum bibendum, diam mauris pretium sem, non faucibus augue tortor ac orci. Aliquam vel metus purus. Praesent iaculis libero erat."
-        },
-        {
-            "title": "In silico exploration of the fructose-6-phosphate phosphorylation step in glycolysis: genomic evidence of the coexistence of an atypical ATP-dependent along with a PPi-dependent phosphofructokinase in Propionibacterium freudenreichii subsp. shermanii",
-            "authors": ["Alice", "Bob"],
-            "date": "2023-10-12",
-            "abstract": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur vitae sem mollis ligula semper ornare eu et sem. Cras sodales dapibus nunc, eu lobortis nunc condimentum ac. Integer quis semper ante, sed suscipit libero. Maecenas consectetur neque a eleifend laoreet. Ut id commodo risus. Mauris porttitor nibh eu turpis dignissim, vitae egestas nibh scelerisque. Vivamus sit amet feugiat lacus. Quisque tincidunt, mi at tincidunt vestibulum, augue lacus interdum justo, id blandit sapien tellus eget enim. Nulla facilisi. Curabitur nisl orci, vehicula eu felis quis, sollicitudin consequat lectus. Morbi convallis nunc eget mi elementum, ac dictum erat eleifend. Donec at lectus consectetur magna porta consequat. In dignissim pellentesque magna, non interdum purus pretium at. Suspendisse eleifend lacus mollis odio varius viverra. Curabitur in imperdiet magna, congue bibendum magna. Vivamus eget dui sodales, auctor neque sed, vehicula arcu. Nunc sed turpis vel sem tempor commodo in at velit. Etiam rhoncus leo at varius varius. Proin eget nunc et nisi suscipit ultricies. Nullam pulvinar, massa nec tempus accumsan, lacus ligula vestibulum eros, facilisis tempor erat magna nec odio. Aenean mattis lectus eu augue interdum fringilla. Aenean sed ullamcorper ligula. Proin vel est feugiat sapien pellentesque suscipit. In blandit, tortor a bibendum bibendum, diam mauris pretium sem, non faucibus augue tortor ac orci. Aliquam vel metus purus. Praesent iaculis libero erat."
-        },
-        {
-            "title": "In silico exploration of the fructose-6-phosphate phosphorylation step in glycolysis: genomic evidence of the coexistence of an atypical ATP-dependent along with a PPi-dependent phosphofructokinase in Propionibacterium freudenreichii subsp. shermanii",
-            "authors": ["Alice", "Bob"],
-            "date": "2023-10-12",
-            "abstract": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur vitae sem mollis ligula semper ornare eu et sem. Cras sodales dapibus nunc, eu lobortis nunc condimentum ac. Integer quis semper ante, sed suscipit libero. Maecenas consectetur neque a eleifend laoreet. Ut id commodo risus. Mauris porttitor nibh eu turpis dignissim, vitae egestas nibh scelerisque. Vivamus sit amet feugiat lacus. Quisque tincidunt, mi at tincidunt vestibulum, augue lacus interdum justo, id blandit sapien tellus eget enim. Nulla facilisi. Curabitur nisl orci, vehicula eu felis quis, sollicitudin consequat lectus. Morbi convallis nunc eget mi elementum, ac dictum erat eleifend. Donec at lectus consectetur magna porta consequat. In dignissim pellentesque magna, non interdum purus pretium at. Suspendisse eleifend lacus mollis odio varius viverra. Curabitur in imperdiet magna, congue bibendum magna. Vivamus eget dui sodales, auctor neque sed, vehicula arcu. Nunc sed turpis vel sem tempor commodo in at velit. Etiam rhoncus leo at varius varius. Proin eget nunc et nisi suscipit ultricies. Nullam pulvinar, massa nec tempus accumsan, lacus ligula vestibulum eros, facilisis tempor erat magna nec odio. Aenean mattis lectus eu augue interdum fringilla. Aenean sed ullamcorper ligula. Proin vel est feugiat sapien pellentesque suscipit. In blandit, tortor a bibendum bibendum, diam mauris pretium sem, non faucibus augue tortor ac orci. Aliquam vel metus purus. Praesent iaculis libero erat."
-        },
-        {
-            "title": "In silico exploration of the fructose-6-phosphate phosphorylation step in glycolysis: genomic evidence of the coexistence of an atypical ATP-dependent along with a PPi-dependent phosphofructokinase in Propionibacterium freudenreichii subsp. shermanii",
-            "authors": ["Alice", "Bob"],
-            "date": "2023-10-12",
-            "abstract": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur vitae sem mollis ligula semper ornare eu et sem. Cras sodales dapibus nunc, eu lobortis nunc condimentum ac. Integer quis semper ante, sed suscipit libero. Maecenas consectetur neque a eleifend laoreet. Ut id commodo risus. Mauris porttitor nibh eu turpis dignissim, vitae egestas nibh scelerisque. Vivamus sit amet feugiat lacus. Quisque tincidunt, mi at tincidunt vestibulum, augue lacus interdum justo, id blandit sapien tellus eget enim. Nulla facilisi. Curabitur nisl orci, vehicula eu felis quis, sollicitudin consequat lectus. Morbi convallis nunc eget mi elementum, ac dictum erat eleifend. Donec at lectus consectetur magna porta consequat. In dignissim pellentesque magna, non interdum purus pretium at. Suspendisse eleifend lacus mollis odio varius viverra. Curabitur in imperdiet magna, congue bibendum magna. Vivamus eget dui sodales, auctor neque sed, vehicula arcu. Nunc sed turpis vel sem tempor commodo in at velit. Etiam rhoncus leo at varius varius. Proin eget nunc et nisi suscipit ultricies. Nullam pulvinar, massa nec tempus accumsan, lacus ligula vestibulum eros, facilisis tempor erat magna nec odio. Aenean mattis lectus eu augue interdum fringilla. Aenean sed ullamcorper ligula. Proin vel est feugiat sapien pellentesque suscipit. In blandit, tortor a bibendum bibendum, diam mauris pretium sem, non faucibus augue tortor ac orci. Aliquam vel metus purus. Praesent iaculis libero erat."
-        },
-        {
-            "title": "In silico exploration of the fructose-6-phosphate phosphorylation step in glycolysis: genomic evidence of the coexistence of an atypical ATP-dependent along with a PPi-dependent phosphofructokinase in Propionibacterium freudenreichii subsp. shermanii",
-            "authors": ["Alice", "Bob"],
-            "date": "2023-10-12",
-            "abstract": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur vitae sem mollis ligula semper ornare eu et sem. Cras sodales dapibus nunc, eu lobortis nunc condimentum ac. Integer quis semper ante, sed suscipit libero. Maecenas consectetur neque a eleifend laoreet. Ut id commodo risus. Mauris porttitor nibh eu turpis dignissim, vitae egestas nibh scelerisque. Vivamus sit amet feugiat lacus. Quisque tincidunt, mi at tincidunt vestibulum, augue lacus interdum justo, id blandit sapien tellus eget enim. Nulla facilisi. Curabitur nisl orci, vehicula eu felis quis, sollicitudin consequat lectus. Morbi convallis nunc eget mi elementum, ac dictum erat eleifend. Donec at lectus consectetur magna porta consequat. In dignissim pellentesque magna, non interdum purus pretium at. Suspendisse eleifend lacus mollis odio varius viverra. Curabitur in imperdiet magna, congue bibendum magna. Vivamus eget dui sodales, auctor neque sed, vehicula arcu. Nunc sed turpis vel sem tempor commodo in at velit. Etiam rhoncus leo at varius varius. Proin eget nunc et nisi suscipit ultricies. Nullam pulvinar, massa nec tempus accumsan, lacus ligula vestibulum eros, facilisis tempor erat magna nec odio. Aenean mattis lectus eu augue interdum fringilla. Aenean sed ullamcorper ligula. Proin vel est feugiat sapien pellentesque suscipit. In blandit, tortor a bibendum bibendum, diam mauris pretium sem, non faucibus augue tortor ac orci. Aliquam vel metus purus. Praesent iaculis libero erat."
-        },
-        {
-            "title": "In silico exploration of the fructose-6-phosphate phosphorylation step in glycolysis: genomic evidence of the coexistence of an atypical ATP-dependent along with a PPi-dependent phosphofructokinase in Propionibacterium freudenreichii subsp. shermanii",
-            "authors": ["Alice", "Bob"],
-            "date": "2023-10-12",
-            "abstract": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur vitae sem mollis ligula semper ornare eu et sem. Cras sodales dapibus nunc, eu lobortis nunc condimentum ac. Integer quis semper ante, sed suscipit libero. Maecenas consectetur neque a eleifend laoreet. Ut id commodo risus. Mauris porttitor nibh eu turpis dignissim, vitae egestas nibh scelerisque. Vivamus sit amet feugiat lacus. Quisque tincidunt, mi at tincidunt vestibulum, augue lacus interdum justo, id blandit sapien tellus eget enim. Nulla facilisi. Curabitur nisl orci, vehicula eu felis quis, sollicitudin consequat lectus. Morbi convallis nunc eget mi elementum, ac dictum erat eleifend. Donec at lectus consectetur magna porta consequat. In dignissim pellentesque magna, non interdum purus pretium at. Suspendisse eleifend lacus mollis odio varius viverra. Curabitur in imperdiet magna, congue bibendum magna. Vivamus eget dui sodales, auctor neque sed, vehicula arcu. Nunc sed turpis vel sem tempor commodo in at velit. Etiam rhoncus leo at varius varius. Proin eget nunc et nisi suscipit ultricies. Nullam pulvinar, massa nec tempus accumsan, lacus ligula vestibulum eros, facilisis tempor erat magna nec odio. Aenean mattis lectus eu augue interdum fringilla. Aenean sed ullamcorper ligula. Proin vel est feugiat sapien pellentesque suscipit. In blandit, tortor a bibendum bibendum, diam mauris pretium sem, non faucibus augue tortor ac orci. Aliquam vel metus purus. Praesent iaculis libero erat."
-        },
-        {
-            "title": "In silico exploration of the fructose-6-phosphate phosphorylation step in glycolysis: genomic evidence of the coexistence of an atypical ATP-dependent along with a PPi-dependent phosphofructokinase in Propionibacterium freudenreichii subsp. shermanii",
-            "authors": ["Alice", "Bob"],
-            "date": "2023-10-12",
-            "abstract": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur vitae sem mollis ligula semper ornare eu et sem. Cras sodales dapibus nunc, eu lobortis nunc condimentum ac. Integer quis semper ante, sed suscipit libero. Maecenas consectetur neque a eleifend laoreet. Ut id commodo risus. Mauris porttitor nibh eu turpis dignissim, vitae egestas nibh scelerisque. Vivamus sit amet feugiat lacus. Quisque tincidunt, mi at tincidunt vestibulum, augue lacus interdum justo, id blandit sapien tellus eget enim. Nulla facilisi. Curabitur nisl orci, vehicula eu felis quis, sollicitudin consequat lectus. Morbi convallis nunc eget mi elementum, ac dictum erat eleifend. Donec at lectus consectetur magna porta consequat. In dignissim pellentesque magna, non interdum purus pretium at. Suspendisse eleifend lacus mollis odio varius viverra. Curabitur in imperdiet magna, congue bibendum magna. Vivamus eget dui sodales, auctor neque sed, vehicula arcu. Nunc sed turpis vel sem tempor commodo in at velit. Etiam rhoncus leo at varius varius. Proin eget nunc et nisi suscipit ultricies. Nullam pulvinar, massa nec tempus accumsan, lacus ligula vestibulum eros, facilisis tempor erat magna nec odio. Aenean mattis lectus eu augue interdum fringilla. Aenean sed ullamcorper ligula. Proin vel est feugiat sapien pellentesque suscipit. In blandit, tortor a bibendum bibendum, diam mauris pretium sem, non faucibus augue tortor ac orci. Aliquam vel metus purus. Praesent iaculis libero erat."
-        },
-        {
-            "title": "In silico exploration of the fructose-6-phosphate phosphorylation step in glycolysis: genomic evidence of the coexistence of an atypical ATP-dependent along with a PPi-dependent phosphofructokinase in Propionibacterium freudenreichii subsp. shermanii",
-            "authors": ["Alice", "Bob"],
-            "date": "2023-10-12",
-            "abstract": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur vitae sem mollis ligula semper ornare eu et sem. Cras sodales dapibus nunc, eu lobortis nunc condimentum ac. Integer quis semper ante, sed suscipit libero. Maecenas consectetur neque a eleifend laoreet. Ut id commodo risus. Mauris porttitor nibh eu turpis dignissim, vitae egestas nibh scelerisque. Vivamus sit amet feugiat lacus. Quisque tincidunt, mi at tincidunt vestibulum, augue lacus interdum justo, id blandit sapien tellus eget enim. Nulla facilisi. Curabitur nisl orci, vehicula eu felis quis, sollicitudin consequat lectus. Morbi convallis nunc eget mi elementum, ac dictum erat eleifend. Donec at lectus consectetur magna porta consequat. In dignissim pellentesque magna, non interdum purus pretium at. Suspendisse eleifend lacus mollis odio varius viverra. Curabitur in imperdiet magna, congue bibendum magna. Vivamus eget dui sodales, auctor neque sed, vehicula arcu. Nunc sed turpis vel sem tempor commodo in at velit. Etiam rhoncus leo at varius varius. Proin eget nunc et nisi suscipit ultricies. Nullam pulvinar, massa nec tempus accumsan, lacus ligula vestibulum eros, facilisis tempor erat magna nec odio. Aenean mattis lectus eu augue interdum fringilla. Aenean sed ullamcorper ligula. Proin vel est feugiat sapien pellentesque suscipit. In blandit, tortor a bibendum bibendum, diam mauris pretium sem, non faucibus augue tortor ac orci. Aliquam vel metus purus. Praesent iaculis libero erat."
-        },
-        {
-            "title": "In silico exploration of the fructose-6-phosphate phosphorylation step in glycolysis: genomic evidence of the coexistence of an atypical ATP-dependent along with a PPi-dependent phosphofructokinase in Propionibacterium freudenreichii subsp. shermanii",
-            "authors": ["Alice", "Bob"],
-            "date": "2023-10-12",
-            "abstract": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur vitae sem mollis ligula semper ornare eu et sem. Cras sodales dapibus nunc, eu lobortis nunc condimentum ac. Integer quis semper ante, sed suscipit libero. Maecenas consectetur neque a eleifend laoreet. Ut id commodo risus. Mauris porttitor nibh eu turpis dignissim, vitae egestas nibh scelerisque. Vivamus sit amet feugiat lacus. Quisque tincidunt, mi at tincidunt vestibulum, augue lacus interdum justo, id blandit sapien tellus eget enim. Nulla facilisi. Curabitur nisl orci, vehicula eu felis quis, sollicitudin consequat lectus. Morbi convallis nunc eget mi elementum, ac dictum erat eleifend. Donec at lectus consectetur magna porta consequat. In dignissim pellentesque magna, non interdum purus pretium at. Suspendisse eleifend lacus mollis odio varius viverra. Curabitur in imperdiet magna, congue bibendum magna. Vivamus eget dui sodales, auctor neque sed, vehicula arcu. Nunc sed turpis vel sem tempor commodo in at velit. Etiam rhoncus leo at varius varius. Proin eget nunc et nisi suscipit ultricies. Nullam pulvinar, massa nec tempus accumsan, lacus ligula vestibulum eros, facilisis tempor erat magna nec odio. Aenean mattis lectus eu augue interdum fringilla. Aenean sed ullamcorper ligula. Proin vel est feugiat sapien pellentesque suscipit. In blandit, tortor a bibendum bibendum, diam mauris pretium sem, non faucibus augue tortor ac orci. Aliquam vel metus purus. Praesent iaculis libero erat."
-        },
-        {
-            "title": "In silico exploration of the fructose-6-phosphate phosphorylation step in glycolysis: genomic evidence of the coexistence of an atypical ATP-dependent along with a PPi-dependent phosphofructokinase in Propionibacterium freudenreichii subsp. shermanii",
-            "authors": ["Alice", "Bob"],
-            "date": "2023-10-12",
-            "abstract": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur vitae sem mollis ligula semper ornare eu et sem. Cras sodales dapibus nunc, eu lobortis nunc condimentum ac. Integer quis semper ante, sed suscipit libero. Maecenas consectetur neque a eleifend laoreet. Ut id commodo risus. Mauris porttitor nibh eu turpis dignissim, vitae egestas nibh scelerisque. Vivamus sit amet feugiat lacus. Quisque tincidunt, mi at tincidunt vestibulum, augue lacus interdum justo, id blandit sapien tellus eget enim. Nulla facilisi. Curabitur nisl orci, vehicula eu felis quis, sollicitudin consequat lectus. Morbi convallis nunc eget mi elementum, ac dictum erat eleifend. Donec at lectus consectetur magna porta consequat. In dignissim pellentesque magna, non interdum purus pretium at. Suspendisse eleifend lacus mollis odio varius viverra. Curabitur in imperdiet magna, congue bibendum magna. Vivamus eget dui sodales, auctor neque sed, vehicula arcu. Nunc sed turpis vel sem tempor commodo in at velit. Etiam rhoncus leo at varius varius. Proin eget nunc et nisi suscipit ultricies. Nullam pulvinar, massa nec tempus accumsan, lacus ligula vestibulum eros, facilisis tempor erat magna nec odio. Aenean mattis lectus eu augue interdum fringilla. Aenean sed ullamcorper ligula. Proin vel est feugiat sapien pellentesque suscipit. In blandit, tortor a bibendum bibendum, diam mauris pretium sem, non faucibus augue tortor ac orci. Aliquam vel metus purus. Praesent iaculis libero erat."
-        },
-    ]
+    driver = None
 
-    for paper in papers:
-        try:
-            dt = datetime.strptime(paper["date"], "%Y-%m-%d")
-            paper["date"] = dt.strftime("%d %B %Y")
-        except Exception as e:
-            print(f"Date parse error: {e}")
+    user_id = "df814dfe-0c12-4298-9c74-44f7617593b4"
 
-    paginator = Paginator(papers, 10)
-    page_number = request.GET.get("page", 1)
-    page_obj = paginator.get_page(page_number)
+    try:
+        driver = get_neo4j_driver()
 
-    return render(request, "base.html", {
-        "content_template": "similarity-access-recommendation/index.html",
-        "body_class": "bg-gray-100",
-        "show_search_form": False,
-        "page_obj": page_obj,
-    })
+        with driver.session() as session:
+            graph_exists = session.run("""
+                CALL gds.graph.exists('aksesGraph')
+                YIELD exists
+                RETURN exists
+            """).single()["exists"]
+
+        if graph_exists:
+            with driver.session() as session:
+                session.run("""
+                    CALL gds.graph.drop('aksesGraph', false)
+                    YIELD graphName
+                    RETURN graphName
+                """)
+                print("Existing 'aksesGraph' dropped.")
+
+        # Create the graph projection with only nodes having embeddings
+        with driver.session() as session:
+            session.run("""
+                MATCH (source:User)
+                OPTIONAL MATCH (source)-[r:HAS_READ]->(target:Paper)
+                RETURN gds.graph.project(
+                    'aksesGraph',
+                    source,
+                    target
+                )
+            """)
+            print("Graph 'aksesGraph' created, excluding papers without embeddings.")
+
+        with driver.session() as session:
+            result = session.run("""
+                MATCH (targetUser:User {userId: $userId})
+                CALL gds.nodeSimilarity.stream('aksesGraph')
+                YIELD node1, node2, similarity
+                WITH gds.util.asNode(node1) AS user1, gds.util.asNode(node2) AS user2, similarity
+                WHERE user1.userId = targetUser.userId
+                WITH user2, similarity
+                ORDER BY similarity DESC
+                LIMIT 5
+                                 
+                MATCH (user2)-[:HAS_READ]->(paper:Paper)
+                WHERE NOT EXISTS {
+                MATCH (targetUser:User {userId: "e709dd90-90a2-4ccf-af96-adf069d7b111"})-[:HAS_READ]->(paper)}
+
+                WITH paper, COUNT(user2) AS frequency, SUM(similarity) AS totalSimilarity
+                OPTIONAL MATCH (paper)-[:AUTHORED_BY]->(author:Author)
+                RETURN 
+                    paper.title AS title,
+                    paper.paperId AS paperId,
+                    paper.publicationDate AS date,
+                    paper.abstract AS abstract,
+                    paper.year AS year,
+                    frequency AS RecommendedByCount, 
+                    totalSimilarity AS SimilarityScore,
+                    totalSimilarity / frequency AS AverageSimilarity,
+                    collect(DISTINCT {name: author.name, id: author.authorId}) AS authors
+                ORDER BY SimilarityScore DESC, frequency DESC
+                LIMIT 10
+            """, userId=user_id)
+
+            papers = [{
+                "paperId": record["paperId"],
+                "title": record["title"],
+                "date": record["date"],
+                "abstract": record["abstract"],
+                "authors": record["authors"],
+                "year": record["year"]
+            } for record in result]
+
+            for paper in papers:
+                if paper["date"]:
+                    try:
+                        try:
+                            dt = datetime.strptime(paper["date"], "%Y-%m-%d %H:%M:%S")
+                        except ValueError:
+                            dt = datetime.strptime(paper["date"], "%Y-%m-%d")
+                        paper["date"] = dt.strftime("%d %B %Y")
+                    except Exception as e:
+                        logger.error(f"Date parse error for paper {paper['paperId']}: {e}")
+                        paper["date"] = paper.get("year", "Unknown date")
+                else:
+                    paper["date"] = paper.get("year", "Unknown date")
+                    
+                if paper["authors"]:
+                    paper['author_names'] = [author['name'] for author in paper['authors']]
+
+        paginator = Paginator(papers, 5)
+        page_number = request.GET.get("page", 1)
+        page_obj = paginator.get_page(page_number)
+
+        return render(request, "base.html", {
+            "content_template": "similarity-access-recommendation/index.html",
+            "body_class": "bg-gray-100",
+            "show_search_form": False,
+            "page_obj": page_obj,
+        })
+    
+    except Exception as e:
+        logger.error(f"Error in similarity view: {str(e)}")
+        return render(request, "base.html", {
+            "content_template": "similarity-access-recommendation/index.html",
+            "body_class": "bg-gray-100",
+            "show_search_form": False,
+            "error": f"An error occurred: {str(e)}"
+        })
+    finally:
+        if driver:
+            driver.close()
+
+    
