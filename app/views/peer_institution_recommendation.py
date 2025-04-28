@@ -17,7 +17,7 @@ def peer_institution(request):
         
         with driver.session() as session:
             result = session.run("""
-                MATCH (pt:PerguruanTinggi {ptId: $ptId})<-[:AFILIATED_WITH]-(u:User)-[:HAS_READ]->(p:Paper)
+                MATCH (pt:Institution {institutionId: $ptId})<-[:AFILIATED_WITH]-(u:User)-[:HAS_READ]->(p:Paper)
                 WITH p, count(u) AS jumlahPembaca
                 OPTIONAL MATCH (p)-[:AUTHORED_BY]->(author:Author)
                 RETURN p.title AS title,
