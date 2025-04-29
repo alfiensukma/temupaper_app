@@ -1,9 +1,16 @@
 {% load unicorn %}
 
-<p class="text-4xl font-semibold py-6">Berdasarkan <span class="text-[#4787FA]">Kemiripan Riwayat Akses</span> dengan <span class="text-[#4787FA]">Pengguna Lain</span></p>
+<p class="text-2xl md:text-3xl lg:text-4xl font-semibold py-6">Berdasarkan <span class="text-[#4787FA]">Kemiripan Riwayat Akses</span> dengan <span class="text-[#4787FA]">Pengguna Lain</span></p>
 {% unicorn "info-alert" title_alert='Informasi' content_alert='Rekomendasi diberikan berdasarkan <span class="text-[#4787FA] font-bold">kemiripan riwayat akses Anda</span> dengan <span class="text-[#4787FA] font-bold">pengguna lain</span>, namun <span class="text-[#4787FA] font-bold">belum Anda baca</span>.' %}
 
-<div class="grid gap-6">
+<div class="grid gap-6
+  [&_.bg-color]:bg-white
+  [&_.bg-color-author]:bg-gray-100
+    [&_.paper-title]:text-base lg:[&_.paper-title]:text-[25px]
+    [&_.paper-authors]:text-sm md:[&_.paper-authors]:text-base
+    [&_.paper-date]:text-sm md:[&_.paper-date]:text-base
+    [&_.paper-abstract]:text-sm md:[&_.paper-abstract]:text-base
+">
     {% for paper in page_obj %}
         {% unicorn "paper-item" title=paper.title authors=paper.author_names date=paper.date abstract=paper.abstract %}
     {% empty %}

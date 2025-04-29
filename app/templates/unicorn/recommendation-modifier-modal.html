@@ -1,0 +1,78 @@
+<div x-data="{ show: false }"
+     @show-modifier-modal.window="show = true"
+     @keydown.escape.window="show = false">
+
+    <div x-show="show"
+        x-transition:enter="transition ease-out duration-300"
+        x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100"
+        x-transition:leave="transition ease-in duration-200"
+        x-transition:leave-start="opacity-100"
+        x-transition:leave-end="opacity-0"
+        class="fixed inset-0 bg-black/50 z-[999]"
+        @click="show = false">
+    </div>
+
+    <!-- Error Notification -->
+    <div unicorn:visible="show_error"
+        x-show="show"
+        x-transition
+        class="fixed top-5 left-1/2 -translate-x-1/2 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg z-[1001]">
+        <div class="flex items-center gap-2">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+            </svg>
+            <span>Maksimal 5 karya ilmiah dapat dipilih!</span>
+        </div>
+    </div>
+
+    <div x-show="show"
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+         x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
+         x-transition:leave="transition ease-in duration-200"
+         x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
+         x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+         class="fixed inset-0 z-[1000] flex items-center justify-center p-4">
+
+        <div class="bg-white rounded-md shadow-xl max-w-4xl w-full mx-auto" @click.away="show = false">
+            <div class="flex justify-between items-center p-6 pb-0">
+                <h3 class="font-medium md:font-semibold text-gray-800 text-lg md:text-2xl">Modifikasi Rekomendasi</h3>
+                <button @click="show = false" class="text-gray-400 hover:text-gray-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="p-6 max-h-[60vh] overflow-y-auto">
+                <div class="divide-y divide-[#4787FA]">
+                    <p class="pb-3">Anda dapat memilih hingga 5 karya ilmiah sebagai dasar untuk menghasilkan rekomendasi.</p>
+                    <div class="space-y-3">
+                        {% for paper in history_papers %}
+                        <label class="flex items-start gap-3 mt-3 hover:bg-gray-50 rounded-lg transition-colors">
+                            <input type="checkbox" 
+                                   unicorn:model="selected_papers"
+                                   unicorn:change="handle_paper_selection('{{ paper.id }}')"
+                                   value="{{ paper.id }}"
+                                   class="mt-1 w-4 h-4 text-blue-600 bg-gray-100 border border-[#4787FA] rounded-sm focus:ring-2 focus:ring-blue-300">
+                            <span class="text-gray-700">{{ paper.title }}</span>
+                        </label>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-6 flex justify-end gap-3">
+                <button @click="show = false"
+                        class="text-center text-sm md:text-base text-[#4787FA] border border-[#4787FA] bg-transparent hover:bg-blue-600 hover:text-white focus:ring-2 focus:outline-none focus:ring-blue-300 rounded-3xl px-6 md:px-5 py-2 md:py-2.5">
+                    Batal
+                </button>
+                <button unicorn:click="apply_changes"
+                        class="text-center text-sm md:text-base text-white bg-[#4787FA] hover:bg-blue-600 focus:ring-2 focus:outline-none focus:ring-blue-300 rounded-3xl px-6 md:px-5 py-2 md:py-2.5">
+                    Terapkan
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

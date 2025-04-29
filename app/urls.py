@@ -4,9 +4,9 @@ from .views.graph_views import generate_knowledge_graph
 from .views.detail_views import get_recommendation, get_detail_json, get_paper_detail
 from .views.search_views import index, search
 from .views.topic_recommendation_views import topic_list, topic_result
-from .views.peer_institution_recommendation import peer_institution
-from .views.similarity_access_recommendation import similarity_access
-from .views.access_history_recommendation import access_history
+from .views.peer_institution_recommendation_views import peer_institution
+from .views.similarity_access_recommendation_views import similarity_access
+from .views.access_history_recommendation_views import access_history
 from .views.login_views import login_view
 from .views.register_views import register_view
 from .views.verification_code_views import verification_code

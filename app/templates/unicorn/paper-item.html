@@ -1,22 +1,25 @@
-<div class="p-6 {% if current_path == '/access-history-recommendation/' %}bg-gray-50{% else %}bg-white{% endif %} rounded-xl">
+<div class="p-6 bg-color rounded-xl">
     {% if paper.paperId %}
-        <a href="{% url 'paper_detail' paper.paperId %}" class="text-justify text-[25px] font-semibold text-[#4787FA] no-underline hover:underline hover:cursor-pointer">{{ title }}</a>
+        <a href="{% url 'paper_detail' paper.paperId %}" class="paper-title line-clamp-2 md:line-clamp-3 text-justify font-semibold text-[#4787FA] no-underline hover:underline hover:cursor-pointer">{{ title }}</a>
     {% else %}
-        <a class="text-justify text-[25px] font-semibold text-[#4787FA] no-underline hover:underline hover:cursor-pointer">{{ title }}</a>
+        <a class="paper-title text-justify line-clamp-2 md:line-clamp-3 font-semibold text-[#4787FA] no-underline hover:underline hover:cursor-pointer">{{ title }}</a>
     {% endif %}
 
     <div class="flex items-center gap-2 mt-2 mb-1">
-        {% with remaining_authors=authors|slice:'5:'|length %}
-        {% for author in authors|slice:':5' %}
-            <span class="px-3 py-1 {% if current_path == '/access-history-recommendation/' %} bg-white {% else %}bg-gray-100{% endif %} text-[#4787FA] text-normal rounded-md">{{ author }}</span>
-        {% endfor %}
-        {% if remaining_authors > 0 %}
-            <span class="px-3 py-1 {% if current_path == '/access-history-recommendation/' %} bg-white {% else %}bg-gray-100{% endif %} text-[#4787FA] text-normal rounded-md">+{{ remaining_authors }} authors</span>
-        {% endif %}
+        {% with remaining_authors=authors|slice:'3:'|length %}
+            {% for author in authors|slice:':3' %}
+                <span class="paper-authors max-w-[10ch] line-clamp-1 md:line-clamp-2 md:max-w-full px-3 py-1 text-[#4787FA] rounded-md bg-color-author">{{ author.name }}</span>
+            {% endfor %}
+            {% if remaining_authors > 0 %}
+                <span class="paper-authors px-3 py-1 {% if current_path == '/access-history-recommendation/' %} bg-white {% else %}bg-gray-100{% endif %} text-[#4787FA] rounded-md">
+                    <span class="md:hidden">+{{ remaining_authors }}</span>
+                    <span class="hidden md:inline">+{{ remaining_authors }} penulis</span>
+                </span>
+            {% endif %}
         {% endwith %}
-        <span class="text-normal text-gray-800">{{ date|default:"(n.d.)" }}</span>
+        <span class="paper-date text-gray-800">{{ date|default:"(n.d.)" }}</span>
     </div>
-    <p class="text-gray-800 mt-2 text-normal text-justify line-clamp-3">
+    <p class="paper-abstract text-gray-800 mt-2 text-justify line-clamp-3">
         {{ abstract }}
     </p>
 </div>

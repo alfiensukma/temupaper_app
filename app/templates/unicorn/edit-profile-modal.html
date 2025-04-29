@@ -30,30 +30,27 @@
                 @click.stop>
                 <!-- Modal Content -->
                 <div class="space-y-6">
-                    <p class="text-2xl font-semibold text-center">Data Diri</p>
+                    <p class="text-xl md:text-2xl font-semibold text-center">Data Diri</p>
                     
                     {% unicorn 'input-field' label="Nama Lengkap" type="text" name="username" placeholder="Masukkan Nama Lengkap" value=username %}
 
                     <div>
-                        <label class="block text-lg font-medium mb-2">Password</label>
+                        <label class="block text-base md:text-lg font-medium mb-2">Password</label>
                         <span>Lakukan verifikasi email untuk mengubah password <a href="/verification-email" class="text-[#4787FA] hover:cursor-pointer no-underline hover:underline">disini</a>.</span>
                     </div>
                 </div>
 
                 <!-- Data Afiliasi Section -->
                 <div class="mt-8 space-y-6">
-                    <p class="text-2xl font-semibold text-center">Data Afiliasi</p>
-                    
+                    <p class="text-xl md:text-2xl font-semibold text-center">Data Afiliasi</p>            
                     {% unicorn 'searchable-dropdown' name="institution" label="Asal Instansi" placeholder="Pilih Institusi" options=institutions selected=institution %}
-                    
-                    {% unicorn 'searchable-dropdown' name="major" label="Jurusan" placeholder="Pilih Jurusan" options=majors selected=major %}
                 </div>
 
                 <!-- Action Buttons -->
                 <div class="flex justify-center mt-8 w-full">
                     <button type="button"
                         @click="$wire.save_profile(); open = false"
-                        class="w-full px-6 py-3 text-white bg-[#4787FA] hover:bg-blue-600 font-medium rounded-xl">
+                        class="w-full px-6 py-3 text-white bg-[#4787FA] hover:bg-blue-600 font-medium rounded-xl text-base md:text-lg">
                         Simpan Perubahan
                     </button>
                 </div>

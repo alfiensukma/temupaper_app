@@ -1,13 +1,14 @@
 from django_unicorn.components import UnicornView
-
 class AccessHistoryItemView(UnicornView):
     topic = ""
-    modal_id = ""
+    topic_papers = {}
+    paper = []
     
-    def show_topic_papers(self):
-        return {
-            "javascript": f"""
-                Unicorn.getComponentById('{self.modal_id}').call('show_papers_for_topic', '{self.topic}');
-                return false;
-            """
-        }
+    def mount(self):
+        if not hasattr(self, 'topic_papers'):
+            self.topic_papers = {}
+        if not hasattr(self, 'paper'):
+            self.paper = []
+        
+        if not isinstance(self.topic_papers, dict):
+            self.topic_papers = {}

@@ -8,7 +8,6 @@ class SearchableDropdownView(UnicornView):
     name = ""
     label = ""
     placeholder = ""
-    is_open = False
     
     def mount(self):
         self.load_options()
@@ -24,14 +23,6 @@ class SearchableDropdownView(UnicornView):
                 "Institut Teknologi Sepuluh Nopember",
                 "Universitas Brawijaya"
             ]
-        elif self.name == "major":
-            self.options = [
-                "Teknik Informatika",
-                "Sistem Informasi",
-                "Ilmu Komputer",
-                "Teknologi Informasi",
-                "Data Science"
-            ]
 
     def updated_search_query(self, value):
         if value:
@@ -44,6 +35,5 @@ class SearchableDropdownView(UnicornView):
 
     def select_option(self, value):
         self.selected = value
-        self.is_open = False
         self.search_query = "" 
         self.filtered_options = self.options

@@ -1,13 +1,13 @@
-<div class="flex items-center justify-center h-[700px] text-center px-4">
+<div class="flex items-center justify-center h-[500px] md:h-[700px] text-center px-4">
   <div class="animate-slide-up">
-    <h1 class="text-[80px] md:text-6xl font-bold leading-tight">
+    <h1 class="text-4xl md:text-5xl lg:text-[80px] font-bold leading-tight">
       Eksplorasi <span class="text-blue-500">Karya Ilmiah</span><br>
       Pada Ilmu Komputer
     </h1>
 
-    <form action="{% url 'search' %}" method="GET" class="mt-8 flex flex-col md:flex-row items-center gap-4 justify-between">
+    <form action="{% url 'search' %}" method="GET" class="mt-8 flex flex-row items-center gap-4 justify-between">
       <div
-        class="w-full md:w-[500px] p-[2px] rounded-lg bg-gradient-to-r from-[#4787FA] to-white transition-all duration-500 focus-within:from-[#4787FA] focus-within:to-[#4787FA]">
+        class="w-[300px] md:w-full p-[2px] rounded-lg bg-gradient-to-r from-[#4787FA] to-white transition-all duration-500 focus-within:from-[#4787FA] focus-within:to-[#4787FA]">
         <input
           type="search" required autocomplete="off" name="query"
           placeholder="Cari berdasarkan judul, kata kunci, atau identifier lainnya..."
@@ -23,7 +23,7 @@
       </button>
     </form>
 
-    <p class="mt-4 text-normal font-medium text-gray-900 text-left">
+    <p class="mt-4 font-medium text-gray-900 text-left">
       <strong>Coba:</strong>
       <a href="#" class="text-[#4787FA] hover:underline">Object Oriented Programming</a>,
       <a href="#" class="text-[#4787FA] hover:underline">Design Pattern</a>
