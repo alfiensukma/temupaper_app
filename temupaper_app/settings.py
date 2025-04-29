@@ -70,6 +70,9 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'app.context_processors.theme_processor'
             ],
+            'libraries': {
+                'custom_filters': 'app.templatetags.custom_filters',
+            }
         },
     },
 ]

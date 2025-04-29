@@ -1,25 +1,31 @@
+{% load unicorn %}
+
 <div class="p-6 bg-white rounded-xl divide-y divide-[#4787FA]">
-    <p class="text-2xl text-center font-semibold pb-3">Apakah hasil rekomendasi memuaskan?</p>
-    <div class="flex flex-col space-y-2 mt-3">
+    <p class="text-base md:text-2xl text-center font-semibold pb-3">Apakah hasil rekomendasi memuaskan?</p>
+    <div class="flex flex-col space-y-2 mt-3" x-data="{ selectedAnswer: null }">
         <label class="inline-flex items-center">
-            <input type="radio" name="answer" value="yes" onchange="showButton()" 
+            <input type="radio" name="answer" value="yes" 
+                @change="selectedAnswer = 'yes'; showButton()"
                 class="w-6 h-6 text-white bg-white border-2 border-blue-500 rounded-full appearance-none checked:bg-blue-500 checked:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-300">
             <span class="ml-3">Ya</span>
         </label>
         <label class="inline-flex items-center">
-            <input type="radio" name="answer" value="no" onchange="showButton()"
+            <input type="radio" name="answer" value="no" 
+                @change="selectedAnswer = 'no'; showButton()"
                 class="w-6 h-6 text-white bg-white border-2 border-blue-500 rounded-full appearance-none checked:bg-blue-500 checked:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-300">
-            <span class="ml-3">Tidak</span>
+            <span class="ml-3 text-base">Tidak</span>
         </label>
-        <!-- Button -->
         <div id="sendFeedback" class="hidden mt-3 text-center">
             <button type="button"
+                @click="if(selectedAnswer === 'no') { $dispatch('show-modifier-modal') }"
                 class="text-[#4787FA] border border-[#4787FA] bg-transparent hover:bg-blue-600 hover:text-white hover:cursor-pointer focus:ring-2 focus:outline-none focus:ring-blue-300 rounded-full text-medium px-5 py-2.5 text-center">
                 Kirim
             </button>
         </div>
     </div>
 </div>
+
+{% unicorn "recommendation-modifier-modal" history_papers=history_papers %}
 
 <script>
 function showButton() {

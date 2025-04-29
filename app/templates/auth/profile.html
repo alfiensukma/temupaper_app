@@ -1,30 +1,26 @@
 {% load unicorn %}
 
-<p class="text-4xl font-semibold py-6">Profil <span class="text-[#4787FA]">Saya</span></p>
+<p class="text-2xl md:text-3xl lg:text-4xl font-semibold py-6">Profil <span class="text-[#4787FA]">Saya</span></p>
 
 {% unicorn 'edit-profile-modal' %}
 
-<div class="grid grid-cols-2 gap-8 mt-8">
+<div class="flex flex-col gap-8 md:grid md:grid-cols-2 md:gap-8 mt-8">
     <div class="space-y-6">
-        <p class="text-2xl font-bold text-gray-800">Data Diri</p>
+        <p class="text-xl md:text-2xl font-bold text-gray-800">Data Diri</p>
         <div class="grid grid-cols-[0.5fr_1fr] items-center">
-            <p class="text-xl font-semibold text-gray-800">Nama Lengkap</p>
-            <p class="text-lg">geewonii</p>
+            <p class="text-lg md:text-xl font-semibold text-gray-800">Nama Lengkap</p>
+            <p class="text-lg md:text-xl">geewonii</p>
         </div>
         <div class="grid grid-cols-[0.5fr_1fr] items-center">
-            <p class="text-xl font-semibold text-gray-800">Email</p>
-            <p class="text-lg">email@email.com</p>
+            <p class="text-lg md:text-xl font-semibold text-gray-800">Email</p>
+            <p class="text-lg md:text-xl">email@email.com</p>
         </div>
     </div>
     <div class="space-y-6">
-        <p class="text-2xl font-bold text-gray-800">Data Afiliasi</p>
+        <p class="text-xl md:text-2xl font-bold text-gray-800">Data Afiliasi</p>
         <div class="grid grid-cols-[0.5fr_1fr] items-center">
-            <p class="text-xl font-semibold text-gray-600">Institusi</p>
-            <p class="text-lg">Dongguk University</p>
-        </div>
-        <div class="grid grid-cols-[0.5fr_1fr] items-center">
-            <p class="text-xl font-semibold text-gray-600">Jurusan</p>
-            <p class="text-lg">Sastra Mesin</p>
+            <p class="text-lg md:text-xl font-semibold text-gray-600">Institusi</p>
+            <p class="text-lg md:text-xl">Dongguk University</p>
         </div>
     </div>
 </div>

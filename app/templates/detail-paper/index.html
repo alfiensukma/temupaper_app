@@ -1,72 +1,106 @@
 {% load unicorn %}
-<div class="my-4">
-    <p class="text-4xl font-bold text-gray-800 text-justify">{{ paper.title }}</p>
+<div class="my-4 flex flex-col gap-8 md:grid md:grid-cols-2">
+
+    <div class="">
+        <div class="flex justify-between">
+            <span class="text-sm md:text-base text-gray-800">
+                DOI: 
+                <a href="https://doi.org/{{ paper.doi }}" 
+                    target="_blank" 
+                    class="text-[#4787FA] no-underline hover:underline">
+                    {{ paper.doi }}
+                </a>
+            </span>
+            <span class="text-sm md:text-base text-gray-800 font-bold">Terbit pada {{ paper.date }}</span>
+        </div>
     
-    <div x-data="{ showAllAuthors: false }" class="my-6">
-        <div class="flex flex-wrap items-center gap-2">
-            {% with total_authors=paper.authors|length %}
-            {% with visible_authors=paper.authors|slice:":10" %}
-            {% with remaining_authors=paper.authors|slice:"10:" %}
-            
+        <p class="text-2xl md:text-3xl lg:text-4xl font-semibold text-gray-800 text-justify my-4">{{ paper.title }}</p>
+        
+        <div x-data="{ showAllAuthors: false }" class="my-6">
             <div class="flex flex-wrap items-center gap-2">
-                {% for author in visible_authors %}
-                    <span class="px-3 py-1 bg-gray-200 text-[#4787FA] text-normal rounded-md">{{ author.name }}</span>
+                {% with total_authors=paper.authors|length %}
+                {% with visible_authors=paper.authors|slice:":10" %}
+                {% with remaining_authors=paper.authors|slice:"10:" %}
+                
+                <div class="inline-flex flex-wrap items-center gap-2">
+                    {% for author in visible_authors %}
+                        <span class="px-3 py-1 bg-gray-200 text-[#4787FA] rounded-md text-sm md:text-base">
+                            {{ author.name }}
+                        </span>
+                    {% endfor %}
+        
+                    {% if remaining_authors %}
+                        <template x-if="!showAllAuthors">
+                            <button 
+                                @click="showAllAuthors = true"
+                                class="px-3 py-1 bg-gray-200 text-[#4787FA] text-sm md:text-base rounded-md hover:bg-gray-300 cursor-pointer">
+                                +{{ remaining_authors|length }} penulis
+                            </button>
+                        </template>
+        
+                        <div x-show="showAllAuthors"
+                            x-transition:enter="transition ease-out duration-200"
+                            x-transition:enter-start="opacity-0"
+                            x-transition:enter-end="opacity-100"
+                            class="inline-flex flex-wrap items-center gap-2">
+                            {% for author in remaining_authors %}
+                                <span class="px-3 py-1 bg-gray-200 text-[#4787FA] text-sm md:text-base rounded-md">
+                                    {{ author.name }}
+                                </span>
+                            {% endfor %}
+                            <button 
+                                @click="showAllAuthors = false"
+                                class="px-3 py-1 bg-gray-200 text-[#4787FA] text-sm md:text-base rounded-md hover:bg-gray-300 cursor-pointer">
+                                Lebih sedikit
+                            </button>
+                        </div>
+                    {% endif %}
+                </div>
+                
+                {% endwith %}
+                {% endwith %}
+                {% endwith %}
+            </div>
+        </div>
+    
+        <div class="my-8 flex gap-3">
+            <a target="_blank" 
+                href="{{ paper.url }}"
+                class="inline-flex items-center gap-2 {% if is_saved %}bg-[#4787FA] text-white{% else %}text-[#4787FA] bg-transparent{% endif %} border border-[#4787FA] hover:bg-blue-600 hover:text-white focus:ring-2 focus:outline-none focus:ring-blue-300 rounded-2xl text-base md:text-xl px-3 md:px-5 py-1 md:py-2.5">
+                <svg class="w-6 h-6" viewBox="0 0 30 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12.5 16.75C13.0368 17.4676 13.7217 18.0614 14.5082 18.4911C15.2947 18.9208 16.1644 19.1764 17.0583 19.2404C17.9522 19.3044 18.8495 19.1754 19.6892 18.8622C20.5289 18.549 21.2914 18.0588 21.925 17.425L25.675 13.675C26.8135 12.4962 27.4435 10.9174 27.4292 9.2787C27.415 7.63997 26.7577 6.07239 25.5989 4.91359C24.4401 3.75479 22.8725 3.09748 21.2338 3.08324C19.595 3.069 18.0163 3.69897 16.8375 4.83746L14.6875 6.97496" 
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M17.5 14.25C16.9632 13.5324 16.2783 12.9386 15.4918 12.5089C14.7053 12.0792 13.8356 11.8236 12.9417 11.7596C12.0478 11.6956 11.1505 11.8246 10.3108 12.1378C9.47112 12.451 8.70861 12.9412 8.075 13.575L4.325 17.325C3.18651 18.5038 2.55655 20.0826 2.57079 21.7213C2.58503 23.36 3.24233 24.9276 4.40113 26.0864C5.55993 27.2452 7.12751 27.9025 8.76624 27.9168C10.405 27.931 11.9837 27.301 13.1625 26.1625L15.3 24.025" 
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>    
+                <span>Lihat di Semantic Scholar</span>
+            </a>
+            {% unicorn 'save-paper' %}
+        </div>
+    
+        <p class="text-justify text-sm md:text-base mb-8">
+            {{ paper.abstract }}
+        </p>
+    </div>
+    
+    <div class="bg-white rounded-xl divide-y divide-[#4787FA] p-6">
+        <p class="text-2xl text-center mt-2 pb-4 md:text-3xl lg:text-4xl font-semibold text-gray-800">Karya Ilmiah <span class="text-[#4787FA]">Terkait</span></p>
+        
+        <div class="h-[600px] overflow-y-auto pr-2 scroll-smooth mt-4">
+            <div class="grid gap-6
+                [&_.bg-color]:bg-gray-50
+                [&_.bg-color-author]:bg-gray-100
+                [&_.paper-title]:text-base md:[&_.paper-title]:text-xl
+                [&_.paper-authors]:text-sm md:[&_.paper-authors]:text-base
+                [&_.paper-date]:text-sm md:[&_.paper-date]:text-base
+                [&_.paper-abstract]:text-sm md:[&_.paper-abstract]:text-base">                
+                {% for paper in paper_recommendation %}
+                    {% unicorn "paper-item" title=paper.title authors=paper.authors date=paper.date abstract=paper.abstract current_path=request.path %}
+                {% empty %}
+                    <p class="text-center text-gray-500 text-xl mt-3">Tidak ada karya ilmiah terkait.</p>
                 {% endfor %}
             </div>
-    
-            {% if remaining_authors %}
-                <div x-show="!showAllAuthors" class="inline-block">
-                    <button 
-                        x-on:click="showAllAuthors = true"
-                        class="px-3 py-1 bg-gray-200 text-[#4787FA] text-normal rounded-md hover:bg-gray-300 cursor-pointer">
-                        +{{ remaining_authors|length }} authors
-                    </button>
-                </div>
-    
-                <div x-show="showAllAuthors" class="w-full">
-                    <div class="flex flex-wrap items-center gap-2">
-                        {% for author in remaining_authors %}
-                            <span class="px-3 py-1 bg-gray-200 text-[#4787FA] text-normal rounded-md">{{ author.name }}</span>
-                        {% endfor %}
-                    </div>
-                    <button 
-                        x-on:click="showAllAuthors = false"
-                        class="px-3 py-1 mt-2 bg-gray-200 text-[#4787FA] text-normal rounded-md hover:bg-gray-300 cursor-pointer">
-                        Show less
-                    </button>
-                </div>
-            {% endif %}
-    
-            {% endwith %}
-            {% endwith %}
-            {% endwith %}
-        </div>
-        
-        <div class="flex items-center gap-2 mt-2">
-            <span class="text-normal text-gray-800">{{ paper.date }}</span>
-            •
-            <span class="text-normal text-gray-800"> DOI: <a href="https://doi.org/{{ paper.doi }}" 
-                target="_blank" class="text-[#4787FA] no-underline hover:underline">{{ paper.doi }}</a>
-            </span>
         </div>
     </div>
-
-    <p class="text-justify">
-        {{ paper.abstract }}
-    </p>
-    <div class="my-8 flex gap-3">
-        <a target="_blank" href="{{ paper.url }}"
-            class="inline-flex items-center gap-2 text-[#4787FA] border border-[#4787FA] bg-transparent hover:bg-blue-600 hover:text-white focus:ring-2 focus:outline-none focus:ring-blue-300 font-xl rounded-2xl text-xl px-5 py-2.5">
-            <svg class="w-6 h-6" viewBox="0 0 30 31" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12.5 16.75C13.0368 17.4676 13.7217 18.0614 14.5082 18.4911C15.2947 18.9208 16.1644 19.1764 17.0583 19.2404C17.9522 19.3044 18.8495 19.1754 19.6892 18.8622C20.5289 18.549 21.2914 18.0588 21.925 17.425L25.675 13.675C26.8135 12.4962 27.4435 10.9174 27.4292 9.2787C27.415 7.63997 26.7577 6.07239 25.5989 4.91359C24.4401 3.75479 22.8725 3.09748 21.2338 3.08324C19.595 3.069 18.0163 3.69897 16.8375 4.83746L14.6875 6.97496" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M17.5 14.25C16.9632 13.5324 16.2783 12.9386 15.4918 12.5089C14.7053 12.0792 13.8356 11.8236 12.9417 11.7596C12.0478 11.6956 11.1505 11.8246 10.3108 12.1378C9.47112 12.451 8.70861 12.9412 8.075 13.575L4.325 17.325C3.18651 18.5038 2.55655 20.0826 2.57079 21.7213C2.58503 23.36 3.24233 24.9276 4.40113 26.0864C5.55993 27.2452 7.12751 27.9025 8.76624 27.9168C10.405 27.931 11.9837 27.301 13.1625 26.1625L15.3 24.025" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>    
-            <span>Lihat di Semantic Scholar</span>
-        </a>
-        {% unicorn 'save-paper' %}
-    </div>
-
-    <p class="text-4xl font-bold text-gray-800">Karya Ilmiah Terkait</p>
-    <!-- Carousel -->
-    {% unicorn 'paper-carousel' papers=paper_recommendation %}
+    
 </div>
