@@ -8,7 +8,7 @@
     <div class="flex items-center gap-2 mt-2 mb-1">
         {% with remaining_authors=authors|slice:'3:'|length %}
             {% for author in authors|slice:':3' %}
-                <span class="paper-authors max-w-[10ch] line-clamp-1 md:line-clamp-2 md:max-w-full px-3 py-1 text-[#4787FA] rounded-md bg-color-author">{{ author.name }}</span>
+                <span class="paper-authors max-w-[10ch] line-clamp-1 md:line-clamp-2 md:max-w-full px-3 py-1 text-[#4787FA] rounded-md bg-color-author">{{ author }}</span>
             {% endfor %}
             {% if remaining_authors > 0 %}
                 <span class="paper-authors px-3 py-1 {% if current_path == '/access-history-recommendation/' %} bg-white {% else %}bg-gray-100{% endif %} text-[#4787FA] rounded-md">
