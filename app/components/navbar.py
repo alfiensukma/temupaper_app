@@ -15,12 +15,19 @@ class NavbarView(UnicornView):
         if url_query:
             self.search_query = url_query
 
-        self.dropdown_items = [
-            {"name": "Popularitas", "url": "/topic-recommendation"},
-            {"name": "Institusi Sejawat", "url": "/peer-institution-recommendation"},
-            {"name": "Kemiripan Akses", "url": "/similarity-access-recommendation"},
-            {"name": "Riwayat Akses", "url": "/access-history-recommendation"},
-        ]
+        is_authenticated = self.request.session.get('is_authenticated', False)
+        
+        if is_authenticated:
+            self.dropdown_items = [
+                {"name": "Popularitas", "url": "/topic-recommendation"},
+                {"name": "Institusi Sejawat", "url": "/peer-institution-recommendation"},
+                {"name": "Kemiripan Akses", "url": "/similarity-access-recommendation"},
+                {"name": "Riwayat Akses", "url": "/access-history-recommendation"},
+            ]
+        else:
+            self.dropdown_items = [
+                {"name": "Popularitas", "url": "/topic-recommendation"},
+            ]
 
         self.active_paths = [item["url"] for item in self.dropdown_items if item["url"] != "#"]
 

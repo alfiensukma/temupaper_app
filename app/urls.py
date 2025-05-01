@@ -12,6 +12,7 @@ from .views.register_views import register_view
 from .views.verification_code_views import verification_code
 from .views.verification_email_views import verification_email
 from .views.profile_views import reset_password, profile_view, edit_profile
+from .views.logout_view import logout_view
 
 urlpatterns = [
     path('', index, name='index'),
@@ -35,4 +36,5 @@ urlpatterns = [
     path('verification-email/', verification_email, name='verification_email'),
     path('reset-password/', reset_password, name='reset_password'),
     path('profile/', profile_view, name='profile_view'),
+    path('logout/', logout_view, name='logout')
 ]

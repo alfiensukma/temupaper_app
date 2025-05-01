@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -27,6 +28,14 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+neo4j_uri = os.environ.get('NEO4J_URI', 'bolt://localhost:7687').replace('bolt://', '')
+neo4j_username = os.environ.get('NEO4J_USERNAME', 'neo4j')
+neo4j_password = os.environ.get('NEO4J_PASSWORD', '12345678')
+NEOMODEL_NEO4J_BOLT_URL = f"bolt://{neo4j_username}:{neo4j_password}@{neo4j_uri}"
+
+NEOMODEL_SIGNALS = True
+NEOMODEL_FORCE_TIMEZONE = False
+NEOMODEL_MAX_CONNECTION_POOL_SIZE = 50
 
 # Application definition
 
@@ -37,6 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_neomodel',
     'app',
     'django_unicorn',
     'django_browser_reload',
@@ -54,6 +64,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django_browser_reload.middleware.BrowserReloadMiddleware',
+    'app.middleware.auth_middleware.AuthenticationMiddleware',
 ]
 
 ROOT_URLCONF = 'temupaper_app.urls'
@@ -68,7 +79,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'app.context_processors.theme_processor'
+                'app.context_processors.theme_processor',
+                'app.context_processors.user_context',  # Add this line
             ],
             'libraries': {
                 'custom_filters': 'app.templatetags.custom_filters',
@@ -149,3 +161,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #         'level': 'DEBUG',
 #     },
 # }
+
+# Email configuration for Gmail with 2FA
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'infotemupaper@gmail.com'  # Replace with your Gmail address
+EMAIL_HOST_PASSWORD = 'eetaaajiecqdtbdp'  # Replace with the 16-character App Password generated
+DEFAULT_FROM_EMAIL = 'infotemupaper@gmail.com'  # Replace with your Gmail address
+
