@@ -46,15 +46,25 @@ def search(request):
                     toLower(p.title) CONTAINS toLower(keyword) OR
                     toLower(p.abstract) CONTAINS toLower(keyword) OR
                     any(topic IN p.cso_topics WHERE toLower(topic) CONTAINS toLower(keyword)))
+                WITH p, 
+                    size([keyword IN $keywords WHERE toLower(p.title) CONTAINS toLower(keyword)]) AS title_matches,
+                    size([keyword IN $keywords WHERE 
+                        toLower(p.abstract) CONTAINS toLower(keyword) OR 
+                        any(topic IN p.cso_topics WHERE toLower(topic) CONTAINS toLower(keyword))]) AS other_matches
                 OPTIONAL MATCH (p)-[:BELONGS_TO]->(t:Topic)
-                WHERE any(keyword IN $keywords WHERE toLower(t.name) CONTAINS toLower(keyword))
+                OPTIONAL MATCH (p)-[:AUTHORED_BY]->(author:Author)
                 RETURN p.paperId AS paperId,
-                       p.title AS title,
-                       p.abstract AS abstract,
-                       p.authors AS authors,
-                       p.publicationDate AS date,
-                       p.cso_topics AS topics,
-                       collect(t.name) AS related_topics
+                    p.title AS title,
+                    p.abstract AS abstract,
+                    p.year AS year,
+                    collect(DISTINCT author.name) AS authors,
+                    p.publicationDate AS date,
+                    p.citationCount AS citation_count,
+                    p.cso_topics AS topics,
+                    collect(DISTINCT t.name) AS related_topics,
+                    title_matches,
+                    other_matches
+                ORDER BY title_matches DESC, citation_count DESC, other_matches DESC
                 LIMIT 50
             """, keywords=keywords)
 
@@ -66,7 +76,8 @@ def search(request):
                         "title": record["title"],
                         "abstract": record["abstract"] or "",
                         "authors": record["authors"] or [],
-                        "date": record["date"] or "",
+                        "date": record["date"],
+                        "year": record["year"],
                         "related_topics": record["related_topics"] or []
                     }
                     
@@ -74,6 +85,8 @@ def search(request):
                     if paper["date"]:
                         dt = datetime.strptime(paper["date"], "%Y-%m-%d %H:%M:%S")
                         paper["date"] = dt.strftime("%d %B %Y")
+                    else:
+                        paper["date"] = paper.get("year", "Unknown date")
                         
                     papers.append(paper)
                 except Exception as e:

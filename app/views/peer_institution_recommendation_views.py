@@ -26,7 +26,7 @@ def peer_institution(request):
                     jumlahPembaca,
                     p.publicationDate AS date,
                     p.year AS year,
-                    collect(DISTINCT {name: author.name, id: author.authorId}) AS authors
+                    collect(DISTINCT author.name) AS authors
                 ORDER BY jumlahPembaca DESC, p.publicationDate DESC, p.year DESC
                 LIMIT 10
             """, ptId=pt_id)
@@ -39,6 +39,8 @@ def peer_institution(request):
                 "authors": record["authors"],
                 "year": record["year"]
             } for record in result]
+
+            print(papers)
 
             for paper in papers:
                 if paper["date"]:
@@ -53,9 +55,6 @@ def peer_institution(request):
                         paper["date"] = paper.get("year", "Unknown date")
                 else:
                     paper["date"] = paper.get("year", "Unknown date")
-                    
-                if paper["authors"]:
-                    paper['author_names'] = [author['name'] for author in paper['authors']]
 
         paginator = Paginator(papers, 5)
         page_number = request.GET.get("page", 1)
