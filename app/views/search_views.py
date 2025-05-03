@@ -94,14 +94,20 @@ def search(request):
             papers = []
             for record in result:
                 try:
-                    authors = [{"name": author["name"], "id": author["authorId"]} 
-                             for author in record["authors"]]
+                    # Fix: Safely handle authors that might be None
+                    authors = []
+                    if record["authors"] is not None:
+                        try:
+                            authors = [{"name": author["name"], "id": author["authorId"]} 
+                                     for author in record["authors"]]
+                        except (TypeError, KeyError) as e:
+                            logger.error(f"Error processing authors: {e}")
                     
                     paper = {
                         "paperId": record["paperId"],
                         "title": record["title"],
                         "abstract": record["abstract"] or "",
-                        "authors": record["authors"] or [],
+                        "authors": authors,  # Use processed authors list
                         "date": record["date"] or "",
                         "related_topics": record["related_topics"] or [],
                         "citation_count": record["citation_count"],
@@ -178,11 +184,20 @@ def get_paper_detail(request, paper_id):
                 except:
                     external_ids = {}
 
+            # Fix: Safely handle authors that might be None
+            authors = []
+            if result["authors"] is not None:
+                try:
+                    authors = [{"name": author["name"], "id": author["authorId"]} 
+                             for author in result["authors"]]
+                except (TypeError, KeyError) as e:
+                    logger.error(f"Error processing authors in detail: {e}")
+
             paper = {
                 "id": result["paperId"],
                 "title": result["title"],
                 "abstract": result["abstract"] or "",
-                "authors": result["authors"] or [],
+                "authors": authors,  # Use processed authors list
                 "date": result["date"] or "",
                 "doi": external_ids.get('DOI', ''),
                 "url": result["url"] or "",
