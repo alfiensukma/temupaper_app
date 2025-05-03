@@ -39,64 +39,54 @@ def parse_cso_rdf(rdf_file_path):
     CSO = Namespace("http://cso.kmi.open.ac.uk/schema/cso#")
     RDFS = Namespace("http://www.w3.org/2000/01/rdf-schema#")
     
-    print("Available namespaces in graph:")
-    for prefix, ns in g.namespaces():
-        print(f"{prefix}: {ns}")
-
+    logger.info("Parsing CSO namespaces")
+    
     hierarchy = []
     topic_labels = {}
+    unique_topics = set()
 
-    # Ekstraksi topik dan label
-    # Loop label (untuk mapping URI -> label)
-    for s, p, o in g.triples((None, RDFS.label, None)):
-        topic_uri = str(s)
-        label = str(o).lower().replace(' ', '_')
-        topic_labels[topic_uri] = label
+    try:
+        # Extract topics and labels
+        for s, p, o in g.triples((None, RDFS.label, None)):
+            topic_uri = str(s)
+            label = str(o) if o else ""
+            
+            if label:
+                label = label.lower().replace(' ', '_')
+                topic_labels[topic_uri] = label
 
-    # Loop hierarchy (untuk parent-child topic)
-    for s, p, o in g.triples((None, CSO.superTopicOf, None)):
-        parent_uri = str(s)
-        child_uri = str(o)
-        parent = topic_labels.get(parent_uri, parent_uri.split('/')[-1]).lower().replace(' ', '_')
-        child = topic_labels.get(child_uri, child_uri.split('/')[-1]).lower().replace(' ', '_')
-        hierarchy.append((child, parent))
-    
-    logger.info(f"Total triples in RDF: {len(g)}")
-    logger.info(f"Total hierarchy relations found: {len(hierarchy)}")
-    logger.info(f"First few: {hierarchy[:5]}")
+        # First, collect direct children of computer_science
+        level_1_topics = set()
+        for s, p, o in g.triples((None, CSO.superTopicOf, None)):
+            parent = topic_labels.get(str(s), "").lower()
+            child = topic_labels.get(str(o), "").lower()
+            
+            if parent == "computer_science":
+                level_1_topics.add(child)
+                unique_topics.add(child)
+
+        # Then collect children of level 1 topics (level 2)
+        for s, p, o in g.triples((None, CSO.superTopicOf, None)):
+            parent = topic_labels.get(str(s), "").lower()
+            child = topic_labels.get(str(o), "").lower()
+            
+            if parent in level_1_topics:
+                hierarchy.append((child, parent))
+                unique_topics.add(child)
+                unique_topics.add(parent)
+
+        # Create topics with numeric IDs (excluding computer_science)
+        topics = []
+        for idx, name in enumerate(sorted(unique_topics)):
+            if name != "computer_science":
+                topics.append({"id": idx + 1, "name": name})
         
-    # Batasi hierarki hingga 4 tingkat
-    filtered_hierarchy = []
-    level_map = {'computer_science': 1} 
-    processed = set()
+        logger.info(f"Filtered hierarchy: {len(hierarchy)}, Topics: {len(topics)}")
+        return topics, hierarchy
 
-    # Iterasi berulang untuk memastikan semua level diproses
-    while True:
-        added = False
-        for child, parent in hierarchy:
-            if (child, parent) in processed:
-                continue
-            parent_level = level_map.get(parent)
-            if parent_level is not None and parent_level < 4:
-                filtered_hierarchy.append((child, parent))
-                level_map[child] = parent_level + 1
-                processed.add((child, parent))
-                added = True
-        if not added:
-            break
-        
-    topics = set()
-    for child, parent in filtered_hierarchy:
-        topics.add(child)
-        topics.add(parent)
-    
-    logger.info(f"Filtered hierarchy relations: {len(filtered_hierarchy)}")
-    logger.info(f"Total topics after filtering: {len(topics)}")
-    
-    root_candidates = set(parent for _, parent in filtered_hierarchy)
-    print("Root candidates:", list(root_candidates)[:20])
-
-    return list(topics), filtered_hierarchy
+    except Exception as e:
+        logger.error(f"Error processing RDF data: {e}")
+        return [], []
 
 def extract_topics(title, abstract, cso_topics):
     text = (title or "") + " " + (abstract or "")
@@ -121,7 +111,7 @@ def extract_topics(title, abstract, cso_topics):
                     break
                 if chunk.has_vector and topic_doc.has_vector:
                     similarity = chunk.similarity(topic_doc)
-                    if similarity > 0.8:  # Threshold
+                    if similarity > 0.9:  # Threshold
                         topics.add(topic)
                         break
     
@@ -130,7 +120,8 @@ def extract_topics(title, abstract, cso_topics):
 def import_cso_hierarchy(driver, topics, hierarchy):
     query_topics = """
     UNWIND $topics AS topic
-    MERGE (t:Topic {name: topic})
+    MERGE (t:Topic {name: topic.name})
+    SET t.id = toInteger(topic.id)
     """
     with driver.session() as session:
         session.run(query_topics, topics=topics)
@@ -154,86 +145,81 @@ def clear_neo4j(driver):
     with driver.session() as session:
         session.run("MATCH (n) DETACH DELETE n")
 
-# Pre-process paper untuk ekstrak topik dan author
+# paper nodes
 def import_papers_nodes(driver, file_path, is_reference=False):
     papers = []
     with open(file_path, mode='r', encoding='utf-8') as f:
         reader = csv.DictReader(f)
         for row in reader:
+            external_ids_str = row.get("externalIds", "{}")
+            try:
+                external_ids = ast.literal_eval(external_ids_str)
+                doi = external_ids.get("DOI", "")
+            except Exception:
+                doi = ""
+           
             papers.append({
                 "paperId": row["paperId"],
-                "title": row.get("title", ""),
-                "abstract": row.get("abstract", ""),
                 "corpusId": row.get("corpusId", ""),
-                "externalIds": row.get("externalIds", ""),
-                "authors": row.get("authors", "[]"),
+                "doi": doi,
+                "title": row.get("title", ""),
                 "year": row.get("year", ""),
+                "abstract": row.get("abstract", ""),
                 "url": row.get("url", ""),
                 "publicationDate": row.get("publicationDate", ""),
-                "fieldsOfStudy": row.get("fieldsOfStudy", ""),
-                "s2FieldsOfStudy": row.get("s2FieldsOfStudy", ""),
                 "venue": row.get("venue", ""),
-                "publicationVenue": row.get("publicationVenue", ""),
                 "citationCount": row.get("citationCount", ""),
                 "influentialCitationCount": row.get("influentialCitationCount", ""),
-                "publicationTypes": row.get("publicationTypes", ""),
-                "journal": row.get("journal", ""),
-                "citationStyles": row.get("citationStyles", ""),
                 "embedding": row.get("embedding", ""),
                 "referenceCount": row.get("referenceCount", ""),
-                "reference_id": row.get("reference_id", "")
             })
     
-    query = f"""
+    query = """
     UNWIND $papers AS row
-    MERGE (p:Paper {{paperId: row.paperId}})
+    MERGE (p:Paper {paperId: row.paperId})
     SET p.corpusId = row.corpusId,
-        p.externalIds = row.externalIds,
+        p.doi = row.doi,
         p.title = row.title,
-        p.authors = [author IN apoc.convert.fromJsonList(row.authors) | author.name],
         p.year = toInteger(row.year),
         p.abstract = row.abstract,
         p.url = row.url,
         p.publicationDate = row.publicationDate,
-        p.fieldsOfStudy = split(row.fieldsOfStudy, ';'),
-        p.s2FieldsOfStudy = split(row.s2FieldsOfStudy, ';'),
         p.venue = row.venue,
-        p.publicationVenue = row.publicationVenue,
         p.citationCount = toInteger(row.citationCount),
-        p.influentialCitationCount = toInteger(row.influentialCitationCount),
-        p.publicationTypes = split(row.publicationTypes, ';'),
-        p.journal = row.journal,
-        p.citationStyles = row.citationStyles,
-        p.embedding = apoc.convert.fromJsonList(row.embedding)
-    {'SET p.reference_id = split(row.reference_id, ";")' if not is_reference else ''}
+        p.influentialCitationCount = toInteger(row.citationCount),
+        p.embedding = apoc.convert.fromJsonList(row.embedding),
+        p.referenceCount = toInteger(row.referenceCount)
     """
+    
     with driver.session() as session:
         session.run(query, papers=papers)
-    
+
+# topic nodes   
 def import_paper_topics(driver, file_path, cso_topics):
     papers = []
     with open(file_path, mode='r', encoding='utf-8') as f:
         reader = csv.DictReader(f)
         for row in reader:
             topics = extract_topics(row.get("title"), row.get("abstract"), cso_topics)
-            papers.append({
-                "paperId": row["paperId"],
-                "cso_topics": topics
-            })
+            if topics:
+                papers.append({
+                    "paperId": row["paperId"],
+                    "topics": topics
+                })
     
     query = """
-    UNWIND $papers AS row
-    MATCH (p:Paper {paperId: row.paperId})
-    SET p.cso_topics = row.cso_topics
-    WITH p, row
-    FOREACH (topic IN row.cso_topics |
-        MERGE (t:Topic {name: topic})
-        MERGE (p)-[:IS_ABOUT]->(t)
-    )
+    UNWIND $papers AS paper
+    MATCH (p:Paper {paperId: paper.paperId})
+    SET p.topics = paper.topics
+    WITH p, paper
+    UNWIND paper.topics AS topic
+    MATCH (t:Topic {name: topic})
+    MERGE (p)-[:IS_ABOUT]->(t)
     """
     with driver.session() as session:
         session.run(query, papers=papers)
-    
+ 
+# author nodes   
 def import_authors_and_relations(driver, file_path):
     papers = []
     with open(file_path, mode='r', encoding='utf-8') as f:
@@ -251,11 +237,104 @@ def import_authors_and_relations(driver, file_path):
     UNWIND authors AS author
     MERGE (a:Author {authorId: author.authorId})
     SET a.name = author.name
-    MERGE (p)-[:WRITTEN_BY]->(a)
+    MERGE (p)-[:AUTHORED_BY]->(a)
     """
     with driver.session() as session:
         session.run(query, papers=papers)
 
+# publication type nodes
+def import_publication_types(driver, file_path):
+    papers_data = []
+    with open(file_path, mode='r', encoding='utf-8') as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            pub_types = row.get("publicationTypes", "")
+            try:
+                if isinstance(pub_types, str):
+                    types_list = pub_types.split(";")
+                    for type_name in types_list:
+                        if type_name:
+                            papers_data.append({
+                                "paperId": row["paperId"],
+                                "typeName": type_name.strip()
+                            })
+            except Exception as e:
+                logger.warning(f"Error processing publicationTypes for paperId {row['paperId']}: {e}")
+
+    query = """
+    UNWIND $papers as row
+    MERGE (pt:PublicationType {name: row.typeName})
+    WITH pt, row
+    MATCH (p:Paper {paperId: row.paperId})
+    MERGE (p)-[:HAS_TYPE]->(pt)
+    """
+    with driver.session() as session:
+        session.run(query, papers=papers_data)
+        
+# journal nodes       
+def import_journals(driver, file_path):
+    journals = []
+    with open(file_path, mode='r', encoding='utf-8') as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            journal_data = row.get("journal", "")
+            if journal_data:
+                try:
+                    journal_info = json.loads(journal_data.replace("'", '"'))
+                    
+                    if journal_info.get("name"):
+                        journals.append({
+                            "paperId": row["paperId"],
+                            "journalName": journal_info.get("name", ""),
+                            "pages": journal_info.get("pages", ""),
+                            "volume": journal_info.get("volume", "")
+                        })
+                except json.JSONDecodeError:
+                    logger.warning(f"Invalid JSON in journal for paperId {row['paperId']}: {journal_data}")
+
+    query = """
+    UNWIND $journals as row
+    MERGE (j:Journal {name: row.journalName})
+    SET j.journalId = id(j),
+        j.pages = row.pages,
+        j.volume = row.volume
+    WITH j, row
+    MATCH (p:Paper {paperId: row.paperId})
+    MERGE (p)-[:IN_JOURNAL]->(j)
+    """
+
+    with driver.session() as session:
+        session.run(query, journals=journals)
+
+# field of study nodes
+def import_fields_of_study(driver, file_path):
+    fields = []
+    with open(file_path, mode='r', encoding='utf-8') as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            s2_fields = row.get("s2FieldsOfStudy", "")
+            if s2_fields:
+                try:
+                    fields_list = s2_fields.split(";")
+                    for field in fields_list:
+                        if field: 
+                            fields.append({
+                                "paperId": row["paperId"],
+                                "fieldName": field.strip()
+                            })
+                except Exception as e:
+                    logger.warning(f"Error processing s2FieldsOfStudy for paperId {row['paperId']}: {e}")
+    
+    query = """
+    UNWIND $fields AS row
+    MERGE (f:FieldOfStudy {name: row.fieldName})
+    WITH f, row
+    MATCH (p:Paper {paperId: row.paperId})
+    MERGE (p)-[:HAS_FIELD]->(f)
+    """
+    with driver.session() as session:
+        session.run(query, fields=fields)
+        
 def import_references(driver):
     query = f"""
     LOAD CSV WITH HEADERS FROM 'file:///{os.path.basename(REFERENCES_PATH)}' AS row
@@ -266,68 +345,15 @@ def import_references(driver):
     with driver.session() as session:
         session.run(query)
 
-def import_publishers(driver, file_path):
-    publishers = []
-    with open(file_path, mode='r', encoding='utf-8') as f:
-        reader = csv.DictReader(f)
-        for row in reader:
-            publication_venue = row.get("publicationVenue", "")
-            if publication_venue:
-                try:
-                    venue_data = json.loads(publication_venue.replace("'", '"'))
-                    publisher_name = venue_data.get("name", "")
-                    if publisher_name:
-                        publishers.append({
-                            "paperId": row["paperId"],
-                            "publisherName": publisher_name
-                        })
-                except json.JSONDecodeError:
-                    logger.warning(f"Invalid JSON in publicationVenue for paperId {row['paperId']}: {publication_venue}")
-    
-    query = """
-    UNWIND $publishers AS row
-    MATCH (p:Paper {paperId: row.paperId})
-    MERGE (pub:Publisher {name: row.publisherName})
-    MERGE (p)-[:PUBLISHED_BY]->(pub)
-    """
-    with driver.session() as session:
-        session.run(query, publishers=publishers)
-
-def import_fields_of_study(driver, file_path):
-    fields = []
-    with open(file_path, mode='r', encoding='utf-8') as f:
-        reader = csv.DictReader(f)
-        for row in reader:
-            s2_fields = row.get("s2FieldsOfStudy", "")
-            if s2_fields:
-                try:
-                    fields_list = ast.literal_eval(s2_fields)
-                    for field in fields_list:
-                        if field:
-                            fields.append({
-                                "paperId": row["paperId"],
-                                "fieldName": field
-                            })
-                except (ValueError, SyntaxError):
-                    logger.warning(f"Invalid s2FieldsOfStudy format for paperId {row['paperId']}: {s2_fields}")
-    
-    query = """
-    UNWIND $fields AS row
-    MATCH (p:Paper {paperId: row.paperId})
-    MERGE (f:FieldOfStudy {name: row.fieldName})
-    MERGE (p)-[:HAS_FIELD]->(f)
-    """
-    with driver.session() as session:
-        session.run(query, fields=fields)
-
 def validate_graph(driver):
     with driver.session() as session:
         # Cek jumlah node
         paper_count = session.run("MATCH (p:Paper) RETURN count(p) AS count").single()["count"]
         topic_count = session.run("MATCH (t:Topic) RETURN count(t) AS count").single()["count"]
         author_count = session.run("MATCH (a:Author) RETURN count(a) AS count").single()["count"]
-        publisher_count = session.run("MATCH (p:Publisher) RETURN count(p) AS count").single()["count"]
+        publication_type_count = session.run("MATCH (pt:PublicationType) RETURN count(pt) AS count").single()["count"]
         field_of_study_count = session.run("MATCH (f:FieldOfStudy) RETURN count(f) AS count").single()["count"]
+        journal_count = session.run("MATCH (j:Journal) RETURN count(j) AS count").single()["count"]
         
         # Cek paper dengan topik
         paper_topics = session.run("""
@@ -350,8 +376,9 @@ def validate_graph(driver):
         "total_papers": paper_count,
         "total_topics": topic_count,
         "total_authors": author_count,
-        "total_publishers": publisher_count,
+        "total_publication_type": publication_type_count,
         "total_fields_of_study": field_of_study_count,
+        "journal_count": journal_count,
         "sample_paper_topics": [
             {
                 "paperId": row["paperId"],
@@ -372,34 +399,39 @@ def import_to_neo4j(driver):
     logger.info("Memulai proses import ke Neo4j")
     
     #delete existing data
-    #clear_neo4j(graph)
+    clear_neo4j(driver)
     
     cso_topics, cso_hierarchy = parse_cso_rdf(CSO_RDF_PATH)
+    topic_names = [topic["name"] for topic in cso_topics]
     
     # Parsing CSO dan generate graph
-    #import_cso_hierarchy(driver, cso_topics, cso_hierarchy)
+    import_cso_hierarchy(driver, cso_topics, cso_hierarchy)
     logger.info(f"Number of CSO topics: {len(cso_topics)}, Filtered hierarchy: {len(cso_hierarchy)}")
     logger.info("Hierarki CSO berhasil diimpor ke Neo4j")
     
     # Impor paper csv
-    #import_papers_nodes(driver, PAPERS_PATH)
+    import_papers_nodes(driver, PAPERS_PATH)
     logger.info(f"Data paper dari {PAPERS_PATH} berhasil diimpor")
     
     # Relasi topic dan paper
-    #import_paper_topics(driver, PAPERS_PATH, cso_topics)
+    import_paper_topics(driver, PAPERS_PATH, topic_names)
     logger.info("Relasi paper-topic berhasil diimpor")
     
     # Impor author dan relasi
-    # import_authors_and_relations(driver, PAPERS_PATH)
+    import_authors_and_relations(driver, PAPERS_PATH)
     logger.info("Author dan relasi berhasil diimpor")
     
     # Impor publisher dan relasi
-    # import_publishers(driver, PAPERS_PATH)
-    logger.info(f"Data publisher dari {PAPERS_PATH} berhasil diimpor")
+    import_journals(driver, PAPERS_PATH)
+    logger.info(f"Data jurnal dari {PAPERS_PATH} berhasil diimpor")
     
     # Impor field of study dan relasi
-    # import_fields_of_study(driver, PAPERS_PATH)
+    import_fields_of_study(driver, PAPERS_PATH)
     logger.info(f"Data field of study dari {PAPERS_PATH} berhasil diimpor")
+    
+    #impor publication type dan relasi
+    import_publication_types(driver, PAPERS_PATH)
+    logger.info(f"Data publication types dari {PAPERS_PATH} berhasil diimpor")
     
     # Impor paper references (opsional)
     # if os.path.exists(PAPER_REFERENCES_PATH):

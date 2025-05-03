@@ -1,0 +1,387 @@
+INFO 2025-05-03 12:45:04,662 autoreload Watching for file changes with StatReloader
+ERROR 2025-05-03 12:45:07,747 parse_indonesian_date Error parsing date '2025-05-01': module 'datetime' has no attribute 'strptime'
+ERROR 2025-05-03 12:45:07,747 search_views Error processing dates: module 'datetime' has no attribute 'strptime'
+INFO 2025-05-03 12:45:09,870 search_views Found 51 papers for query: oBject
+INFO 2025-05-03 12:47:55,922 autoreload D:\Data-Kuliah\Semester-6\Assets-TA\temupaper_app\app\utils\parse_indonesian_date.py changed, reloading.
+INFO 2025-05-03 12:47:57,047 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 12:47:59,792 parse_indonesian_date Parsing date: 1 Mei 2025
+INFO 2025-05-03 12:47:59,792 parse_indonesian_date Formatted date: 2025-05-01
+ERROR 2025-05-03 12:47:59,792 parse_indonesian_date Error parsing date '1 Mei 2025': module 'datetime' has no attribute 'strptime'
+ERROR 2025-05-03 12:47:59,792 search_views Error processing dates: module 'datetime' has no attribute 'strptime'
+INFO 2025-05-03 12:48:01,885 search_views Found 51 papers for query: oBject
+INFO 2025-05-03 12:48:33,779 autoreload D:\Data-Kuliah\Semester-6\Assets-TA\temupaper_app\app\views\search_views.py changed, reloading.
+INFO 2025-05-03 12:48:34,732 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 12:48:37,112 parse_indonesian_date Parsing date: 1 Mei 2025
+INFO 2025-05-03 12:48:37,112 parse_indonesian_date Formatted date: 2025-05-01
+ERROR 2025-05-03 12:48:37,112 parse_indonesian_date Error parsing date '1 Mei 2025': module 'datetime' has no attribute 'strptime'
+ERROR 2025-05-03 12:48:37,113 search_views Error processing dates: module 'datetime' has no attribute 'strptime'
+INFO 2025-05-03 12:48:39,184 search_views Found 51 papers for query: oBject
+INFO 2025-05-03 12:50:19,718 autoreload D:\Data-Kuliah\Semester-6\Assets-TA\temupaper_app\app\utils\parse_indonesian_date.py changed, reloading.
+INFO 2025-05-03 12:50:20,658 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 12:50:23,536 parse_indonesian_date Parsing date: 1 Mei 2025
+INFO 2025-05-03 12:50:23,536 parse_indonesian_date Formatted date: 2025-05-01
+ERROR 2025-05-03 12:50:23,536 parse_indonesian_date Error parsing date '1 Mei 2025': module 'datetime' has no attribute 'strptime'
+ERROR 2025-05-03 12:50:23,536 search_views Error processing dates: module 'datetime' has no attribute 'strptime'
+INFO 2025-05-03 12:50:25,617 search_views Found 51 papers for query: oBject
+INFO 2025-05-03 12:51:08,469 autoreload D:\Data-Kuliah\Semester-6\Assets-TA\temupaper_app\app\utils\parse_indonesian_date.py changed, reloading.
+INFO 2025-05-03 12:51:09,388 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 12:51:11,998 parse_indonesian_date Parsing date: 1 Mei 2025
+INFO 2025-05-03 12:51:12,002 parse_indonesian_date Formatted date: 2025-05-01
+INFO 2025-05-03 12:51:12,005 parse_indonesian_date Parsing date: 6 Mei 2025
+INFO 2025-05-03 12:51:12,006 parse_indonesian_date Formatted date: 2025-05-06
+INFO 2025-05-03 12:51:14,193 search_views Found 0 papers for query: oBject
+INFO 2025-05-03 12:51:39,083 autoreload D:\Data-Kuliah\Semester-6\Assets-TA\temupaper_app\app\utils\parse_indonesian_date.py changed, reloading.
+INFO 2025-05-03 12:51:40,054 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 12:51:44,714 search_views Found 0 papers for query: oBject
+INFO 2025-05-03 12:52:04,315 autoreload D:\Data-Kuliah\Semester-6\Assets-TA\temupaper_app\app\views\search_views.py changed, reloading.
+INFO 2025-05-03 12:52:05,376 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 12:52:10,282 search_views Found 0 papers for query: oBject
+INFO 2025-05-03 12:52:13,465 search_views Found 51 papers for query: oBject
+INFO 2025-05-03 12:55:05,239 search_views Found 51 papers for query: oBject
+INFO 2025-05-03 12:56:26,919 search_views Found 51 papers for query: oBject
+INFO 2025-05-03 12:57:35,594 search_views Found 51 papers for query: oBject
+INFO 2025-05-03 12:58:00,667 search_views Found 51 papers for query: oBject
+INFO 2025-05-03 12:58:16,934 search_views Found 51 papers for query: oBject
+INFO 2025-05-03 13:00:22,027 search_views Found 4 papers for query: oBject
+INFO 2025-05-03 13:03:13,099 search_views Found 4 papers for query: oBject
+INFO 2025-05-03 13:05:19,246 autoreload D:\Data-Kuliah\Semester-6\Assets-TA\temupaper_app\app\context_processors.py changed, reloading.
+INFO 2025-05-03 14:37:07,424 autoreload Watching for file changes with StatReloader
+WARNING 2025-05-03 14:37:14,989 log Not Found: /favicon.ico
+ERROR 2025-05-03 14:39:24,072 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,072 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,074 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,074 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,075 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,075 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,075 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,077 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,077 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,078 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,078 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,078 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,080 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,080 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,081 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,081 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,081 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,081 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,081 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,084 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,084 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,084 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,084 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,086 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,087 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,087 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,087 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,089 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,089 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,089 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,089 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,089 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,092 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,092 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,093 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,093 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,093 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,095 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,095 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,097 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,097 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,099 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,099 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,101 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,101 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,101 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,101 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,103 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,103 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,103 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,105 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,105 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,105 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,107 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,107 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,109 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,109 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,109 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,111 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,111 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,111 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,113 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,113 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,114 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,114 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,114 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,116 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,116 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,118 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,120 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,120 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,120 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,120 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,123 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,123 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,123 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,123 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,128 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,129 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,129 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,129 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,129 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,132 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,132 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,132 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,134 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,134 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,134 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,134 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,134 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,137 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,138 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,138 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,138 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,140 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,140 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,140 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,140 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,142 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,142 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,142 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,142 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,142 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,142 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,142 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,142 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,142 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,142 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,148 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,148 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,148 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,148 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,148 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,148 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,148 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,153 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,153 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,153 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,153 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,153 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,153 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,153 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,156 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,156 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,156 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,156 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,156 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,156 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,156 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,159 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,160 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,160 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,160 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,160 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,160 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,160 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,160 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,160 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,160 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,160 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,160 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,160 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,166 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,166 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,167 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,167 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,167 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,168 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,168 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,168 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,169 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,170 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,171 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,171 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,171 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,171 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,171 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,171 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,171 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,171 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,171 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,175 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,175 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,175 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,175 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,175 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,175 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,175 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,178 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,178 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,178 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,179 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,179 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,179 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,179 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,181 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,182 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,182 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,182 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,182 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,182 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,182 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,185 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,185 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,185 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,185 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,185 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,185 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,185 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,185 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,185 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,185 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,185 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,189 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,189 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,189 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,189 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,189 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,192 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,192 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,193 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,193 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,193 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,193 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,193 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,196 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,196 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,196 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,196 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,198 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,198 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,198 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,198 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,198 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,198 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,200 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,200 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,200 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,200 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,202 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,202 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,203 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,204 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,204 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,204 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,204 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,204 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,207 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,207 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,207 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,207 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,207 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,207 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,210 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,210 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,210 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,211 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,212 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,212 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,212 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,213 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,213 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,213 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,213 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,213 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,215 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,215 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,215 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,216 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,216 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,216 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,216 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,218 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,218 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,220 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,220 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,220 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,220 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,221 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,221 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,221 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,221 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,221 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,221 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,221 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,221 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,221 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,221 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,221 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,221 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,225 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,226 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,226 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,226 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,226 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,226 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,226 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,226 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,230 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,230 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,230 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,231 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,231 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,231 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,231 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,231 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,231 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,231 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,231 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,231 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,231 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,231 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,231 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,235 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,235 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,235 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,237 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,237 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,237 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,237 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,237 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,239 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,239 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,239 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,241 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,241 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,241 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,241 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,241 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,241 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,241 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,241 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,241 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,241 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,241 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,241 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,241 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,241 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,246 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,246 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,247 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,247 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,247 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,247 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,247 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,249 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,250 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,250 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,250 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,250 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,250 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,250 search_views Error processing paper: 'NoneType' object is not iterable
+INFO 2025-05-03 14:39:24,250 search_views Found 0 papers for query: design pattern
+INFO 2025-05-03 14:42:37,394 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\search_views.py changed, reloading.
+INFO 2025-05-03 14:42:39,520 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 14:42:45,765 search_views Found 332 papers for query: design pattern
+INFO 2025-05-03 14:43:01,465 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\search_views.py changed, reloading.
+INFO 2025-05-03 14:43:03,491 autoreload Watching for file changes with StatReloader
