@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 import logging
 from datetime import datetime
 import ast
+from app.models import User, Paper
 
 
 logging.basicConfig(level=logging.INFO)
@@ -19,7 +20,6 @@ def get_recommendation(paper_id):
     try:
         driver = get_neo4j_driver()
 
-        # Check if the graph exists, if so, drop it
         with driver.session() as session:
             graph_exists = session.run("""
                 CALL gds.graph.exists('detailGraph')
@@ -36,7 +36,6 @@ def get_recommendation(paper_id):
                 """)
                 print("Existing 'detailGraph' dropped.")
 
-        # Create the graph projection with only nodes having embeddings
         with driver.session() as session:
             session.run("""
                 MATCH (p:Paper)
@@ -52,7 +51,6 @@ def get_recommendation(paper_id):
             """)
             print("Graph 'detailGraph' created, excluding papers without embeddings.")
 
-        # Run the KNN query
         with driver.session() as session:
             result = session.run("""
                 MATCH (p:Paper {paperId: $paperId})
@@ -90,7 +88,6 @@ def get_recommendation(paper_id):
                 "year": record["year"]
             } for record in result]
 
-            # Format dates for each result
             for paper in data:
                 if paper["date"]:
                     try:
@@ -134,16 +131,14 @@ def get_detail_json(request, paper_id):
                     p.url as url,
                     collect({name: a.name, id: a.authorId}) as authors
             """, paperId=paper_id)
-            
-            # Ambil hasil dari query
+
             record = result.single()
-            
-            # Cek apakah paper ditemukan
+
             if not record:
                 return JsonResponse({'error': 'Paper not found'}, status=404)
-                
-            # Parsing data dari record
+
             paper = {
+                "paperId": paper_id,
                 "title": record["title"],
                 "abstract": record["abstract"],
                 "date": record["date"],
@@ -189,11 +184,9 @@ def get_detail_json(request, paper_id):
 
 def get_paper_detail(request, paper_id):
     try:
-        # Get Neo4j driver
         driver = get_neo4j_driver()
         
         with driver.session() as session:
-            # Get paper details
             result = session.run("""
                 MATCH (p:Paper {paperId: $paperId})
                 RETURN p.paperId AS paperId,
@@ -226,12 +219,10 @@ def get_paper_detail(request, paper_id):
                 "url": result["url"] or "",
             }
 
-            # Format date if exists
             if paper["date"]:
                 dt = datetime.strptime(paper["date"], "%Y-%m-%d %H:%M:%S")
                 paper["date"] = dt.strftime("%d %B %Y")
 
-            # Dummy related papers for carousel
             paper_recommendation = [
                 {
                     "id": "1",
@@ -274,3 +265,48 @@ def get_paper_detail(request, paper_id):
             "show_search_form": True,
             "error": f"An error occurred: {str(e)}"
         })
+    
+def record_paper_read(request):
+    if request.method == 'POST':
+        paper_id = request.POST.get('paper_id')
+        access_method = request.POST.get('access_method')
+
+        user_id = request.session.get('user_id', '')
+        
+        logger.info(f"Recording paper read - User ID: {user_id}, Paper ID: {paper_id}, Access Method: {access_method}")
+        
+        if not user_id:
+            return JsonResponse({'status': 'error', 'message': 'User not authenticated'}, status=401)
+        
+        try:
+            user = User.nodes.get(userId=user_id)
+            paper = Paper.nodes.get(paperId=paper_id)
+
+            existing_relations = list(user.has_read.all_relationships(paper))
+            
+            if existing_relations:
+                rel = existing_relations[0]
+                rel.read_at = datetime.now()
+                rel.access_method = access_method
+                rel.save()
+                logger.info(f"Updated existing read relationship")
+            else:
+                user.has_read.connect(paper, {
+                    'read_at': datetime.now(),
+                    'access_method': access_method
+                })
+                logger.info(f"Created new read relationship")
+            
+            return JsonResponse({'status': 'success', 'message': 'Paper read recorded'})
+        
+        except User.DoesNotExist:
+            logger.error(f"User not found with ID: {user_id}")
+            return JsonResponse({'status': 'error', 'message': f'User not found with ID: {user_id}'}, status=404)
+        except Paper.DoesNotExist:
+            logger.error(f"Paper not found with ID: {paper_id}")
+            return JsonResponse({'status': 'error', 'message': f'Paper not found with ID: {paper_id}'}, status=404)
+        except Exception as e:
+            logger.error(f"Error recording paper read: {str(e)}", exc_info=True)
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+    
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=400)

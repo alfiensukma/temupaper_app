@@ -1,41 +1,76 @@
 {% load unicorn %}
 
-<div class="h-full flex items-center justify-center">
-    <div class="w-full max-w-xl">
-        <p class="text-2xl md:text-3xl lg:text-4xl font-bold my-10 text-center">Masuk Pada <span class="text-[#4787FA]">Aplikasi</span></p>
+<div class="max-h-screen flex items-center justify-center px-4">
+    <div class="w-full max-w-md fade-in">
+        <div class="text-center mb-8">
+            <!-- Login Icon -->
+            <div class="inline-block p-3 bg-blue-100 rounded-full mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-[#4787FA]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                </svg>
+            </div>
+            
+            <h1 class="text-3xl md:text-4xl font-bold mb-2 text-gray-800">Masuk Pada <span class="text-[#4787FA]">Aplikasi</span></h1>
+            <p class="text-gray-600 mb-4">Selamat datang kembali! Silakan masuk ke akun Anda</p>
+        </div>
         
         {% if messages %}
-        <div class="mb-6">
-            {% for message in messages %}
-                <div class="{% if message.tags == 'error' %}bg-red-100 border border-red-400 text-red-700{% else %}bg-green-100 border border-green-400 text-green-700{% endif %} px-4 py-3 rounded-lg mb-2" role="alert">
-                    <p>{{ message }}</p>
-                </div>
-            {% endfor %}
-        </div>
+            <div class="mb-6 fade-in">
+                {% for message in messages %}
+                    <div class="{% if message.tags == 'error' %}bg-red-100 border-l-4 border-red-500 text-red-700{% else %}bg-green-100 border-l-4 border-green-500 text-green-700{% endif %} px-4 py-3 rounded-lg mb-4 shadow-md flex items-center" role="alert">
+                        <!-- Ikon Bulat -->
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 {% if message.tags == 'error' %}text-red-500{% else %}text-green-500{% endif %}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M12 3a9 9 0 100 18 9 9 0 000-18z" />
+                        </svg>
+                        <p>{{ message }}</p>
+                    </div>
+                {% endfor %}
+            </div>
         {% endif %}
         
-        <form method="POST" class="space-y-6">
-            {% csrf_token %}
-            
-            {% unicorn 'input-field' label="Email" type="email" name="email" placeholder="Masukkan Email" value=form_data.email %}
+        <div class="bg-white rounded-2xl shadow-lg p-8 transition-all hover:shadow-xl">
+            <form method="POST" class="space-y-6">
+                {% csrf_token %}
+                
+                <div class="space-y-5">
+                    {% unicorn 'input-field' label="Email" type="email" name="email" placeholder="Masukkan email Anda" value=form_data.email %}
+                    
+                    {% unicorn 'input-field' label="Password" type="password" name="password" placeholder="Masukkan password Anda" %}
+                </div>
 
-            {% unicorn 'input-field' label="Password" type="password" name="password" placeholder="Masukkan Password" %}
+                <div class="flex justify-start mt-2">
+                    <span class="text-gray-600 hover:text-gray-800 transition-colors">
+                        Lupa password? 
+                        <a href="{% url 'verification_email' %}" class="text-[#4787FA] hover:text-blue-700 font-medium hover:underline transition-colors">
+                            Reset disini
+                        </a>
+                    </span>
+                </div>
 
-            <div class="flex justify-start">
-                <span>Lupa password? <a href="{% url 'reset_password' %}" class="text-[#4787FA] hover:underline"> Reset disini</a></span>
-            </div>
-
-            <button type="submit"
-                class="w-full text-white bg-[#4787FA] hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 font-medium rounded-xl text-base md:text-xl px-5 py-4 text-center">
-                Masuk
-            </button>
-
-            <p class="text-center text-gray-800">
+                <button type="submit"
+                    class="mt-6 w-full text-white bg-[#4787FA] hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-xl text-base px-5 py-4 text-center transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-md hover:shadow-lg">
+                    Masuk Sekarang
+                </button>
+            </form>
+        </div>
+        
+        <div class="mt-8 text-center">
+            <p class="text-gray-700">
                 Belum memiliki akun? 
-                <a href="{% url 'register_view' %}" class="text-[#4787FA] hover:underline">
+                <a href="{% url 'register_view' %}" class="text-[#4787FA] font-medium hover:text-blue-700 hover:underline transition-colors">
                     Registrasi Disini
                 </a>
             </p>
-        </form>
+        </div>
     </div>
 </div>
+
+<style>
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.fade-in {
+    animation: fadeIn 0.6s ease-out forwards;
+}
+</style>
