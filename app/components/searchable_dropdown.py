@@ -1,4 +1,6 @@
+# components/searchable_dropdown.py
 from django_unicorn.components import UnicornView
+from app.models import Institution
 
 class SearchableDropdownView(UnicornView):
     options = []
@@ -12,28 +14,26 @@ class SearchableDropdownView(UnicornView):
     def mount(self):
         self.load_options()
         self.filtered_options = self.options
-
+    
     def load_options(self):
         if self.name == "institution":
-            self.options = [
-                "Politeknik Negeri Bandung",
-                "Universitas Indonesia",
-                "Institut Teknologi Bandung",
-                "Universitas Gadjah Mada",
-                "Institut Teknologi Sepuluh Nopember",
-                "Universitas Brawijaya"
-            ]
-
-    def updated_search_query(self, value):
-        if value:
+            institutions = Institution.nodes.all()
+            self.options = [institution.name for institution in institutions]
+    
+    def filter_options(self):
+        if self.search_query:
             self.filtered_options = [
                 opt for opt in self.options 
-                if value.lower() in opt.lower()
+                if self.search_query.lower() in opt.lower()
             ]
         else:
             self.filtered_options = self.options
-
+    
+    def updated_search_query(self, value):
+        self.search_query = value
+        self.filter_options()
+    
     def select_option(self, value):
         self.selected = value
-        self.search_query = "" 
+        self.search_query = ""
         self.filtered_options = self.options

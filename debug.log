@@ -35,3 +35,13 @@ INFO 2025-05-03 12:51:40,054 autoreload Watching for file changes with StatReloa
 INFO 2025-05-03 12:51:44,714 search_views Found 0 papers for query: oBject
 INFO 2025-05-03 12:52:04,315 autoreload D:\Data-Kuliah\Semester-6\Assets-TA\temupaper_app\app\views\search_views.py changed, reloading.
 INFO 2025-05-03 12:52:05,376 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 12:52:10,282 search_views Found 0 papers for query: oBject
+INFO 2025-05-03 12:52:13,465 search_views Found 51 papers for query: oBject
+INFO 2025-05-03 12:55:05,239 search_views Found 51 papers for query: oBject
+INFO 2025-05-03 12:56:26,919 search_views Found 51 papers for query: oBject
+INFO 2025-05-03 12:57:35,594 search_views Found 51 papers for query: oBject
+INFO 2025-05-03 12:58:00,667 search_views Found 51 papers for query: oBject
+INFO 2025-05-03 12:58:16,934 search_views Found 51 papers for query: oBject
+INFO 2025-05-03 13:00:22,027 search_views Found 4 papers for query: oBject
+INFO 2025-05-03 13:03:13,099 search_views Found 4 papers for query: oBject
+INFO 2025-05-03 13:05:19,246 autoreload D:\Data-Kuliah\Semester-6\Assets-TA\temupaper_app\app\context_processors.py changed, reloading.

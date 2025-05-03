@@ -71,7 +71,7 @@ def similarity_access(request):
                     frequency AS RecommendedByCount, 
                     totalSimilarity AS SimilarityScore,
                     totalSimilarity / frequency AS AverageSimilarity,
-                    collect(DISTINCT {name: author.name, id: author.authorId}) AS authors
+                    collect(DISTINCT author.name) AS authors
                 ORDER BY SimilarityScore DESC, frequency DESC
                 LIMIT 10
             """, userId=user_id)
@@ -98,9 +98,6 @@ def similarity_access(request):
                         paper["date"] = paper.get("year", "Unknown date")
                 else:
                     paper["date"] = paper.get("year", "Unknown date")
-                    
-                if paper["authors"]:
-                    paper['author_names'] = [author['name'] for author in paper['authors']]
 
         paginator = Paginator(papers, 5)
         page_number = request.GET.get("page", 1)

@@ -61,19 +61,35 @@ def search(request):
                     
             # Search papers
             result = session.run(f"""
-                    MATCH (p:Paper)
-                    WHERE any(keyword IN $keywords WHERE
-                        toLower(p.title) CONTAINS toLower(keyword) OR
-                        toLower(p.abstract) CONTAINS toLower(keyword))
-                    {date_filter}
-                    OPTIONAL MATCH (p)-[:AUTHORED_BY]->(a:Author)
-                    WITH p, collect(DISTINCT a) as authors
-                    RETURN p.paperId AS paperId,
-                        p.title AS title,
-                        p.abstract AS abstract,
-                        p.publicationDate AS date,
-                        authors
-                """, **params)
+                MATCH (p:Paper)
+                WHERE any(keyword IN $keywords WHERE
+                    toLower(p.title) CONTAINS toLower(keyword) OR
+                    toLower(p.abstract) CONTAINS toLower(keyword))
+                {date_filter}
+                WITH p,
+                    size([keyword IN $keywords WHERE toLower(p.title) CONTAINS toLower(keyword)]) AS title_matches,
+                    size([keyword IN $keywords WHERE toLower(p.abstract) CONTAINS toLower(keyword)]) AS abstract_matches
+                OPTIONAL MATCH (p)-[:BELONGS_TO]->(t:Topic)
+                WHERE any(keyword IN $keywords WHERE toLower(t.name) CONTAINS toLower(keyword))
+                WITH p, 
+                    collect(DISTINCT t.name) as related_topics,
+                    title_matches,
+                    abstract_matches,
+                    COALESCE(p.citationCount, 0) as citation_count
+                RETURN p.paperId AS paperId,
+                       p.title AS title,
+                       p.abstract AS abstract,
+                       p.authors AS authors,
+                       p.publicationDate AS date,
+                       related_topics,
+                       title_matches,
+                       abstract_matches,
+                       citation_count
+                ORDER BY 
+                    title_matches DESC,
+                    citation_count DESC,
+                    abstract_matches DESC
+            """, **params)
 
             papers = []
             for record in result:
@@ -85,14 +101,18 @@ def search(request):
                         "paperId": record["paperId"],
                         "title": record["title"],
                         "abstract": record["abstract"] or "",
-                        "authors": authors,
+                        "authors": record["authors"] or [],
                         "date": record["date"] or "",
+                        "related_topics": record["related_topics"] or [],
+                        "citation_count": record["citation_count"],
                     }
                     
                     # Format date if exists
                     if paper["date"]:
                         dt = datetime.strptime(paper["date"], "%Y-%m-%d %H:%M:%S")
                         paper["date"] = dt.strftime("%d %B %Y")
+                    else:
+                        paper["date"] = paper.get("year", "Unknown date")
                         
                     papers.append(paper)
                 except Exception as e:

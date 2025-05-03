@@ -39,14 +39,18 @@ def get_recommendation(paper_id):
         # Create the graph projection with only nodes having embeddings
         with driver.session() as session:
             session.run("""
-                CALL gds.graph.project.cypher(
+                MATCH (p:Paper)
+                RETURN gds.graph.project(
                     'detailGraph',
-                    'MATCH (p:Paper) WHERE p.embedding IS NOT NULL RETURN id(p) AS id, p.embedding AS embedding',
-                    'RETURN null AS source, null AS target LIMIT 0',
-                    { readConcurrency: 4 }
+                    p,
+                    null,
+                    {
+                        sourceNodeProperties: p { .embedding },
+                        targetNodeProperties: {}
+                    }
                 )
             """)
-            print("Graph 'paperGraph' created, excluding papers without embeddings.")
+            print("Graph 'detailGraph' created, excluding papers without embeddings.")
 
         # Run the KNN query
         with driver.session() as session:
@@ -82,16 +86,24 @@ def get_recommendation(paper_id):
                 "date": record["date"],
                 "similarity": record["similarity"],
                 "abstract": record["abstract"],
-                "authors": record["authors"]
+                "authors": record["authors"],
+                "year": record["year"]
             } for record in result]
 
             # Format dates for each result
             for paper in data:
                 if paper["date"]:
-                    dt = datetime.strptime(paper["date"], "%Y-%m-%d %H:%M:%S")
-                    paper["date"] = dt.strftime("%d %B %Y")
+                    try:
+                        try:
+                            dt = datetime.strptime(paper["date"], "%Y-%m-%d %H:%M:%S")
+                        except ValueError:
+                            dt = datetime.strptime(paper["date"], "%Y-%m-%d")
+                        paper["date"] = dt.strftime("%d %B %Y")
+                    except Exception as e:
+                        logger.error(f"Date parse error for paper {paper['paperId']}: {e}")
+                        paper["date"] = paper.get("year", "Unknown date")
                 else:
-                    paper["date"] = paper["year"]
+                    paper["date"] = paper.get("year", "Unknown date")
                     
         return data
 
@@ -103,7 +115,6 @@ def get_recommendation(paper_id):
             driver.close()
 
 def get_detail_json(request, paper_id):
-    # paperId = request.GET.get('paper_id')
     if not paper_id:
         return JsonResponse({'error': 'Missing paper_id'}, status=400)
 
@@ -138,12 +149,22 @@ def get_detail_json(request, paper_id):
                 "date": record["date"],
                 "doi": record["doi"],
                 "url": record["url"],
+                "year": record["year"],
                 "authors": record["authors"]
             }
 
             if paper["date"]:
-                dt = datetime.strptime(paper["date"], "%Y-%m-%d %H:%M:%S")
-                paper["date"] = dt.strftime("%d %B %Y")
+                try:
+                    try:
+                        dt = datetime.strptime(paper["date"], "%Y-%m-%d %H:%M:%S")
+                    except ValueError:
+                        dt = datetime.strptime(paper["date"], "%Y-%m-%d")
+                    paper["date"] = dt.strftime("%d %B %Y")
+                except Exception as e:
+                    logger.error(f"Date parse error for paper {paper['paperId']}: {e}")
+                    paper["date"] = paper.get("year", "Unknown date")
+            else:
+                paper["date"] = paper.get("year", "Unknown date")
         
         driver.close()
 
