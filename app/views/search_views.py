@@ -1,11 +1,15 @@
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
-from datetime import datetime
+from datetime import datetime, timedelta
 from app.utils.neo4j_connection import get_neo4j_driver
+from app.utils.parse_indonesian_date import parse_indonesian_date
 import logging
 import ast
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
 logger = logging.getLogger(__name__)
 
 def index(request):
@@ -18,6 +22,9 @@ def index(request):
 def search(request):
     try:
         query = request.GET.get('query', '')
+        start_date = request.GET.get('start_date', '')
+        end_date = request.GET.get('end_date', '')
+        
         if not query:
             return render(request, "base.html", {
                 "content_template": "search-paper/search-result.html",
@@ -30,55 +37,74 @@ def search(request):
         driver = get_neo4j_driver()
         
         with driver.session() as session:
-            # Get CSO topics
-            cso_topics = session.run("""
-                MATCH (t:Topic)
-                RETURN t.name AS Topic
-            """).data()
-            cso_topics = [record["Topic"] for record in cso_topics]
-
-            keywords = query.lower().split()  # Simplified for example
-
+            keywords = query.lower().split()
+            date_filter = ""
+            params = {"keywords": keywords}
+            
+            # filter date
+            if start_date and end_date:
+                try:
+                    start_dt = parse_indonesian_date(start_date)
+                    end_dt = parse_indonesian_date(end_date)
+                    start_str = start_dt.strftime("%Y-%m-%d")
+                    end_str = end_dt.strftime("%Y-%m-%d")
+                    date_filter = """
+                        AND left(p.publicationDate, 10) >= $start_date 
+                        AND left(p.publicationDate, 10) <= $end_date
+                    """
+                    params.update({
+                        "start_date": start_str,
+                        "end_date": end_str
+                    })
+                except Exception as e:
+                    logger.error(f"Error processing dates: {e}")
+                    
             # Search papers
-            result = session.run("""
+            result = session.run(f"""
                 MATCH (p:Paper)
                 WHERE any(keyword IN $keywords WHERE
                     toLower(p.title) CONTAINS toLower(keyword) OR
-                    toLower(p.abstract) CONTAINS toLower(keyword) OR
-                    any(topic IN p.cso_topics WHERE toLower(topic) CONTAINS toLower(keyword)))
-                WITH p, 
+                    toLower(p.abstract) CONTAINS toLower(keyword))
+                {date_filter}
+                WITH p,
                     size([keyword IN $keywords WHERE toLower(p.title) CONTAINS toLower(keyword)]) AS title_matches,
-                    size([keyword IN $keywords WHERE 
-                        toLower(p.abstract) CONTAINS toLower(keyword) OR 
-                        any(topic IN p.cso_topics WHERE toLower(topic) CONTAINS toLower(keyword))]) AS other_matches
+                    size([keyword IN $keywords WHERE toLower(p.abstract) CONTAINS toLower(keyword)]) AS abstract_matches
                 OPTIONAL MATCH (p)-[:BELONGS_TO]->(t:Topic)
-                OPTIONAL MATCH (p)-[:AUTHORED_BY]->(author:Author)
-                RETURN p.paperId AS paperId,
-                    p.title AS title,
-                    p.abstract AS abstract,
-                    p.year AS year,
-                    collect(DISTINCT author.name) AS authors,
-                    p.publicationDate AS date,
-                    p.citationCount AS citation_count,
-                    p.cso_topics AS topics,
-                    collect(DISTINCT t.name) AS related_topics,
+                WHERE any(keyword IN $keywords WHERE toLower(t.name) CONTAINS toLower(keyword))
+                WITH p, 
+                    collect(DISTINCT t.name) as related_topics,
                     title_matches,
-                    other_matches
-                ORDER BY title_matches DESC, citation_count DESC, other_matches DESC
-                LIMIT 50
-            """, keywords=keywords)
+                    abstract_matches,
+                    COALESCE(p.citationCount, 0) as citation_count
+                RETURN p.paperId AS paperId,
+                       p.title AS title,
+                       p.abstract AS abstract,
+                       p.authors AS authors,
+                       p.publicationDate AS date,
+                       related_topics,
+                       title_matches,
+                       abstract_matches,
+                       citation_count
+                ORDER BY 
+                    title_matches DESC,
+                    citation_count DESC,
+                    abstract_matches DESC
+            """, **params)
 
             papers = []
             for record in result:
                 try:
+                    authors = [{"name": author["name"], "id": author["authorId"]} 
+                             for author in record["authors"]]
+                    
                     paper = {
                         "paperId": record["paperId"],
                         "title": record["title"],
                         "abstract": record["abstract"] or "",
                         "authors": record["authors"] or [],
-                        "date": record["date"],
-                        "year": record["year"],
-                        "related_topics": record["related_topics"] or []
+                        "date": record["date"] or "",
+                        "related_topics": record["related_topics"] or [],
+                        "citation_count": record["citation_count"],
                     }
                     
                     # Format date if exists
@@ -101,8 +127,8 @@ def search(request):
         page_number = request.GET.get("page", 1)
         page_obj = paginator.get_page(page_number)
 
-        logger.info(f"Found {len(papers)} papers for query: {query}, keywords: {keywords}")
-
+        logger.info(f"Found {len(papers)} papers for query: {query}")
+        
         return render(request, "base.html", {
             "content_template": "search-paper/search-result.html",
             "body_class": "bg-gray-100",
@@ -110,6 +136,8 @@ def search(request):
             "page_obj": page_obj,
             "query": query,
             "keywords": keywords,
+            "start_date": start_date,
+            "end_date": end_date,  
         })
 
     except Exception as e:
