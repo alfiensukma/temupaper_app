@@ -30,8 +30,10 @@
     </form>
 </div>
 
+<div class="mt-4">{% unicorn "date-range-picker" %}</div>
+
 {% if error %}
-    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+    <div class="mt-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
         <p>{{ error }}</p>
     </div>
 {% else %}
@@ -58,13 +60,13 @@
     <div class="mt-10 flex justify-start items-center gap-2 font-semibold">
         {% if page_obj.paginator.num_pages > 1 %}
             {% if page_obj.has_previous %}
-                <a href="?page=1&query={{ query }}" 
+                <a href="?page=1&query={{ query }}&start_date={{ start_date }}&end_date={{ end_date }}" 
                     class="px-4 py-2 bg-white border border-gray-300 rounded hover:bg-gray-100">
                     <svg width="16" height="24" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M15.16 1.41L10.58 6L15.16 10.59L13.75 12L7.75 6L13.75 0L15.16 1.41Z M8.16 1.41L3.58 6L8.16 10.59L6.75 12L0.75 6L6.75 0L8.16 1.41Z" fill="#C4CDD5"/>
                     </svg>
                 </a>
-                <a href="?page={{ page_obj.previous_page_number }}&query={{ query }}"
+                <a href="?page={{ page_obj.previous_page_number }}&query={{ query }}&start_date={{ start_date }}&end_date={{ end_date }}"
                     class="px-4 py-2 bg-white border border-gray-300 rounded hover:bg-gray-100">
                     <svg width="8" height="24" viewBox="0 0 9 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M8.16003 1.41L3.58003 6L8.16003 10.59L6.75003 12L0.750034 6L6.75003 0L8.16003 1.41Z"
@@ -77,7 +79,7 @@
                 {% if page_obj.number == num %}
                     <span class="px-4 py-2 bg-white text-[#4787FA] rounded border-2 border-[#4787FA]">{{ num }}</span>
                 {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-                    <a href="?page={{ num }}&query={{ query }}" 
+                    <a href="?page={{ num }}&query={{ query }}&start_date={{ start_date }}&end_date={{ end_date }}" 
                         class="px-4 py-2 bg-white border border-gray-300 rounded hover:bg-gray-100">
                         {{ num }}
                     </a>
@@ -87,13 +89,13 @@
             {% endfor %}
     
             {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}&query={{ query }}"
+                <a href="?page={{ page_obj.next_page_number }}&query={{ query }}&start_date={{ start_date }}&end_date={{ end_date }}"
                     class="px-4 py-2 bg-white border border-gray-300 rounded hover:bg-gray-100">
                     <svg width="9" height="24" viewBox="0 0 9 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M0.839966 1.41L5.41997 6L0.839966 10.59L2.24997 12L8.24997 6L2.24997 0L0.839966 1.41Z" fill="#C4CDD5"/>
                     </svg>                
                 </a>
-                <a href="?page={{ page_obj.paginator.num_pages }}&query={{ query }}"
+                <a href="?page={{ page_obj.paginator.num_pages }}&query={{ query }}&start_date={{ start_date }}&end_date={{ end_date }}"
                     class="px-4 py-2 bg-white border border-gray-300 rounded hover:bg-gray-100">
                     <svg width="16" height="24" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M0.84 1.41L5.42 6L0.84 10.59L2.25 12L8.25 6L2.25 0L0.84 1.41Z M7.84 1.41L12.42 6L7.84 10.59L9.25 12L15.25 6L9.25 0L7.84 1.41Z" fill="#C4CDD5"/>
