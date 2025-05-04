@@ -4,8 +4,10 @@
 {% unicorn "info-alert" title_alert='Informasi' content_alert='Rekomendasi diberikan per topik dari bidang Ilmu Komputer berdasarkan popularitas dari <span class="text-[#4787FA] font-bold">jumlah sitasi</span>.' %}
 
 <div class="grid gap-6">
-    {% for topic in topic %}
-        {% unicorn "topic-item" topic=topic %}
+    {% for t in topic %}
+        {% if t.id %}  <!-- Pastikan t.id tidak kosong -->
+            {% unicorn "topic-item" topic=t %}
+        {% endif %}
     {% empty %}
         <p class="text-center text-gray-500 text-xl mt-3">Tidak ada hasil ditemukan.</p>
     {% endfor %}

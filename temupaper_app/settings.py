@@ -148,6 +148,30 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': False,
+#     'handlers': {
+#         'console': {
+#             'class': 'logging.StreamHandler',
+#         },
+#     },
+#     'root': {
+#         'handlers': ['console'],
+#         'level': 'DEBUG',
+#     },
+# }
+
+# Email configuration for Gmail with 2FA
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 465
+EMAIL_USE_SSL = True 
+EMAIL_USE_TLS = False
+EMAIL_HOST_USER = 'infotemupaper@gmail.com'  # Replace with your Gmail address
+EMAIL_HOST_PASSWORD = 'eetaaajiecqdtbdp'  # Replace with the 16-character App Password generated
+DEFAULT_FROM_EMAIL = 'infotemupaper@gmail.com'  # Replace with your Gmail address
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,

@@ -1,0 +1,136 @@
+{% load unicorn %}
+<div class="container mx-auto px-4 py-8">
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-800">Karya Ilmiah Tersimpan</h1>
+        <p class="text-gray-600 mt-2">Daftar karya ilmiah yang Anda simpan</p>
+    </div>
+    
+    <!-- Success/Error Messages -->
+    {% if request.session.message %}
+    <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6" role="alert">
+        <p>{{ request.session.message }}</p>
+    </div>
+    {% endif %}
+    
+    {% if request.session.error %}
+    <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6" role="alert">
+        <p>{{ request.session.error }}</p>
+    </div>
+    {% endif %}
+    
+    <!-- Search Bar -->
+    <div class="mb-6">
+        <form method="GET" action="/save-paper-list/">
+            <div class="relative">
+                <input 
+                    type="text" 
+                    name="q" 
+                    value="{{ search_query }}"
+                    placeholder="Cari di karya ilmiah tersimpan..." 
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                >
+                <button 
+                    type="submit"
+                    class="absolute right-2 top-2 text-gray-500 hover:text-blue-500"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Empty State -->
+    {% if not papers %}
+    <div class="bg-white rounded-lg shadow-md p-8 text-center">
+        <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+        </svg>
+        <h3 class="text-lg font-medium text-gray-900 mb-2">Belum ada karya ilmiah tersimpan</h3>
+        <p class="text-gray-600">Simpan karya ilmiah untuk membacanya nanti atau merujuknya kembali.</p>
+        <a href="/" class="mt-4 inline-block px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
+            Jelajahi Karya Ilmiah
+        </a>
+    </div>
+    {% else %}
+
+    <!-- Timeline View -->
+    <div class="timeline-container">
+        {% regroup page_obj by formatted_date as date_groups %}
+        
+        {% for date_group in date_groups %}
+            <div class="mb-8">
+                <h2 class="text-xl font-bold text-gray-700 border-b-2 border-gray-200 pb-2 mb-4">
+                    {{ date_group.grouper }}
+                </h2>
+                
+                <div class="grid gap-6
+                      [&_.bg-color]:bg-white
+                      [&_.bg-color-author]:bg-gray-100
+                      [&_.paper-title]:text-base lg:[&_.paper-title]:text-[25px]
+                      [&_.paper-authors]:text-sm md:[&_.paper-authors]:text-base
+                      [&_.paper-date]:text-sm md:[&_.paper-date]:text-base
+                      [&_.paper-abstract]:text-sm md:[&_.paper-abstract]:text-base
+                    ">
+                    {% for paper in date_group.list %}
+                        <div class="timeline-item pl-4 border-l-2 border-blue-500">
+                            {% unicorn "paper-item" title=paper.title authors=paper.authors date=paper.formatted_publication_date abstract=paper.abstract %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% empty %}
+            <p class="text-center text-gray-500 text-xl mt-3">Tidak ada hasil ditemukan.</p>
+        {% endfor %}
+    </div>
+
+    <div class="mt-10 flex justify-start items-center gap-2 font-semibold">
+        {% if page_obj.paginator.num_pages > 1 %}
+            {% if page_obj.has_previous %}
+                <a href="?page=1&q={{ search_query|urlencode }}" 
+                    class="px-4 py-2 bg-white border border-gray-300 rounded hover:bg-gray-100">
+                    <svg width="16" height="24" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M15.16 1.41L10.58 6L15.16 10.59L13.75 12L7.75 6L13.75 0L15.16 1.41Z M8.16 1.41L3.58 6L8.16 10.59L6.75 12L0.75 6L6.75 0L8.16 1.41Z" fill="#C4CDD5"/>
+                    </svg>
+                </a>
+                <a href="?page={{ page_obj.previous_page_number }}&q={{ search_query|urlencode }}"
+                    class="px-4 py-2 bg-white border border-gray-300 rounded hover:bg-gray-100">
+                    <svg width="8" height="24" viewBox="0 0 9 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M8.16003 1.41L3.58003 6L8.16003 10.59L6.75003 12L0.750034 6L6.75003 0L8.16003 1.41Z"
+                            fill="#C4CDD5" />
+                    </svg>
+                </a>
+            {% endif %}
+    
+            {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                    <span class="px-4 py-2 bg-white text-[#4787FA] rounded border-2 border-[#4787FA]">{{ num }}</span>
+                {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                    <a href="?page={{ num }}&q={{ search_query|urlencode }}" 
+                        class="px-4 py-2 bg-white border border-gray-300 rounded hover:bg-gray-100">
+                        {{ num }}
+                    </a>
+                {% elif num == page_obj.number|add:'-3' or num == page_obj.number|add:'3' %}
+                    <span class="px-4 py-2">...</span>
+                {% endif %}
+            {% endfor %}
+    
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}&q={{ search_query|urlencode }}"
+                    class="px-4 py-2 bg-white border border-gray-300 rounded hover:bg-gray-100">
+                    <svg width="9" height="24" viewBox="0 0 9 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0.839966 1.41L5.41997 6L0.839966 10.59L2.24997 12L8.24997 6L2.24997 0L0.839966 1.41Z" fill="#C4CDD5"/>
+                    </svg>                
+                </a>
+                <a href="?page={{ page_obj.paginator.num_pages }}&q={{ search_query|urlencode }}"
+                    class="px-4 py-2 bg-white border border-gray-300 rounded hover:bg-gray-100">
+                    <svg width="16" height="24" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0.84 1.41L5.42 6L0.84 10.59L2.25 12L8.25 6L2.25 0L0.84 1.41Z M7.84 1.41L12.42 6L7.84 10.59L9.25 12L15.25 6L9.25 0L7.84 1.41Z" fill="#C4CDD5"/>
+                    </svg>
+                </a>
+            {% endif %}
+        {% endif %}
+    </div>
+    {% endif %}
+</div>

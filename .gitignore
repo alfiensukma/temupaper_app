@@ -1,3 +1,9 @@
 .vscode
 .env
 venv
+logs/
+*.log
+*.pyc
+*.pyo
+*.pyd
+__pycache__/

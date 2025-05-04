@@ -38,7 +38,8 @@ def login_view(request):
                 request.session['user_name'] = user.name
                 request.session['is_authenticated'] = True
                 
-                return redirect('search') 
+                messages.success(request, "Anda Berhasil Login")
+                return redirect('index')
             else:
                 messages.error(request, 'Email atau password salah.')
         except User.DoesNotExist:

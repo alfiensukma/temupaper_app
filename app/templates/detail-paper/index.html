@@ -1,14 +1,14 @@
 {% load unicorn %}
 <div class="my-8 flex flex-col gap-10 md:grid md:grid-cols-3 md:gap-12">
 
-    <!-- Paper Details Section -->
     <div class="bg-white rounded-2xl p-6 shadow-md hover:shadow-lg transition-shadow duration-300 md:col-span-2">
         <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 mb-4">
             <span class="text-sm md:text-base text-gray-700 font-medium">
                 DOI: 
                 <a href="https://doi.org/{{ paper.doi }}" 
                     target="_blank" 
-                    class="text-[#4787FA] no-underline hover:underline transition-colors">
+                    class="text-[#4787FA] no-underline hover:underline transition-colors"
+                    onclick="recordPaperRead('{{ paper.paperId }}', 'doi'); return true;">
                     {{ paper.doi }}
                 </a>
             </span>
@@ -19,77 +19,67 @@
     
         <h1 class="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-800 my-5 leading-tight">{{ paper.title }}</h1>
         
-        <!-- Authors Section -->
-        <div x-data="{ showAllAuthors: false }" class="my-6">
-            <div class="flex flex-wrap items-center gap-2">
-                {% with total_authors=paper.authors|length %}
-                {% with visible_authors=paper.authors|slice:":6" %}
-                {% with remaining_authors=paper.authors|slice:"6:" %}
-                
-                <div class="inline-flex flex-wrap items-center gap-2" id="authors-container">
-                    {% if visible_authors|length <= 3 %}
-                        {% for author in visible_authors %}
-                            <span class="px-3 py-1.5 bg-blue-50 text-[#4787FA] rounded-full text-sm md:text-base font-medium hover:bg-blue-100 transition-colors">
-                                {{ author.name }}
-                            </span>
-                        {% endfor %}
-                    {% else %}
-                        {% with remaining_authors=visible_authors|length|add:"-3" %}
-                            <div id="authors-preview">
-                                {% for author in visible_authors|slice:":3" %}
-                                    <span class="px-3 py-1.5 mx-1 bg-blue-50 text-[#4787FA] rounded-full text-sm md:text-base font-medium hover:bg-blue-100 transition-colors">
-                                        {{ author.name }}
-                                    </span>
-                                {% endfor %}
-                                <span id="show-more-btn" class="px-3 py-1.5 bg-blue-50 text-[#4787FA] rounded-full text-sm md:text-base font-medium hover:bg-blue-100 transition-colors cursor-pointer">
-                                    + {{ remaining_authors }} penulis
-                                </span>
-                            </div>
-                        {% endwith %}
-                        <div id="authors-full" class="hidden">
-                            {% for author in visible_authors %}
-                                <span class="px-3 py-1.5 mx-1 bg-blue-50 text-[#4787FA] rounded-full text-sm md:text-base font-medium hover:bg-blue-100 transition-colors">
-                                    {{ author.name }}
-                                </span>
-                            {% endfor %}
-                            <span id="hide-btn" class="px-3 py-1.5 bg-white text-[#4787FA] rounded-full text-sm md:text-base font-medium hover:bg-blue-100 transition-colors cursor-pointer">
-                                Sembunyikan
-                            </span>
-                        </div>
-                    {% endif %}
-                </div>
-                
-                <script>
-                    document.addEventListener('DOMContentLoaded', function() {
-                        const showMoreBtn = document.getElementById('show-more-btn');
-                        const hideBtn = document.getElementById('hide-btn');
-                        
-                        if (showMoreBtn) {
-                            showMoreBtn.addEventListener('click', function() {
-                                document.getElementById('authors-preview').classList.add('hidden');
-                                document.getElementById('authors-full').classList.remove('hidden');
-                            });
-                        }
-                        
-                        if (hideBtn) {
-                            hideBtn.addEventListener('click', function() {
-                                document.getElementById('authors-full').classList.add('hidden');
-                                document.getElementById('authors-preview').classList.remove('hidden');
-                            });
-                        }
-                    });
-                </script>
-                
-                {% endwith %}
-                {% endwith %}
-                {% endwith %}
+        <div class="my-6">
+            {% with visible_authors=paper.authors|slice:":3" %}
+            {% with remaining_authors=paper.authors|slice:"3:" %}
+            
+            <div class="flex flex-wrap gap-2 mb-4" id="authors-preview">
+                {% for author in visible_authors %}
+                    <span class="px-3 py-1.5 mb-1 bg-blue-50 text-[#4787FA] rounded-full text-sm md:text-base font-medium hover:bg-blue-100 transition-colors">
+                        {{ author.name }}
+                    </span>
+                {% endfor %}
+                {% if remaining_authors %}
+                    <span id="show-more-btn" class="px-3 py-1.5 mb-1 bg-blue-50 text-[#4787FA] rounded-full text-sm md:text-base font-medium hover:bg-blue-100 transition-colors cursor-pointer">
+                        + {{ remaining_authors|length }} penulis
+                    </span>
+                {% endif %}
             </div>
+        
+            {% if remaining_authors %}
+            <div class="flex flex-wrap gap-2 mb-4 hidden" id="authors-full">
+                {% for author in paper.authors %}
+                    <span class="px-3 py-1.5 mb-2 bg-blue-50 text-[#4787FA] rounded-full text-sm md:text-base font-medium hover:bg-blue-100 transition-colors">
+                        {{ author.name }}
+                    </span>
+                {% endfor %}
+                <span id="hide-btn" class="px-3 py-1.5 mb-2 bg-white text-[#4787FA] rounded-full text-sm md:text-base font-medium hover:bg-blue-100 transition-colors cursor-pointer">
+                    Sembunyikan
+                </span>
+            </div>
+            {% endif %}
+            
+            {% endwith %}
+            {% endwith %}
         </div>
-    
-        <!-- Action Buttons -->
+        
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const showMoreBtn = document.getElementById('show-more-btn');
+                const hideBtn = document.getElementById('hide-btn');
+                const preview = document.getElementById('authors-preview');
+                const full = document.getElementById('authors-full');
+        
+                if (showMoreBtn) {
+                    showMoreBtn.addEventListener('click', function () {
+                        preview.classList.add('hidden');
+                        full.classList.remove('hidden');
+                    });
+                }
+        
+                if (hideBtn) {
+                    hideBtn.addEventListener('click', function () {
+                        full.classList.add('hidden');
+                        preview.classList.remove('hidden');
+                    });
+                }
+            });
+        </script>
+        
         <div class="my-8 flex flex-wrap gap-4">
             <a target="_blank" 
                 href="{{ paper.url }}"
+                onclick="recordPaperRead('{{ paper.paperId }}', 'semantic'); return true;"
                 class="inline-flex items-center gap-2 text-white bg-[#4787FA] border border-[#4787FA] hover:bg-blue-600 focus:ring-2 focus:outline-none focus:ring-blue-300 rounded-xl text-base md:text-lg px-4 md:px-5 py-2.5 transition-colors">
                 <svg class="w-5 h-5" viewBox="0 0 30 31" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M12.5 16.75C13.0368 17.4676 13.7217 18.0614 14.5082 18.4911C15.2947 18.9208 16.1644 19.1764 17.0583 19.2404C17.9522 19.3044 18.8495 19.1754 19.6892 18.8622C20.5289 18.549 21.2914 18.0588 21.925 17.425L25.675 13.675C26.8135 12.4962 27.4435 10.9174 27.4292 9.2787C27.415 7.63997 26.7577 6.07239 25.5989 4.91359C24.4401 3.75479 22.8725 3.09748 21.2338 3.08324C19.595 3.069 18.0163 3.69897 16.8375 4.83746L14.6875 6.97496" 
@@ -99,7 +89,9 @@
                 </svg>    
                 <span>Lihat di Semantic Scholar</span>
             </a>
-            {% unicorn 'save-paper' %}
+            {% if user.is_authenticated %}
+                {% unicorn 'save-paper' paper_id=paper.paperId %}
+            {% endif %}
         </div>
     
         <!-- Abstract -->
@@ -111,9 +103,7 @@
         </div>
     </div>
     
-    <!-- Related Papers Section -->
     <div class="h-[700px] bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100">
-        <!-- Header dengan desain yang lebih menarik -->
         <div class="bg-gradient-to-r from-blue-600 to-indigo-700 px-6 py-4 text-white relative overflow-hidden">
             <div class="absolute right-0 top-0 opacity-10">
                 <svg width="120" height="120" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -131,7 +121,6 @@
                 {% for paper in paper_recommendation %}
                     <div class="bg-white p-5 rounded-xl transition-all duration-300 border border-gray-100 hover:border-blue-300 hover:shadow-md group">
                         <div class="flex flex-col">
-                            <!-- <h3 class="font-bold text-gray-800 text-lg group-hover:text-blue-600 transition-colors">{{ paper.title }}</h3> -->
                             <a href="{% url 'paper_detail' paper.paperId %}" class="font-bold text-gray-800 text-lg group-hover:text-blue-600 transition-colors">{{ paper.title }}</a>
                             <p class="text-sm text-gray-500 mt-4 mb-4 border-b border-gray-100 pb-2">
                                 {% for author in paper.authors|slice:":3" %}
@@ -160,3 +149,28 @@
     </div>
     
 </div>
+
+<script>
+    function recordPaperRead(paperId, accessMethod) {
+        {% if user.is_authenticated %}
+            fetch('{% url "record_paper_read" %}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: new URLSearchParams({
+                    'paper_id': paperId,
+                    'access_method': accessMethod
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Paper read recorded:', data);
+            })
+            .catch(error => {
+                console.error('Error recording paper read:', error);
+            });
+        {% endif %}
+    }
+    </script>
