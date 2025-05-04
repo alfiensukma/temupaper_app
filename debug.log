@@ -61,7 +61,3 @@ INFO 2025-05-04 19:45:38,962 graph_views Data jurnal dari D:\Data-Kuliah\Semeste
 INFO 2025-05-04 19:45:39,116 graph_views Data field of study dari D:\Data-Kuliah\Semester-6\Assets-TA\temupaper_app\app\data-csv\papers-dummy.csv berhasil diimpor
 INFO 2025-05-04 19:45:39,259 graph_views Data publication types dari D:\Data-Kuliah\Semester-6\Assets-TA\temupaper_app\app\data-csv\papers-dummy.csv berhasil diimpor
 INFO 2025-05-04 19:45:39,673 graph_views Validasi knowledge graph selesai
-INFO 2025-05-04 19:57:13,287 autoreload D:\Data-Kuliah\Semester-6\Assets-TA\temupaper_app\app\views\peer_institution_recommendation_views.py changed, reloading.
-INFO 2025-05-04 19:57:15,021 autoreload Watching for file changes with StatReloader
-INFO 2025-05-04 19:57:24,524 autoreload D:\Data-Kuliah\Semester-6\Assets-TA\temupaper_app\temupaper_app\settings.py changed, reloading.
-INFO 2025-05-04 19:57:25,820 autoreload Watching for file changes with StatReloader
