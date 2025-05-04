@@ -54,10 +54,6 @@ def parse_cso_rdf(rdf_file_path):
             if label:
                 label = label.lower().replace(' ', '_')
                 topic_labels[topic_uri] = label
-                
-        level_topics = {0: {"computer_science"}}
-        unique_topics = {"computer_science"}
-        topic_levels = {"computer_science": 0}
 
         # First, collect direct children of computer_science
         level_1_topics = set()
@@ -68,10 +64,6 @@ def parse_cso_rdf(rdf_file_path):
             if parent == "computer_science":
                 level_1_topics.add(child)
                 unique_topics.add(child)
-                topic_levels[child] = 1
-                if 1 not in level_topics:
-                    level_topics[1] = set()
-                level_topics[1].add(child)
 
         # Then collect children of level 1 topics (level 2)
         for s, p, o in g.triples((None, CSO.superTopicOf, None)):
@@ -82,20 +74,12 @@ def parse_cso_rdf(rdf_file_path):
                 hierarchy.append((child, parent))
                 unique_topics.add(child)
                 unique_topics.add(parent)
-                topic_levels[child] = 2
-                if 2 not in level_topics:
-                    level_topics[2] = set()
-                level_topics[2].add(child)
 
         # Create topics with numeric IDs (excluding computer_science)
         topics = []
         for idx, name in enumerate(sorted(unique_topics)):
             if name != "computer_science":
-                topics.append({
-                    "id": idx + 1, 
-                    "name": name,
-                    "level": topic_levels.get(name, 0)
-                    })
+                topics.append({"id": idx + 1, "name": name})
         
         logger.info(f"Filtered hierarchy: {len(hierarchy)}, Topics: {len(topics)}")
         return topics, hierarchy
@@ -137,8 +121,7 @@ def import_cso_hierarchy(driver, topics, hierarchy):
     query_topics = """
     UNWIND $topics AS topic
     MERGE (t:Topic {name: topic.name})
-    SET t.id = toInteger(topic.id),
-        t.level = toInteger(topic.level)
+    SET t.id = toInteger(topic.id)
     """
     with driver.session() as session:
         session.run(query_topics, topics=topics)
