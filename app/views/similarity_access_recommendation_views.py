@@ -11,7 +11,15 @@ logger = logging.getLogger(__name__)
 def similarity_access(request):
     driver = None
 
-    user_id = "df814dfe-0c12-4298-9c74-44f7617593b4"
+    if not request.session.get('is_authenticated', False):
+        return render(request, "base.html", {
+            "content_template": "peer-institution-recommendation/index.html",
+            "body_class": "bg-gray-100",
+            "show_search_form": False,
+            "error": "Anda perlu login untuk melihat halaman ini"
+        })
+    
+    user_id = request.session.get('user_id')
 
     try:
         driver = get_neo4j_driver()
@@ -58,7 +66,7 @@ def similarity_access(request):
                                  
                 MATCH (user2)-[:HAS_READ]->(paper:Paper)
                 WHERE NOT EXISTS {
-                MATCH (targetUser:User {userId: "e709dd90-90a2-4ccf-af96-adf069d7b111"})-[:HAS_READ]->(paper)}
+                MATCH (targetUser:User {userId: $userId})-[:HAS_READ]->(paper)}
 
                 WITH paper, COUNT(user2) AS frequency, SUM(similarity) AS totalSimilarity
                 OPTIONAL MATCH (paper)-[:AUTHORED_BY]->(author:Author)
