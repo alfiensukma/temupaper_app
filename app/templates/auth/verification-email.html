@@ -1,18 +1,88 @@
 {% load unicorn %}
 
-<div class="h-full flex items-center justify-center">
-    <div class="w-full max-w-xl">
-        <p class="text-2xl md:text-3xl lg:text-4xl font-bold my-10 text-center">Email <span class="text-[#4787FA]">Verifikasi</span></p>
-        
-        <form method="POST" class="space-y-6">
-            {% csrf_token %}
-            
-            {% unicorn 'input-field' label="Email" type="email" name="verification_email" placeholder="Masukkan Email" %}
+{% if messages %}
+<div id="flash-messages" class="fixed top-20 right-4 z-50 w-96 max-w-full">
+    {% for message in messages %}
+        <div 
+            class="{% if message.tags == 'error' %}bg-red-100 border-l-4 border-red-500 text-red-700{% else %}bg-green-100 border-l-4 border-green-500 text-green-700{% endif %} px-4 py-3 rounded-lg mb-4 shadow-lg relative overflow-hidden flex items-start gap-3 fade-in"
+            role="alert">
+            <div class="">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 {% if message.tags == 'error' %}text-red-700{% else %}text-green-700{% endif %}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M12 3a9 9 0 100 18 9 9 0 000-18z" />
+                </svg>
+            </div>
 
-            <button type="submit"
-                class="mt-2 w-full text-white bg-[#4787FA] hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 font-medium rounded-xl text-base md:text-xl px-5 py-4 text-center">
-                Verifikasi
-            </button>
-        </form>
+            <div class="flex-1 pr-2">
+                <p>{{ message }}</p>
+            </div>
+            <div class="absolute bottom-0 left-0 h-1 w-full {% if message.tags == 'error' %}bg-red-500{% else %}bg-green-500{% endif %} animate-progressBar"></div>
+        </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<div class="max-h-screen to-white flex items-center justify-center px-4 ">
+    <div class="w-full max-w-md fade-in">
+        <div class="text-center mb-8">
+            <!-- Email Verification Icon -->
+            <div class="inline-block p-3 bg-blue-100 rounded-full mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-[#4787FA]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+            </div>
+            
+            <h1 class="text-3xl md:text-4xl font-bold mb-2 text-gray-800">Email <span class="text-[#4787FA]">Verifikasi</span></h1>
+            <p class="text-gray-600 mb-8">Masukkan email Anda untuk menerima kode verifikasi</p>
+        </div>
+        
+        <div class="bg-white rounded-2xl shadow-lg p-8 transition-all hover:shadow-xl">
+            <form method="POST" class="space-y-6">
+                {% csrf_token %}
+                
+                {% unicorn 'input-field' label="Email" type="email" name="verification_email" placeholder="Masukkan email Anda" %}
+
+                <button type="submit"
+                    class="mt-6 w-full text-white bg-[#4787FA] hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-xl text-base px-5 py-4 text-center transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-md hover:shadow-lg">
+                    Kirim Kode Verifikasi
+                </button>
+            </form>
+        </div>
+        
+        <div class="mt-8 text-center">
+            <p class="text-sm text-gray-600">
+                Sudah memiliki akun? <a href="/login" class="text-[#4787FA] hover:text-blue-700 hover:underline font-medium transition-colors">Masuk disini</a>
+            </p>
+        </div>
     </div>
 </div>
+
+<style>
+@keyframes progressBar {
+    from { width: 100%; }
+    to { width: 0%; }
+}
+.animate-progressBar {
+    animation: progressBar 6s linear forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.fade-in {
+    animation: fadeIn 0.6s ease-out forwards;
+}
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(() => {
+            const flash = document.getElementById('flash-messages');
+            if (flash) {
+                flash.style.opacity = '0';
+                flash.style.transition = 'opacity 0.6s ease';
+                setTimeout(() => flash.remove(), 600);
+            }
+        }, 6000);
+    });
+</script>

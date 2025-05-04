@@ -3,13 +3,7 @@
 <p class="text-2xl md:text-3xl lg:text-4xl font-semibold pt-6 md:py-6">Berdasarkan Popularitas dari Topik <span class="text-[#4787FA]">{{ selected_topic }}</span></p>
 
 <div class="flex justify-between items-center my-4">
-    <button class="text-center text-base md:text-lg text-[#4787FA] border border-[#4787FA] bg-transparent hover:bg-blue-600 hover:text-white focus:ring-2 focus:outline-none focus:ring-blue-300 rounded-2xl px-6 md:px-5 py-2 md:py-2.5 inline-flex items-center gap-2">
-        <span>Rentang Waktu</span>
-        <svg class="w-4 h-4 text-gray-400 transition-transform duration-200"
-            fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-        </svg>
-    </button>
+    {% unicorn "date-range-picker" %}
 
     <div class="relative">
         <div class="flex items-center">
@@ -37,7 +31,7 @@
 
 <div class="grid gap-6
   [&_.bg-color]:bg-white
-    [&_.bg-color-author]:bg-gray-100
+  [&_.bg-color-author]:bg-gray-100
     [&_.paper-title]:text-base lg:[&_.paper-title]:text-[25px]
     [&_.paper-authors]:text-sm md:[&_.paper-authors]:text-base
     [&_.paper-date]:text-sm md:[&_.paper-date]:text-base

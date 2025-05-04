@@ -172,3 +172,30 @@ EMAIL_HOST_USER = 'infotemupaper@gmail.com'  # Replace with your Gmail address
 EMAIL_HOST_PASSWORD = 'eetaaajiecqdtbdp'  # Replace with the 16-character App Password generated
 DEFAULT_FROM_EMAIL = 'infotemupaper@gmail.com'  # Replace with your Gmail address
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+        'file': {
+            'class': 'logging.FileHandler',
+            'filename': 'debug.log',
+            'formatter': 'verbose',
+        },
+    },
+    'loggers': {
+        '': {  # Root logger
+            'handlers': ['console', 'file'],
+            'level': 'INFO',
+        },
+    },
+}
