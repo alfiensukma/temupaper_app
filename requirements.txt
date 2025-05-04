@@ -6,3 +6,5 @@ neo4j
 spacy
 rdflib
 django-unicorn
+django-neomodel
+django-browser-reload
