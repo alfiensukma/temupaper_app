@@ -1,3 +1,5 @@
-<a href="{% url 'topic_result' topic=topic %}" class="px-6 py-4 bg-white rounded-xl shadow-md hover:cursor-pointer">
-    <h2 class="text-normal md:text-2xl lg:text-[25px] font-semibold text-gray-800 hover:text-[#4787FA]">{{ topic }}</h2>
+<a href="{% if topic.id %}{% url 'topic_result' topic.id %}{% else %}#{% endif %}" class="px-6 py-4 bg-white rounded-xl shadow-md hover:cursor-pointer">
+    <h2 class="text-normal md:text-2xl lg:text-[25px] font-semibold text-gray-800 hover:text-[#4787FA]">
+        {{ topic.name|default:"Unnamed Topic" }}
+    </h2>
 </a>
