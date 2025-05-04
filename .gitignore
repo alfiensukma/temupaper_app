@@ -2,6 +2,7 @@
 .env
 venv
 logs/
+ *.log
 *.pyc
 *.pyo
 *.pyd
