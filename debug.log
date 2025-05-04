@@ -45,3 +45,19 @@ INFO 2025-05-03 12:58:16,934 search_views Found 51 papers for query: oBject
 INFO 2025-05-03 13:00:22,027 search_views Found 4 papers for query: oBject
 INFO 2025-05-03 13:03:13,099 search_views Found 4 papers for query: oBject
 INFO 2025-05-03 13:05:19,246 autoreload D:\Data-Kuliah\Semester-6\Assets-TA\temupaper_app\app\context_processors.py changed, reloading.
+INFO 2025-05-04 18:22:12,370 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 19:28:43,336 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 19:30:19,223 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 19:31:36,593 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 19:40:24,978 graph_views Memulai proses import ke Neo4j
+INFO 2025-05-04 19:40:31,569 graph_views Parsing CSO namespaces
+INFO 2025-05-04 19:40:31,748 graph_views Filtered hierarchy: 1042, Topics: 653
+INFO 2025-05-04 19:40:33,529 graph_views Number of CSO topics: 653, Filtered hierarchy: 1042
+INFO 2025-05-04 19:40:33,530 graph_views Hierarki CSO berhasil diimpor ke Neo4j
+INFO 2025-05-04 19:40:33,980 graph_views Data paper dari D:\Data-Kuliah\Semester-6\Assets-TA\temupaper_app\app\data-csv\papers-dummy.csv berhasil diimpor
+INFO 2025-05-04 19:45:38,522 graph_views Relasi paper-topic berhasil diimpor
+INFO 2025-05-04 19:45:38,800 graph_views Author dan relasi berhasil diimpor
+INFO 2025-05-04 19:45:38,962 graph_views Data jurnal dari D:\Data-Kuliah\Semester-6\Assets-TA\temupaper_app\app\data-csv\papers-dummy.csv berhasil diimpor
+INFO 2025-05-04 19:45:39,116 graph_views Data field of study dari D:\Data-Kuliah\Semester-6\Assets-TA\temupaper_app\app\data-csv\papers-dummy.csv berhasil diimpor
+INFO 2025-05-04 19:45:39,259 graph_views Data publication types dari D:\Data-Kuliah\Semester-6\Assets-TA\temupaper_app\app\data-csv\papers-dummy.csv berhasil diimpor
+INFO 2025-05-04 19:45:39,673 graph_views Validasi knowledge graph selesai
