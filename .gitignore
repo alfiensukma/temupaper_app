@@ -7,3 +7,4 @@ logs/
 *.pyo
 *.pyd
 __pycache__/
+debug.log
