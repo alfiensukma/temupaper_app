@@ -394,3 +394,541 @@ INFO 2025-05-03 19:55:44,542 detail_views Created new read relationship
 INFO 2025-05-03 19:58:36,200 detail_views Recording paper read - User ID: 052374a0423c49888c32ac4a58a3d820, Paper ID: 490a0302116255f75d62a590177a87e301538402, Access Method: semantic
 INFO 2025-05-03 19:58:38,249 detail_views Created new read relationship
 INFO 2025-05-05 12:09:37,837 autoreload Watching for file changes with StatReloader
+WARNING 2025-05-05 12:10:30,523 log Not Found: /favicon.ico
+INFO 2025-05-05 12:11:31,576 search_views Found 332 papers for query: design pattern
+INFO 2025-05-05 12:13:24,724 search_views Found 332 papers for query: design pattern
+WARNING 2025-05-05 12:13:24,805 unicorn_template_response The HTML in 'date-range-picker' appears to be missing a closing tag. That can potentially cause errors in Unicorn.
+WARNING 2025-05-05 12:13:24,807 unicorn_template_response The 'date-range-picker' component appears to have multiple root elements.
+INFO 2025-05-05 12:16:27,921 search_views Found 332 papers for query: design pattern
+WARNING 2025-05-05 12:16:28,009 unicorn_template_response The HTML in 'date-range-picker' appears to be missing a closing tag. That can potentially cause errors in Unicorn.
+WARNING 2025-05-05 12:16:28,012 unicorn_template_response The 'date-range-picker' component appears to have multiple root elements.
+INFO 2025-05-05 12:16:36,225 search_views Found 332 papers for query: design pattern
+WARNING 2025-05-05 12:16:36,244 unicorn_template_response The HTML in 'date-range-picker' appears to be missing a closing tag. That can potentially cause errors in Unicorn.
+WARNING 2025-05-05 12:16:36,248 unicorn_template_response The 'date-range-picker' component appears to have multiple root elements.
+INFO 2025-05-05 12:17:14,485 search_views Found 332 papers for query: design pattern
+WARNING 2025-05-05 12:17:14,564 unicorn_template_response The HTML in 'date-range-picker' appears to be missing a closing tag. That can potentially cause errors in Unicorn.
+WARNING 2025-05-05 12:17:14,564 unicorn_template_response The 'date-range-picker' component appears to have multiple root elements.
+INFO 2025-05-05 12:18:45,965 search_views Found 332 papers for query: design pattern
+WARNING 2025-05-05 12:18:46,034 unicorn_template_response The HTML in 'date-range-picker' appears to be missing a closing tag. That can potentially cause errors in Unicorn.
+WARNING 2025-05-05 12:18:46,037 unicorn_template_response The 'date-range-picker' component appears to have multiple root elements.
+INFO 2025-05-05 12:20:09,193 search_views Found 332 papers for query: design pattern
+WARNING 2025-05-05 12:20:09,275 unicorn_template_response The HTML in 'date-range-picker' appears to be missing a closing tag. That can potentially cause errors in Unicorn.
+WARNING 2025-05-05 12:20:09,280 unicorn_template_response The 'date-range-picker' component appears to have multiple root elements.
+INFO 2025-05-05 12:21:37,568 search_views Found 332 papers for query: design pattern
+WARNING 2025-05-05 12:21:37,651 unicorn_template_response The HTML in 'date-range-picker' appears to be missing a closing tag. That can potentially cause errors in Unicorn.
+WARNING 2025-05-05 12:21:37,657 unicorn_template_response The 'date-range-picker' component appears to have multiple root elements.
+INFO 2025-05-05 12:21:45,702 search_views Found 332 papers for query: design pattern
+WARNING 2025-05-05 12:21:45,731 unicorn_template_response The HTML in 'date-range-picker' appears to be missing a closing tag. That can potentially cause errors in Unicorn.
+WARNING 2025-05-05 12:21:45,734 unicorn_template_response The 'date-range-picker' component appears to have multiple root elements.
+INFO 2025-05-05 12:21:55,846 search_views Found 332 papers for query: design pattern
+WARNING 2025-05-05 12:21:55,866 unicorn_template_response The HTML in 'date-range-picker' appears to be missing a closing tag. That can potentially cause errors in Unicorn.
+WARNING 2025-05-05 12:21:55,868 unicorn_template_response The 'date-range-picker' component appears to have multiple root elements.
+INFO 2025-05-05 12:22:21,848 search_views Found 332 papers for query: design pattern
+WARNING 2025-05-05 12:22:21,876 unicorn_template_response The HTML in 'date-range-picker' appears to be missing a closing tag. That can potentially cause errors in Unicorn.
+WARNING 2025-05-05 12:22:21,876 unicorn_template_response The 'date-range-picker' component appears to have multiple root elements.
+INFO 2025-05-05 12:22:40,604 search_views Found 332 papers for query: design pattern
+WARNING 2025-05-05 12:22:40,682 unicorn_template_response The HTML in 'date-range-picker' appears to be missing a closing tag. That can potentially cause errors in Unicorn.
+WARNING 2025-05-05 12:22:40,683 unicorn_template_response The 'date-range-picker' component appears to have multiple root elements.
+WARNING 2025-05-05 12:28:31,657 unicorn_template_response The HTML in 'date-range-picker' appears to be missing a closing tag. That can potentially cause errors in Unicorn.
+WARNING 2025-05-05 12:28:31,660 unicorn_template_response The 'date-range-picker' component appears to have multiple root elements.
+WARNING 2025-05-05 12:29:34,605 unicorn_template_response The HTML in 'date-range-picker' appears to be missing a closing tag. That can potentially cause errors in Unicorn.
+WARNING 2025-05-05 12:29:34,610 unicorn_template_response The 'date-range-picker' component appears to have multiple root elements.
+WARNING 2025-05-05 12:30:00,060 unicorn_template_response The HTML in 'date-range-picker' appears to be missing a closing tag. That can potentially cause errors in Unicorn.
+WARNING 2025-05-05 12:30:00,065 unicorn_template_response The 'date-range-picker' component appears to have multiple root elements.
+WARNING 2025-05-05 12:30:20,124 unicorn_template_response The HTML in 'date-range-picker' appears to be missing a closing tag. That can potentially cause errors in Unicorn.
+WARNING 2025-05-05 12:30:20,132 unicorn_template_response The 'date-range-picker' component appears to have multiple root elements.
+INFO 2025-05-05 13:33:41,138 _client HTTP Request: GET https://api.semanticscholar.org/graph/v1/paper/search?query=data+mining&year=2020-&fieldsOfStudy=Computer+Science&fields=paperId%2CcorpusId%2CexternalIds%2Cauthors%2Ctitle%2Cyear%2Cabstract%2Curl%2CpublicationDate%2CfieldsOfStudy%2Cs2FieldsOfStudy%2Cvenue%2CpublicationVenue%2CcitationCount%2CinfluentialCitationCount%2CpublicationTypes%2Cjournal%2CcitationStyles%2Cembedding%2Creferences%2CreferenceCount&offset=0&limit=100 "HTTP/1.1 504 Gateway Timeout"
+ERROR 2025-05-05 13:33:41,140 log Internal Server Error: /api/fetch-papers/
+INFO 2025-05-05 13:33:58,570 _client HTTP Request: GET https://api.semanticscholar.org/graph/v1/paper/search?query=data+mining&year=2020-&fieldsOfStudy=Computer+Science&fields=paperId%2CcorpusId%2CexternalIds%2Cauthors%2Ctitle%2Cyear%2Cabstract%2Curl%2CpublicationDate%2CfieldsOfStudy%2Cs2FieldsOfStudy%2Cvenue%2CpublicationVenue%2CcitationCount%2CinfluentialCitationCount%2CpublicationTypes%2Cjournal%2CcitationStyles%2Cembedding%2Creferences%2CreferenceCount&offset=0&limit=100 "HTTP/1.1 200 OK"
+INFO 2025-05-05 13:34:09,372 _client HTTP Request: GET https://api.semanticscholar.org/graph/v1/paper/search?query=data+mining&year=2020-&fieldsOfStudy=Computer+Science&fields=paperId%2CcorpusId%2CexternalIds%2Cauthors%2Ctitle%2Cyear%2Cabstract%2Curl%2CpublicationDate%2CfieldsOfStudy%2Cs2FieldsOfStudy%2Cvenue%2CpublicationVenue%2CcitationCount%2CinfluentialCitationCount%2CpublicationTypes%2Cjournal%2CcitationStyles%2Cembedding%2Creferences%2CreferenceCount&offset=100&limit=100 "HTTP/1.1 429 "
+INFO 2025-05-05 13:34:51,483 _client HTTP Request: GET https://api.semanticscholar.org/graph/v1/paper/search?query=data+mining&year=2020-&fieldsOfStudy=Computer+Science&fields=paperId%2CcorpusId%2CexternalIds%2Cauthors%2Ctitle%2Cyear%2Cabstract%2Curl%2CpublicationDate%2CfieldsOfStudy%2Cs2FieldsOfStudy%2Cvenue%2CpublicationVenue%2CcitationCount%2CinfluentialCitationCount%2CpublicationTypes%2Cjournal%2CcitationStyles%2Cembedding%2Creferences%2CreferenceCount&offset=100&limit=100 "HTTP/1.1 200 OK"
+INFO 2025-05-05 13:35:11,467 _client HTTP Request: GET https://api.semanticscholar.org/graph/v1/paper/search?query=data+mining&year=2020-&fieldsOfStudy=Computer+Science&fields=paperId%2CcorpusId%2CexternalIds%2Cauthors%2Ctitle%2Cyear%2Cabstract%2Curl%2CpublicationDate%2CfieldsOfStudy%2Cs2FieldsOfStudy%2Cvenue%2CpublicationVenue%2CcitationCount%2CinfluentialCitationCount%2CpublicationTypes%2Cjournal%2CcitationStyles%2Cembedding%2Creferences%2CreferenceCount&offset=200&limit=100 "HTTP/1.1 200 OK"
+INFO 2025-05-05 13:35:30,473 _client HTTP Request: GET https://api.semanticscholar.org/graph/v1/paper/search?query=data+mining&year=2020-&fieldsOfStudy=Computer+Science&fields=paperId%2CcorpusId%2CexternalIds%2Cauthors%2Ctitle%2Cyear%2Cabstract%2Curl%2CpublicationDate%2CfieldsOfStudy%2Cs2FieldsOfStudy%2Cvenue%2CpublicationVenue%2CcitationCount%2CinfluentialCitationCount%2CpublicationTypes%2Cjournal%2CcitationStyles%2Cembedding%2Creferences%2CreferenceCount&offset=300&limit=100 "HTTP/1.1 429 "
+INFO 2025-05-05 13:36:01,616 _client HTTP Request: GET https://api.semanticscholar.org/graph/v1/paper/search?query=data+mining&year=2020-&fieldsOfStudy=Computer+Science&fields=paperId%2CcorpusId%2CexternalIds%2Cauthors%2Ctitle%2Cyear%2Cabstract%2Curl%2CpublicationDate%2CfieldsOfStudy%2Cs2FieldsOfStudy%2Cvenue%2CpublicationVenue%2CcitationCount%2CinfluentialCitationCount%2CpublicationTypes%2Cjournal%2CcitationStyles%2Cembedding%2Creferences%2CreferenceCount&offset=300&limit=100 "HTTP/1.1 429 "
+INFO 2025-05-05 13:36:32,684 _client HTTP Request: GET https://api.semanticscholar.org/graph/v1/paper/search?query=data+mining&year=2020-&fieldsOfStudy=Computer+Science&fields=paperId%2CcorpusId%2CexternalIds%2Cauthors%2Ctitle%2Cyear%2Cabstract%2Curl%2CpublicationDate%2CfieldsOfStudy%2Cs2FieldsOfStudy%2Cvenue%2CpublicationVenue%2CcitationCount%2CinfluentialCitationCount%2CpublicationTypes%2Cjournal%2CcitationStyles%2Cembedding%2Creferences%2CreferenceCount&offset=300&limit=100 "HTTP/1.1 429 "
+INFO 2025-05-05 13:37:04,200 _client HTTP Request: GET https://api.semanticscholar.org/graph/v1/paper/search?query=data+mining&year=2020-&fieldsOfStudy=Computer+Science&fields=paperId%2CcorpusId%2CexternalIds%2Cauthors%2Ctitle%2Cyear%2Cabstract%2Curl%2CpublicationDate%2CfieldsOfStudy%2Cs2FieldsOfStudy%2Cvenue%2CpublicationVenue%2CcitationCount%2CinfluentialCitationCount%2CpublicationTypes%2Cjournal%2CcitationStyles%2Cembedding%2Creferences%2CreferenceCount&offset=300&limit=100 "HTTP/1.1 429 "
+INFO 2025-05-05 13:37:44,759 _client HTTP Request: GET https://api.semanticscholar.org/graph/v1/paper/search?query=data+mining&year=2020-&fieldsOfStudy=Computer+Science&fields=paperId%2CcorpusId%2CexternalIds%2Cauthors%2Ctitle%2Cyear%2Cabstract%2Curl%2CpublicationDate%2CfieldsOfStudy%2Cs2FieldsOfStudy%2Cvenue%2CpublicationVenue%2CcitationCount%2CinfluentialCitationCount%2CpublicationTypes%2Cjournal%2CcitationStyles%2Cembedding%2Creferences%2CreferenceCount&offset=300&limit=100 "HTTP/1.1 200 OK"
+INFO 2025-05-05 13:37:56,224 _client HTTP Request: GET https://api.semanticscholar.org/graph/v1/paper/search?query=data+mining&year=2020-&fieldsOfStudy=Computer+Science&fields=paperId%2CcorpusId%2CexternalIds%2Cauthors%2Ctitle%2Cyear%2Cabstract%2Curl%2CpublicationDate%2CfieldsOfStudy%2Cs2FieldsOfStudy%2Cvenue%2CpublicationVenue%2CcitationCount%2CinfluentialCitationCount%2CpublicationTypes%2Cjournal%2CcitationStyles%2Cembedding%2Creferences%2CreferenceCount&offset=400&limit=100 "HTTP/1.1 200 OK"
+INFO 2025-05-05 13:38:04,487 _client HTTP Request: GET https://api.semanticscholar.org/graph/v1/paper/search?query=data+mining&year=2020-&fieldsOfStudy=Computer+Science&fields=paperId%2CcorpusId%2CexternalIds%2Cauthors%2Ctitle%2Cyear%2Cabstract%2Curl%2CpublicationDate%2CfieldsOfStudy%2Cs2FieldsOfStudy%2Cvenue%2CpublicationVenue%2CcitationCount%2CinfluentialCitationCount%2CpublicationTypes%2Cjournal%2CcitationStyles%2Cembedding%2Creferences%2CreferenceCount&offset=500&limit=100 "HTTP/1.1 429 "
+INFO 2025-05-05 13:38:35,638 _client HTTP Request: GET https://api.semanticscholar.org/graph/v1/paper/search?query=data+mining&year=2020-&fieldsOfStudy=Computer+Science&fields=paperId%2CcorpusId%2CexternalIds%2Cauthors%2Ctitle%2Cyear%2Cabstract%2Curl%2CpublicationDate%2CfieldsOfStudy%2Cs2FieldsOfStudy%2Cvenue%2CpublicationVenue%2CcitationCount%2CinfluentialCitationCount%2CpublicationTypes%2Cjournal%2CcitationStyles%2Cembedding%2Creferences%2CreferenceCount&offset=500&limit=100 "HTTP/1.1 429 "
+INFO 2025-05-05 13:39:09,240 _client HTTP Request: GET https://api.semanticscholar.org/graph/v1/paper/search?query=data+mining&year=2020-&fieldsOfStudy=Computer+Science&fields=paperId%2CcorpusId%2CexternalIds%2Cauthors%2Ctitle%2Cyear%2Cabstract%2Curl%2CpublicationDate%2CfieldsOfStudy%2Cs2FieldsOfStudy%2Cvenue%2CpublicationVenue%2CcitationCount%2CinfluentialCitationCount%2CpublicationTypes%2Cjournal%2CcitationStyles%2Cembedding%2Creferences%2CreferenceCount&offset=500&limit=100 "HTTP/1.1 429 "
+INFO 2025-05-05 13:39:40,062 _client HTTP Request: GET https://api.semanticscholar.org/graph/v1/paper/search?query=data+mining&year=2020-&fieldsOfStudy=Computer+Science&fields=paperId%2CcorpusId%2CexternalIds%2Cauthors%2Ctitle%2Cyear%2Cabstract%2Curl%2CpublicationDate%2CfieldsOfStudy%2Cs2FieldsOfStudy%2Cvenue%2CpublicationVenue%2CcitationCount%2CinfluentialCitationCount%2CpublicationTypes%2Cjournal%2CcitationStyles%2Cembedding%2Creferences%2CreferenceCount&offset=500&limit=100 "HTTP/1.1 429 "
+INFO 2025-05-05 13:40:39,858 _client HTTP Request: GET https://api.semanticscholar.org/graph/v1/paper/search?query=data+mining&year=2020-&fieldsOfStudy=Computer+Science&fields=paperId%2CcorpusId%2CexternalIds%2Cauthors%2Ctitle%2Cyear%2Cabstract%2Curl%2CpublicationDate%2CfieldsOfStudy%2Cs2FieldsOfStudy%2Cvenue%2CpublicationVenue%2CcitationCount%2CinfluentialCitationCount%2CpublicationTypes%2Cjournal%2CcitationStyles%2Cembedding%2Creferences%2CreferenceCount&offset=500&limit=100 "HTTP/1.1 504 Gateway Timeout"
+ERROR 2025-05-05 13:40:39,899 log Internal Server Error: /api/fetch-papers/
+WARNING 2025-05-05 14:49:54,583 unicorn_template_response The 'result-confirmation' component appears to have multiple root elements.
+ERROR 2025-05-05 14:52:36,653 log Internal Server Error: /unicorn/message/recommendation-modifier-modal
+Traceback (most recent call last):
+  File "D:\Kuliah\TA FIX\temupaper_app\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kuliah\TA FIX\temupaper_app\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kuliah\TA FIX\temupaper_app\venv\Lib\site-packages\decorator.py", line 235, in fun
+    return caller(func, *(extras + args), **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kuliah\TA FIX\temupaper_app\venv\Lib\site-packages\django_unicorn\decorators.py", line 20, in timed
+    result = func(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kuliah\TA FIX\temupaper_app\venv\Lib\site-packages\django_unicorn\views\__init__.py", line 49, in wrapped_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kuliah\TA FIX\temupaper_app\venv\Lib\site-packages\django\utils\decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kuliah\TA FIX\temupaper_app\venv\Lib\site-packages\django\utils\decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kuliah\TA FIX\temupaper_app\venv\Lib\site-packages\django\utils\decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kuliah\TA FIX\temupaper_app\venv\Lib\site-packages\django\utils\decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kuliah\TA FIX\temupaper_app\venv\Lib\site-packages\django\views\decorators\http.py", line 64, in inner
+    return func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kuliah\TA FIX\temupaper_app\venv\Lib\site-packages\django_unicorn\views\__init__.py", line 556, in message
+    json_result = _handle_component_request(request, component_request)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kuliah\TA FIX\temupaper_app\venv\Lib\site-packages\django_unicorn\views\__init__.py", line 409, in _handle_component_request
+    return _process_component_request(request, component_request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kuliah\TA FIX\temupaper_app\venv\Lib\site-packages\django_unicorn\views\__init__.py", line 130, in _process_component_request
+    ) = call_method.handle(component_request, component, action.payload)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kuliah\TA FIX\temupaper_app\venv\Lib\site-packages\django_unicorn\views\action_parsers\call_method.py", line 109, in handle
+    return_data.value = _call_method_name(component_with_method, method_name, args, kwargs)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kuliah\TA FIX\temupaper_app\venv\Lib\site-packages\decorator.py", line 235, in fun
+    return caller(func, *(extras + args), **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kuliah\TA FIX\temupaper_app\venv\Lib\site-packages\django_unicorn\decorators.py", line 20, in timed
+    result = func(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kuliah\TA FIX\temupaper_app\venv\Lib\site-packages\django_unicorn\views\action_parsers\call_method.py", line 138, in _call_method_name
+    arguments = get_method_arguments(func)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kuliah\TA FIX\temupaper_app\venv\Lib\site-packages\django_unicorn\utils.py", line 87, in get_method_arguments
+    function_signature = signature(func)
+                         ^^^^^^^^^^^^^^^
+  File "C:\Users\mahes\AppData\Local\Programs\Python\Python311\Lib\inspect.py", line 3280, in signature
+    return Signature.from_callable(obj, follow_wrapped=follow_wrapped,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mahes\AppData\Local\Programs\Python\Python311\Lib\inspect.py", line 3028, in from_callable
+    return _signature_from_callable(obj, sigcls=cls,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mahes\AppData\Local\Programs\Python\Python311\Lib\inspect.py", line 2449, in _signature_from_callable
+    raise TypeError('{!r} is not a callable object'.format(obj))
+TypeError: False is not a callable object
+ERROR 2025-05-05 14:54:02,077 log Internal Server Error: /unicorn/message/recommendation-modifier-modal
+Traceback (most recent call last):
+  File "D:\Kuliah\TA FIX\temupaper_app\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kuliah\TA FIX\temupaper_app\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kuliah\TA FIX\temupaper_app\venv\Lib\site-packages\decorator.py", line 235, in fun
+    return caller(func, *(extras + args), **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kuliah\TA FIX\temupaper_app\venv\Lib\site-packages\django_unicorn\decorators.py", line 20, in timed
+    result = func(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kuliah\TA FIX\temupaper_app\venv\Lib\site-packages\django_unicorn\views\__init__.py", line 49, in wrapped_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kuliah\TA FIX\temupaper_app\venv\Lib\site-packages\django\utils\decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kuliah\TA FIX\temupaper_app\venv\Lib\site-packages\django\utils\decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kuliah\TA FIX\temupaper_app\venv\Lib\site-packages\django\utils\decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kuliah\TA FIX\temupaper_app\venv\Lib\site-packages\django\utils\decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kuliah\TA FIX\temupaper_app\venv\Lib\site-packages\django\views\decorators\http.py", line 64, in inner
+    return func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kuliah\TA FIX\temupaper_app\venv\Lib\site-packages\django_unicorn\views\__init__.py", line 556, in message
+    json_result = _handle_component_request(request, component_request)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kuliah\TA FIX\temupaper_app\venv\Lib\site-packages\django_unicorn\views\__init__.py", line 409, in _handle_component_request
+    return _process_component_request(request, component_request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kuliah\TA FIX\temupaper_app\venv\Lib\site-packages\django_unicorn\views\__init__.py", line 130, in _process_component_request
+    ) = call_method.handle(component_request, component, action.payload)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kuliah\TA FIX\temupaper_app\venv\Lib\site-packages\django_unicorn\views\action_parsers\call_method.py", line 109, in handle
+    return_data.value = _call_method_name(component_with_method, method_name, args, kwargs)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kuliah\TA FIX\temupaper_app\venv\Lib\site-packages\decorator.py", line 235, in fun
+    return caller(func, *(extras + args), **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kuliah\TA FIX\temupaper_app\venv\Lib\site-packages\django_unicorn\decorators.py", line 20, in timed
+    result = func(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kuliah\TA FIX\temupaper_app\venv\Lib\site-packages\django_unicorn\views\action_parsers\call_method.py", line 180, in _call_method_name
+    return func(*parsed_args, **parsed_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kuliah\TA FIX\temupaper_app\app\components\recommendation_modifier_modal.py", line 17, in handle_paper_selection
+    if paper_id in self.selected_papers:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: argument of type 'bool' is not iterable
+ERROR 2025-05-05 14:54:02,708 log Internal Server Error: /unicorn/message/recommendation-modifier-modal
+Traceback (most recent call last):
+  File "D:\Kuliah\TA FIX\temupaper_app\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kuliah\TA FIX\temupaper_app\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kuliah\TA FIX\temupaper_app\venv\Lib\site-packages\decorator.py", line 235, in fun
+    return caller(func, *(extras + args), **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kuliah\TA FIX\temupaper_app\venv\Lib\site-packages\django_unicorn\decorators.py", line 20, in timed
+    result = func(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kuliah\TA FIX\temupaper_app\venv\Lib\site-packages\django_unicorn\views\__init__.py", line 49, in wrapped_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kuliah\TA FIX\temupaper_app\venv\Lib\site-packages\django\utils\decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kuliah\TA FIX\temupaper_app\venv\Lib\site-packages\django\utils\decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kuliah\TA FIX\temupaper_app\venv\Lib\site-packages\django\utils\decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kuliah\TA FIX\temupaper_app\venv\Lib\site-packages\django\utils\decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kuliah\TA FIX\temupaper_app\venv\Lib\site-packages\django\views\decorators\http.py", line 64, in inner
+    return func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kuliah\TA FIX\temupaper_app\venv\Lib\site-packages\django_unicorn\views\__init__.py", line 556, in message
+    json_result = _handle_component_request(request, component_request)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kuliah\TA FIX\temupaper_app\venv\Lib\site-packages\django_unicorn\views\__init__.py", line 409, in _handle_component_request
+    return _process_component_request(request, component_request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kuliah\TA FIX\temupaper_app\venv\Lib\site-packages\django_unicorn\views\__init__.py", line 130, in _process_component_request
+    ) = call_method.handle(component_request, component, action.payload)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kuliah\TA FIX\temupaper_app\venv\Lib\site-packages\django_unicorn\views\action_parsers\call_method.py", line 109, in handle
+    return_data.value = _call_method_name(component_with_method, method_name, args, kwargs)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kuliah\TA FIX\temupaper_app\venv\Lib\site-packages\decorator.py", line 235, in fun
+    return caller(func, *(extras + args), **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kuliah\TA FIX\temupaper_app\venv\Lib\site-packages\django_unicorn\decorators.py", line 20, in timed
+    result = func(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kuliah\TA FIX\temupaper_app\venv\Lib\site-packages\django_unicorn\views\action_parsers\call_method.py", line 180, in _call_method_name
+    return func(*parsed_args, **parsed_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kuliah\TA FIX\temupaper_app\app\components\recommendation_modifier_modal.py", line 17, in handle_paper_selection
+    if paper_id in self.selected_papers:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: argument of type 'bool' is not iterable
+INFO 2025-05-05 18:47:34,320 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-05 18:47:37,326 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 18:47:48,302 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-05 18:47:49,861 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 18:49:00,089 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-05 18:49:02,944 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 18:49:13,479 autoreload D:\Kuliah\TA FIX\temupaper_app\app\urls.py changed, reloading.
+INFO 2025-05-05 18:49:15,637 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 18:49:27,858 autoreload D:\Kuliah\TA FIX\temupaper_app\app\urls.py changed, reloading.
+INFO 2025-05-05 18:49:30,494 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 18:49:45,892 autoreload D:\Kuliah\TA FIX\temupaper_app\app\urls.py changed, reloading.
+INFO 2025-05-05 18:49:48,438 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 18:50:19,492 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-05 18:50:22,094 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 18:51:41,798 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-05 18:51:44,411 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 18:51:53,254 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-05 18:51:55,608 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 18:53:44,771 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-05 18:53:46,998 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 18:54:05,942 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-05 18:54:08,369 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 18:54:25,015 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-05 18:54:27,631 autoreload Watching for file changes with StatReloader
+WARNING 2025-05-05 18:55:08,063 log Not Found: /api/fetch-papers-semantic/
+WARNING 2025-05-05 18:55:15,375 log Not Found: /api/fetch-papers-semantic
+WARNING 2025-05-05 18:55:17,083 log Not Found: /api/fetch-papers-semantic
+INFO 2025-05-05 18:55:18,797 autoreload D:\Kuliah\TA FIX\temupaper_app\app\urls.py changed, reloading.
+INFO 2025-05-05 18:55:20,969 autoreload Watching for file changes with StatReloader
+ERROR 2025-05-05 18:55:27,392 log Internal Server Error: /api/fetch-papers-semantic/
+ERROR 2025-05-05 18:55:30,145 log Internal Server Error: /api/fetch-papers-semantic/
+INFO 2025-05-05 19:10:33,160 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-05 19:10:35,688 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 19:11:03,874 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-05 19:11:06,126 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 19:11:31,179 autoreload D:\Kuliah\TA FIX\temupaper_app\app\urls.py changed, reloading.
+INFO 2025-05-05 19:11:33,459 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 19:14:52,026 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-05 19:14:54,212 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 19:15:00,768 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-05 19:15:02,906 autoreload Watching for file changes with StatReloader
+WARNING 2025-05-05 19:16:10,274 log Bad Request: /api/fetch-references/
+INFO 2025-05-05 19:17:18,507 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-05 19:17:21,090 autoreload Watching for file changes with StatReloader
+WARNING 2025-05-05 19:17:42,031 log Bad Request: /api/fetch-references/
+WARNING 2025-05-05 19:17:58,480 log Bad Request: /api/fetch-references/
+INFO 2025-05-05 19:20:30,749 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-05 19:20:33,394 autoreload Watching for file changes with StatReloader
+WARNING 2025-05-05 19:20:43,647 log Bad Request: /api/fetch-references/
+WARNING 2025-05-05 19:21:24,513 log Bad Request: /api/fetch-references/
+WARNING 2025-05-05 19:21:26,987 log Bad Request: /api/fetch-references/
+INFO 2025-05-05 19:23:25,893 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-05 19:23:28,428 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 19:23:36,023 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-05 19:23:38,227 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 19:24:21,334 autoreload D:\Kuliah\TA FIX\temupaper_app\app\urls.py changed, reloading.
+INFO 2025-05-05 19:24:23,600 autoreload Watching for file changes with StatReloader
+WARNING 2025-05-05 19:24:30,083 log Bad Request: /api/fetch-references/
+INFO 2025-05-05 19:24:39,377 autoreload D:\Kuliah\TA FIX\temupaper_app\app\urls.py changed, reloading.
+INFO 2025-05-05 19:24:41,904 autoreload Watching for file changes with StatReloader
+WARNING 2025-05-05 19:24:47,364 log Bad Request: /api/fetch-references/
+INFO 2025-05-05 19:25:10,639 autoreload D:\Kuliah\TA FIX\temupaper_app\app\urls.py changed, reloading.
+INFO 2025-05-05 19:25:13,115 autoreload Watching for file changes with StatReloader
+ERROR 2025-05-05 19:28:06,927 log Internal Server Error: /api/fetch-papers-semantic/
+ERROR 2025-05-05 19:28:20,957 log Internal Server Error: /api/fetch-papers-semantic/
+WARNING 2025-05-05 19:29:41,167 log Not Found: /http://fetch-papers-semantic/
+ERROR 2025-05-05 19:29:49,095 log Internal Server Error: /fetch-papers-semantic/
+ERROR 2025-05-05 19:29:52,097 log Internal Server Error: /fetch-papers-semantic/
+INFO 2025-05-05 19:30:13,889 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-05 19:30:16,688 autoreload Watching for file changes with StatReloader
+ERROR 2025-05-05 19:30:42,456 log Internal Server Error: /fetch-papers-semantic/
+INFO 2025-05-05 19:37:24,355 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-05 19:37:26,444 autoreload Watching for file changes with StatReloader
+WARNING 2025-05-05 19:38:00,349 log Bad Request: /api/fetch-references/
+WARNING 2025-05-05 19:38:09,988 log Bad Request: /api/fetch-references/
+INFO 2025-05-05 19:40:21,641 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-05 19:40:24,029 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 19:40:34,592 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-05 19:40:36,942 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 19:41:36,337 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-05 19:41:38,715 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 19:42:48,133 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-05 19:42:50,458 autoreload Watching for file changes with StatReloader
+ERROR 2025-05-05 19:42:59,090 log Internal Server Error: /fetch-papers-semantic/
+ERROR 2025-05-05 19:43:02,880 log Internal Server Error: /fetch-papers-semantic/
+INFO 2025-05-05 19:43:50,620 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-05 19:43:53,000 autoreload Watching for file changes with StatReloader
+ERROR 2025-05-05 19:44:02,588 log Internal Server Error: /fetch-papers-semantic/
+INFO 2025-05-05 19:44:18,460 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-05 19:44:20,680 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 19:44:49,662 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-05 19:44:52,221 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 19:44:58,499 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-05 19:45:00,593 autoreload Watching for file changes with StatReloader
+ERROR 2025-05-05 19:45:19,835 log Internal Server Error: /fetch-papers-semantic/
+ERROR 2025-05-05 19:45:22,790 log Internal Server Error: /fetch-papers-semantic/
+INFO 2025-05-05 19:45:35,260 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-05 19:45:37,863 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 19:45:46,396 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-05 19:45:48,659 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 19:46:35,340 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-05 19:46:37,807 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 19:46:45,407 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-05 19:46:47,602 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 19:46:54,055 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-05 19:46:56,264 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 19:47:02,408 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-05 19:47:04,612 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:03:52,370 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-05 20:03:55,071 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:04:10,182 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-05 20:04:12,940 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:09:20,961 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-05 20:09:23,286 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:09:52,007 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-05 20:09:54,626 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:10:26,648 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-05 20:10:29,113 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:10:42,063 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-05 20:10:44,718 autoreload Watching for file changes with StatReloader
+ERROR 2025-05-05 20:10:57,122 log Internal Server Error: /fetch-papers-semantic/
+INFO 2025-05-05 20:15:27,327 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-05 20:15:29,530 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:15:56,906 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-05 20:15:59,202 autoreload Watching for file changes with StatReloader
+WARNING 2025-05-05 20:23:03,067 log Bad Request: /api/fetch-references/
+ERROR 2025-05-05 20:23:16,221 log Internal Server Error: /fetch-papers-semantic/
+ERROR 2025-05-05 20:23:26,813 log Internal Server Error: /fetch-papers-semantic/
+ERROR 2025-05-05 20:24:42,902 log Internal Server Error: /fetch-papers-semantic/
+WARNING 2025-05-05 20:25:54,223 log Too Many Requests: /fetch-papers-semantic/
+INFO 2025-05-05 20:51:08,876 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-05 20:51:12,508 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:51:22,352 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-05 20:51:23,762 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:51:28,039 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-05 20:51:29,379 autoreload Watching for file changes with StatReloader
+WARNING 2025-05-05 20:52:45,654 log Bad Request: /api/fetch-references/
+ERROR 2025-05-05 20:58:28,170 log Internal Server Error: /fetch-papers-semantic/
+Traceback (most recent call last):
+  File "D:\Kuliah\TA FIX\temupaper_app\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kuliah\TA FIX\temupaper_app\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kuliah\TA FIX\temupaper_app\venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py", line 326, in fetch_semantic_scholar_papers
+    json.dumps(p.get('embedding', {}).get('vector', [])),
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'get'
+WARNING 2025-05-05 21:10:34,089 log Not Found: /api/fetch-semantic-scholar
+WARNING 2025-05-05 21:10:41,560 log Not Found: /api/fetch-semantic-scholar/
+WARNING 2025-05-05 21:11:36,390 log Not Found: /fetch-semantic-scholar/
+INFO 2025-05-05 21:11:46,301 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-05 21:11:47,818 autoreload Watching for file changes with StatReloader
+WARNING 2025-05-05 21:11:50,565 log Not Found: /fetch-semantic-scholar/
+WARNING 2025-05-05 21:11:51,237 log Not Found: /fetch-semantic-scholar/
+INFO 2025-05-05 21:12:05,937 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-05 21:12:07,335 autoreload Watching for file changes with StatReloader
+WARNING 2025-05-05 21:12:09,847 log Not Found: /fetch-semantic-scholar/
+WARNING 2025-05-05 21:12:13,217 log Not Found: /fetch-semantic-scholar/
+WARNING 2025-05-05 21:12:14,860 log Not Found: /fetch-semantic-scholar/
+WARNING 2025-05-05 21:12:16,533 log Not Found: /fetch-semantic-scholar/
+INFO 2025-05-05 21:12:32,990 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-05 21:12:34,388 autoreload Watching for file changes with StatReloader
+WARNING 2025-05-05 21:12:36,916 log Not Found: /fetch-semantic-scholar/
+WARNING 2025-05-05 21:12:39,146 log Not Found: /fetch-semantic-scholar/
+WARNING 2025-05-05 21:12:47,992 log Not Found: /fetch-semantic-scholar/
+INFO 2025-05-05 21:13:09,274 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-05 21:13:10,654 autoreload Watching for file changes with StatReloader
+WARNING 2025-05-05 21:13:13,206 log Not Found: /fetch-semantic-scholar/
+ERROR 2025-05-05 21:14:28,247 log Internal Server Error: /fetch-papers-semantic/
+ERROR 2025-05-05 21:14:43,493 log Internal Server Error: /fetch-papers-semantic/
+INFO 2025-05-05 21:14:48,830 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-05 21:14:50,084 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 21:14:54,019 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-05 21:14:55,261 autoreload Watching for file changes with StatReloader
+ERROR 2025-05-05 21:15:04,975 log Internal Server Error: /fetch-papers-semantic/
+WARNING 2025-05-05 21:15:22,579 log Too Many Requests: /fetch-papers-semantic/
+ERROR 2025-05-05 21:16:00,155 log Internal Server Error: /fetch-papers-semantic/
+Traceback (most recent call last):
+  File "D:\Kuliah\TA FIX\temupaper_app\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kuliah\TA FIX\temupaper_app\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kuliah\TA FIX\temupaper_app\venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py", line 214, in fetch_semantic_scholar_papers
+    limit = int(request.GET.get('limit', 10))
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: invalid literal for int() with base 10: '1-'
+ERROR 2025-05-05 21:16:05,966 log Internal Server Error: /fetch-papers-semantic/
+Traceback (most recent call last):
+  File "D:\Kuliah\TA FIX\temupaper_app\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kuliah\TA FIX\temupaper_app\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kuliah\TA FIX\temupaper_app\venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py", line 214, in fetch_semantic_scholar_papers
+    limit = int(request.GET.get('limit', 10))
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: invalid literal for int() with base 10: '1-'
+INFO 2025-05-05 21:16:30,814 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-05 21:16:32,139 autoreload Watching for file changes with StatReloader
+ERROR 2025-05-05 21:17:28,862 log Internal Server Error: /fetch-papers-semantic/
+INFO 2025-05-05 21:18:39,592 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-05 21:18:40,993 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 21:24:39,319 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-05 21:24:40,672 autoreload Watching for file changes with StatReloader
+WARNING 2025-05-05 21:25:22,472 log Too Many Requests: /fetch-papers-semantic/
+INFO 2025-05-05 21:25:55,470 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-05 21:25:56,681 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 21:26:00,695 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-05 21:26:01,933 autoreload Watching for file changes with StatReloader
+ERROR 2025-05-05 21:34:55,815 log Internal Server Error: /fetch-papers-semantic/
+Traceback (most recent call last):
+  File "D:\Kuliah\TA FIX\temupaper_app\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kuliah\TA FIX\temupaper_app\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kuliah\TA FIX\temupaper_app\venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py", line 333, in fetch_semantic_scholar_papers
+    json.dumps(paper.get('embedding', {}).get('vector', [])),
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'get'
+INFO 2025-05-05 21:36:01,932 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-05 21:36:03,187 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 21:36:25,154 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-05 21:36:26,401 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 21:43:12,731 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-05 21:43:13,993 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 21:45:13,740 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-05 21:45:15,017 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 21:48:38,228 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-05 21:48:39,440 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 21:49:03,352 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-05 21:49:04,594 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 21:50:26,061 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-05 21:50:27,315 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 21:50:41,020 autoreload D:\Kuliah\TA FIX\temupaper_app\app\urls.py changed, reloading.
+INFO 2025-05-05 21:50:42,396 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 21:53:52,118 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-05 21:53:53,360 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 21:54:02,566 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-05 21:54:03,833 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 21:55:00,117 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-05 21:55:01,389 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 21:56:31,329 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-05 21:56:32,559 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 22:10:10,490 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-05 22:10:11,742 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 22:10:43,101 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-05 22:10:44,344 autoreload Watching for file changes with StatReloader
+ERROR 2025-05-05 22:16:11,887 log Internal Server Error: /fetch-papers-semantic/
+Traceback (most recent call last):
+  File "D:\Kuliah\TA FIX\temupaper_app\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kuliah\TA FIX\temupaper_app\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kuliah\TA FIX\temupaper_app\venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py", line 328, in fetch_semantic_scholar_papers
+    paper.get['abstract'],
+    ~~~~~~~~~^^^^^^^^^^^^
+TypeError: 'builtin_function_or_method' object is not subscriptable
+INFO 2025-05-05 22:18:23,187 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-05 22:18:24,507 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 22:27:36,387 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-05 22:27:37,629 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 22:35:47,127 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-05 22:35:48,414 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 22:41:34,933 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-05 22:41:36,209 autoreload Watching for file changes with StatReloader
+ERROR 2025-05-05 22:46:08,886 log Internal Server Error: /fetch-papers-semantic/
+INFO 2025-05-05 22:52:50,036 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-05 22:52:51,273 autoreload Watching for file changes with StatReloader
+INFO 2025-05-06 06:09:03,386 autoreload Watching for file changes with StatReloader
+INFO 2025-05-06 06:22:36,670 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-06 06:22:39,436 autoreload Watching for file changes with StatReloader
+INFO 2025-05-06 06:22:54,080 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-06 06:22:56,742 autoreload Watching for file changes with StatReloader
