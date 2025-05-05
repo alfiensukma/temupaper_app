@@ -385,3 +385,12 @@ INFO 2025-05-03 14:42:39,520 autoreload Watching for file changes with StatReloa
 INFO 2025-05-03 14:42:45,765 search_views Found 332 papers for query: design pattern
 INFO 2025-05-03 14:43:01,465 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\search_views.py changed, reloading.
 INFO 2025-05-03 14:43:03,491 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 14:43:09,963 search_views Found 332 papers for query: design pattern
+INFO 2025-05-03 19:05:05,755 autoreload Watching for file changes with StatReloader
+WARNING 2025-05-03 19:54:22,785 log Not Found: /favicon.ico
+INFO 2025-05-03 19:54:31,618 search_views Found 332 papers for query: design pattern
+INFO 2025-05-03 19:55:41,455 detail_views Recording paper read - User ID: 052374a0423c49888c32ac4a58a3d820, Paper ID: 2e84ed415aa5466e7fd6a6012e8e648df20d6a99, Access Method: doi
+INFO 2025-05-03 19:55:44,542 detail_views Created new read relationship
+INFO 2025-05-03 19:58:36,200 detail_views Recording paper read - User ID: 052374a0423c49888c32ac4a58a3d820, Paper ID: 490a0302116255f75d62a590177a87e301538402, Access Method: semantic
+INFO 2025-05-03 19:58:38,249 detail_views Created new read relationship
+INFO 2025-05-05 12:09:37,837 autoreload Watching for file changes with StatReloader
