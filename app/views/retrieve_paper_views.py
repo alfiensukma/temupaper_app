@@ -211,7 +211,7 @@ def fetch_papers_by_reference_ids(request):
 def fetch_semantic_scholar_papers(request):
     query = request.GET.get('query', '')
     limit = int(request.GET.get('limit', 10))
-    offset = int(request.GET.get('offset', 0))
+    offset = int(request.GET.get('offset', 100))
     total_count = int(request.GET.get('total_count', 0))
     fields_of_study = request.GET.get('fields_of_study', 'Computer Science')
     year_range = request.GET.get('year', '')

@@ -932,3 +932,5 @@ INFO 2025-05-06 06:22:36,670 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views
 INFO 2025-05-06 06:22:39,436 autoreload Watching for file changes with StatReloader
 INFO 2025-05-06 06:22:54,080 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
 INFO 2025-05-06 06:22:56,742 autoreload Watching for file changes with StatReloader
+INFO 2025-05-06 06:38:21,010 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\retrieve_paper_views.py changed, reloading.
+INFO 2025-05-06 06:38:23,511 autoreload Watching for file changes with StatReloader
