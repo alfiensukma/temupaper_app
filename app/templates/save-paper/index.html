@@ -17,29 +17,32 @@
         <p>{{ request.session.error }}</p>
     </div>
     {% endif %}
-    
-    <!-- Search Bar -->
-    <div class="mb-6">
-        <form method="GET" action="/save-paper-list/">
-            <div class="relative">
-                <input 
-                    type="text" 
-                    name="q" 
-                    value="{{ search_query }}"
-                    placeholder="Cari di karya ilmiah tersimpan..." 
-                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
-                >
-                <button 
-                    type="submit"
-                    class="absolute right-2 top-2 text-gray-500 hover:text-blue-500"
-                >
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
-                </button>
-            </div>
-        </form>
+
+    <div class="flex justify-between items-center gap-4 mt-4 mb-6">
+        <div>{% unicorn "date-range-picker" %}</div>
+        <div class="w-1/2">
+            <form method="GET" action="/save-paper-list/">
+                <div class="relative">
+                    <input 
+                        type="text" 
+                        name="q" 
+                        value="{{ search_query }}"
+                        placeholder="Cari di karya ilmiah tersimpan..." 
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                    >
+                    <button 
+                        type="submit"
+                        class="absolute right-2 top-2 text-gray-500 hover:text-blue-500"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
+    
 
     <!-- Empty State -->
     {% if not papers %}

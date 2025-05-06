@@ -815,3 +815,5 @@ INFO 2025-05-05 13:51:15,421 search_views Found 377 papers for query: learning
 WARNING 2025-05-05 14:46:15,177 unicorn_template_response The 'result-confirmation' component appears to have multiple root elements.
 WARNING 2025-05-05 14:49:52,756 unicorn_template_response The 'result-confirmation' component appears to have multiple root elements.
 INFO 2025-05-06 10:23:22,977 autoreload Watching for file changes with StatReloader
+INFO 2025-05-06 10:24:27,747 autoreload D:\College\semester 6\rekomendasi_app\temupaper_app\app\urls.py changed, reloading.
+INFO 2025-05-06 10:24:28,842 autoreload Watching for file changes with StatReloader
