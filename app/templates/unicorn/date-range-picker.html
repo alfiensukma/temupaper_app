@@ -1,265 +1,68 @@
 <div 
-    x-data="dateRangePicker()" 
-    x-init="initComponent()" 
+    x-data="yearRangePicker()" 
     x-cloak 
     class="relative">
 
-    <form id="dateRangeForm" method="get" class="hidden">
-        <input type="hidden" name="query" value="{{ request.GET.query }}">
-        <input type="hidden" name="start_date" :value="startDate">
-        <input type="hidden" name="end_date" :value="endDate">
-    </form>
-
     <button 
         @click="show = !show"
-        class="text-center text-base md:text-lg text-[#4787FA] border border-[#4787FA] bg-transparent hover:bg-blue-600 hover:text-white focus:ring-2 focus:outline-none focus:ring-blue-300 rounded-2xl px-6 md:px-5 py-2 md:py-2.5 inline-flex items-center gap-2"
+        class="text-center text-base text-blue-600 border border-blue-600 rounded-2xl px-6 py-2 hover:bg-blue-600 hover:text-white"
     >
-        <span x-text="selectedRange || 'Rentang Waktu'"></span>
-        <svg class="w-4 h-4 transition-transform duration-200" 
-            :class="{'rotate-180': show}"
-            fill="none" 
-            stroke="currentColor" 
-            viewBox="0 0 24 24"
-        >
+        <span x-text="selectedRange || 'Pilih Rentang Tahun'"></span>
+        <svg class="w-4 h-4 inline ml-2" :class="{'rotate-180': show}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
         </svg>
     </button>
 
-    <!-- Date Picker Dropdown -->
-    <div x-show="show" 
+    <div 
+        x-show="show" 
         @click.away="show = false"
-        class="absolute left-0 mt-2 p-4 bg-white rounded-lg shadow-lg z-40 w-[300px]"
-        x-transition:enter="transition ease-out duration-200"
-        x-transition:enter-start="opacity-0 transform -translate-y-2"
-        x-transition:enter-end="opacity-100 transform translate-y-0"
+        class="absolute z-50 mt-2 w-[300px] p-4 bg-white border rounded-lg shadow-lg"
     >
-        <!-- Start Date Picker -->
-        <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Mulai</label>
-            <div class="relative">
-                <input 
-                    type="text"
-                    x-model="startDate"
-                    @click="currentPicker = 'start'"
-                    readonly
-                    class="w-full pl-4 pr-10 py-2 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
-                >
-                <div class="absolute right-2 top-2">
-                    <svg class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                    </svg>
-                </div>
+        <div class="grid grid-cols-2 gap-4 mb-4">
+            <div>
+                <label class="block mb-1 text-sm font-medium text-gray-600">Tahun Mulai</label>
+                <select x-model="startYear" class="w-full px-4 py-2 border rounded-md">
+                    <template x-for="year in years">
+                        <option :value="year" x-text="year"></option>
+                    </template>
+                </select>
+            </div>
+            <div>
+                <label class="block mb-1 text-sm font-medium text-gray-600">Tahun Selesai</label>
+                <select x-model="endYear" class="w-full px-4 py-2 border rounded-md">
+                    <template x-for="year in years">
+                        <option :value="year" x-text="year"></option>
+                    </template>
+                </select>
             </div>
         </div>
 
-        <!-- End Date Picker -->
-        <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Selesai</label>
-            <div class="relative">
-                <input 
-                    type="text"
-                    x-model="endDate"
-                    @click="currentPicker = 'end'"
-                    readonly
-                    class="w-full pl-4 pr-10 py-2 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
-                >
-                <div class="absolute right-2 top-2">
-                    <svg class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                    </svg>
-                </div>
-            </div>
-        </div>
-
-        <!-- Calendar -->
-        <div x-show="currentPicker" class="mb-4">
-            <div class="flex justify-between items-center mb-2">
-                <span>
-                    <a x-text="MONTH_NAMES[month]" class="text-lg font-bold"></a>
-                    <a x-text="year" class="text-lg font-bold"></a>
-                </span>
-                <div class="flex space-x-1">
-                    <button @click="handleMonthChange(-1)" 
-                        class="p-1 hover:bg-gray-100 rounded-full">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-                        </svg>
-                    </button>
-                    <button @click="handleMonthChange(1)"
-                        class="p-1 hover:bg-gray-100 rounded-full">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                        </svg>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Days of week -->
-            <div class="grid grid-cols-7 mb-1">
-                <template x-for="day in DAYS" :key="day">
-                    <div class="text-center text-gray-600 text-sm py-1" x-text="day"></div>
-                </template>
-            </div>
-
-            <!-- Calendar days -->
-            <div class="grid grid-cols-7">
-                <template x-for="blank in blankdays">
-                    <div class="text-center py-1"></div>
-                </template>
-                <template x-for="date in no_of_days">
-                    <div 
-                        @click="selectDate(date)"
-                        x-text="date"
-                        class="text-center py-1 cursor-pointer hover:bg-blue-100 rounded-full transition-colors"
-                        :class="{
-                            'bg-blue-500 text-white hover:bg-blue-600': isStartOrEndDate(date),
-                            'bg-blue-100 text-blue-800': isInRange(date) && !isStartOrEndDate(date),
-                            'text-gray-700': !isInRange(date) && !isStartOrEndDate(date)
-                        }"
-                    ></div>
-                </template>
-            </div>
-        </div>
-
-        <!-- Apply Button -->
         <button
-            @click="submitDateRange()"
-            class="w-full bg-[#4787FA] text-white rounded-lg py-2 hover:bg-blue-600 transition-colors"
+            @click="applyYearRange()"
+            class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700"
         >
-            Terapkan Filter
+            Terapkan
         </button>
     </div>
+</div>
 
-    <script>
-        function dateRangePicker() {
-            return {
-                show: false,
-                currentPicker: null,
-                startDate: '',
-                endDate: '',
-                selectedRange: '',
-                month: new Date().getMonth(),
-                year: new Date().getFullYear(),
-                no_of_days: [],
-                blankdays: [],
-                MONTH_NAMES: ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'],
-                DAYS: ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'],
+<script>
+function yearRangePicker() {
+    return {
+        show: false,
+        startYear: '',
+        endYear: '',
+        selectedRange: '',
+        years: Array.from({ length: 50 }, (_, i) => new Date().getFullYear() - i), // 50 tahun ke belakang
 
-                handleMonthChange(increment) {
-                    this.month += increment;
-                    if (this.month > 11) {
-                        this.month = 0;
-                        this.year++;
-                    } else if (this.month < 0) {
-                        this.month = 11;
-                        this.year--;
-                    }
-                    this.getNoOfDays();
-                },
-                
-                initComponent() {
-                    // Mengambil tanggal dari template Django
-                    this.startDate = '{{ start_date }}';
-                    this.endDate = '{{ end_date }}';
-                    this.initDates();
-                    this.getNoOfDays();
-                    if (this.startDate && this.endDate) {
-                        this.selectedRange = `${this.startDate} - ${this.endDate}`;
-                    }
-                },
-                
-                initDates() {
-                    const today = new Date();
-                    this.month = today.getMonth();
-                    this.year = today.getFullYear();
-                },
-                
-                selectDate(date) {
-                    const selectedDate = new Date(this.year, this.month, date);
-                    const formattedDate = this.formatDate(selectedDate);
-                    
-                    if (this.currentPicker === 'start') {
-                        this.startDate = formattedDate;
-                        this.currentPicker = 'end';
-                    } else if (this.currentPicker === 'end') {
-                        const startDate = this.parseDate(this.startDate);
-                        
-                        if (startDate && selectedDate < startDate) {
-                            this.endDate = this.startDate;
-                            this.startDate = formattedDate;
-                        } else {
-                            this.endDate = formattedDate;
-                        }
-                        
-                        this.currentPicker = null;
-                    }
-                },
-                
-                formatDate(date) {
-                    return `${date.getDate()} ${this.MONTH_NAMES[date.getMonth()]} ${date.getFullYear()}`;
-                },
-                
-                isStartOrEndDate(date) {
-                    const currentDate = new Date(this.year, this.month, date);
-                    const startDate = this.parseDate(this.startDate);
-                    const endDate = this.parseDate(this.endDate);
-                    
-                    return (startDate && this.isSameDay(currentDate, startDate)) || 
-                           (endDate && this.isSameDay(currentDate, endDate));
-                },
-                
-                isInRange(date) {
-                    const currentDate = new Date(this.year, this.month, date);
-                    const startDate = this.parseDate(this.startDate);
-                    const endDate = this.parseDate(this.endDate);
-                    
-                    if (!startDate || !endDate) return false;
-                    
-                    return currentDate >= startDate && currentDate <= endDate;
-                },
-                
-                isSameDay(date1, date2) {
-                    if (!date1 || !date2) return false;
-                    return date1.getDate() === date2.getDate() &&
-                           date1.getMonth() === date2.getMonth() &&
-                           date1.getFullYear() === date2.getFullYear();
-                },
-                
-                getNoOfDays() {
-                    const daysInMonth = new Date(this.year, this.month + 1, 0).getDate();
-                    const firstDay = new Date(this.year, this.month).getDay();
-                    
-                    this.blankdays = Array(firstDay).fill(null);
-                    this.no_of_days = Array.from({length: daysInMonth}, (_, i) => i + 1);
-                },
-                
-                submitDateRange() {
-                    if (this.startDate && this.endDate) {
-                        const startDate = this.parseDate(this.startDate);
-                        const endDate = this.parseDate(this.endDate);
-                        
-                        if (startDate > endDate) {
-                            [this.startDate, this.endDate] = [this.endDate, this.startDate];
-                        }
-                        
-                        this.selectedRange = `${this.startDate} - ${this.endDate}`;
-                        document.getElementById('dateRangeForm').submit();
-                    }
-                    this.show = false;
-                },
-
-                parseDate(dateStr) {
-                    if (!dateStr) return null;
-                    const parts = dateStr.split(' ');
-                    if (parts.length !== 3) return null;
-                    
-                    const day = parseInt(parts[0]);
-                    const month = this.MONTH_NAMES.indexOf(parts[1]);
-                    const year = parseInt(parts[2]);
-                    
-                    return new Date(year, month, day);
-                },
+        applyYearRange() {
+            if (this.startYear && this.endYear && parseInt(this.startYear) <= parseInt(this.endYear)) {
+                this.selectedRange = `${this.startYear} - ${this.endYear}`;
+                this.show = false;
+            } else {
+                alert("Pastikan Tahun Mulai tidak lebih besar dari Tahun Selesai.");
             }
         }
-    </script>
-</div>
+    }
+}
+</script>

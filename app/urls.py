@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .views.retrieve_paper_views import fetch_papers, fetch_papers_by_reference_ids
+from .views.retrieve_paper_views import fetch_papers, fetch_papers_by_reference_ids, fetch_semantic_scholar_papers
 from .views.graph_views import generate_knowledge_graph
 from .views.detail_views import get_recommendation, get_detail_json, get_paper_detail, record_paper_read
 from .views.search_views import index, search
@@ -18,7 +18,8 @@ from .views.save_paper import save_paper_list
 urlpatterns = [
     path('', index, name='index'),
     path("unicorn/", include("django_unicorn.urls")),
-    path("fetch-papers/", fetch_papers, name="get_paper"), # support params query, min_year, fields_of_study, limit, reference_limit
+    path("fetch-papers/", fetch_papers, name="get_paper"), 
+    path("fetch-papers-semantic/", fetch_semantic_scholar_papers, name="fetch_semantic_scholar_papers"), 
     path("fetch-references/", fetch_papers_by_reference_ids, name="fetch_papers_by_reference_ids"),
     path("paper/detail/", get_detail_json, name="get_detail"),
     path("paper/detail/recommendation", get_recommendation, name="get_recommendation"),
