@@ -802,3 +802,16 @@ WARNING 2025-05-04 18:12:57,726 unicorn_template_response The 'edit-profile-moda
 INFO 2025-05-04 18:13:28,897 search_views Found 408 papers for query: machine learning
 INFO 2025-05-04 20:50:55,899 autoreload Watching for file changes with StatReloader
 INFO 2025-05-04 20:53:27,086 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 08:29:41,745 autoreload Watching for file changes with StatReloader
+WARNING 2025-05-05 08:30:36,917 unicorn_template_response The HTML in 'input-field' appears to be missing a closing tag. That can potentially cause errors in Unicorn.
+WARNING 2025-05-05 08:30:36,918 unicorn_template_response The 'input-field' component appears to have multiple root elements.
+WARNING 2025-05-05 08:31:33,041 unicorn_template_response The 'result-confirmation' component appears to have multiple root elements.
+INFO 2025-05-05 13:45:05,772 autoreload Watching for file changes with StatReloader
+WARNING 2025-05-05 13:45:18,746 log Not Found: /favicon.ico
+WARNING 2025-05-05 13:48:09,824 unicorn_template_response The HTML in 'input-field' appears to be missing a closing tag. That can potentially cause errors in Unicorn.
+WARNING 2025-05-05 13:48:09,824 unicorn_template_response The 'input-field' component appears to have multiple root elements.
+INFO 2025-05-05 13:48:45,214 search_views Found 408 papers for query: machine learning
+INFO 2025-05-05 13:51:15,421 search_views Found 377 papers for query: learning
+WARNING 2025-05-05 14:46:15,177 unicorn_template_response The 'result-confirmation' component appears to have multiple root elements.
+WARNING 2025-05-05 14:49:52,756 unicorn_template_response The 'result-confirmation' component appears to have multiple root elements.
+INFO 2025-05-06 10:23:22,977 autoreload Watching for file changes with StatReloader
