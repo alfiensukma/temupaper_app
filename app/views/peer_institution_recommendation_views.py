@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
 from datetime import datetime
-from app.utils.neo4j_connection import get_neo4j_driver
+from app.utils.neo4j_connection import Neo4jConnection
 import logging
 from app.models import User
 
@@ -38,7 +38,8 @@ def peer_institution(request):
         institutionId = institutions[0].institutionId
         
         # Query Neo4j untuk paper rekomendasi
-        driver = get_neo4j_driver()
+        neo4j_connection = Neo4jConnection()
+        driver = neo4j_connection.get_driver()
         papers = []
         
         with driver.session() as session:

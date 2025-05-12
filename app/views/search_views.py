@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
 from datetime import datetime, timedelta
-from app.utils.neo4j_connection import get_neo4j_driver
+from app.utils.neo4j_connection import Neo4jConnection
 from app.utils.parse_indonesian_date import parse_indonesian_date
 import logging
 import ast
@@ -34,7 +34,8 @@ def search(request):
             })
 
         # Get Neo4j driver
-        driver = get_neo4j_driver()
+        neo4j_connection = Neo4jConnection()
+        driver = neo4j_connection.get_driver()
         
         with driver.session() as session:
             keywords = query.lower().split()

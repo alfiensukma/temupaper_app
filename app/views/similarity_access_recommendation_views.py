@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
 from datetime import datetime
-from app.utils.neo4j_connection import get_neo4j_driver
+from app.utils.neo4j_connection import Neo4jConnection
 import logging
 
 logging.basicConfig(level=logging.INFO)
@@ -22,7 +22,8 @@ def similarity_access(request):
     user_id = request.session.get('user_id')
 
     try:
-        driver = get_neo4j_driver()
+        neo4j_connection = Neo4jConnection()
+        driver = neo4j_connection.get_driver()
 
         with driver.session() as session:
             graph_exists = session.run("""
