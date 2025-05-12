@@ -14,6 +14,7 @@ from .views.verification_email_views import verification_email, verification_cod
 from .views.profile_views import reset_password, profile_view, edit_profile
 from .views.logout_view import logout_view
 from .views.save_paper import save_paper_list
+from .views.embedding_views import create_and_save_search_embedding
 
 urlpatterns = [
     path('', index, name='index'),
@@ -44,4 +45,5 @@ urlpatterns = [
     path('save-paper-list/', save_paper_list, name='save_paper_list'),
     path('resend-verification-code/', resend_verification_code, name='resend_verification_code'),
     path('record-paper-read/', record_paper_read, name='record_paper_read'),
+    path('create-search-embedding/', create_and_save_search_embedding, name='create_and_save_search_embedding'),
 ]

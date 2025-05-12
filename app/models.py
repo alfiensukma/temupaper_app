@@ -62,6 +62,7 @@ class Paper(StructuredNode):
     corpusId = StringProperty()
     doi = StringProperty()
     embedding = ArrayProperty()
+    search_embedding = ArrayProperty()
     influentialCitationCount = IntegerProperty(default=0)
     publicationDate = StringProperty()
     referenceCount = IntegerProperty(default=0)

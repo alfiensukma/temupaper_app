@@ -366,7 +366,7 @@ def import_to_neo4j(driver):
     logger.info("Memulai proses import ke Neo4j")
     
     #delete existing data
-    # clear_neo4j(driver)
+    clear_neo4j(driver)
 
     #Impor institusi
     import_institusi_nodes(driver, INSTITUTION_PATH)
