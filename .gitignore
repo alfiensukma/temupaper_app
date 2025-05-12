@@ -8,3 +8,4 @@ logs/
 *.pyd
 __pycache__/
 debug.log
+data-csv/

@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
-from app.utils.neo4j_connection import get_neo4j_driver
+from app.utils.neo4j_connection import Neo4jConnection
 from dotenv import load_dotenv
 import logging
 from datetime import datetime
@@ -18,7 +18,8 @@ def get_recommendation(paper_id):
 
     driver = None
     try:
-        driver = get_neo4j_driver()
+        neo4j_connection = Neo4jConnection()
+        driver = neo4j_connection.get_driver()
 
         with driver.session() as session:
             graph_exists = session.run("""
@@ -117,7 +118,8 @@ def get_detail_json(request, paper_id):
 
     driver = None
     try:
-        driver = get_neo4j_driver()
+        neo4j_connection = Neo4jConnection()
+        driver = neo4j_connection.get_driver()
 
         with driver.session() as session:
             result = session.run("""
@@ -184,7 +186,8 @@ def get_detail_json(request, paper_id):
 
 def get_paper_detail(request, paper_id):
     try:
-        driver = get_neo4j_driver()
+        neo4j_connection = Neo4jConnection()
+        driver = neo4j_connection.get_driver()
         
         with driver.session() as session:
             result = session.run("""
