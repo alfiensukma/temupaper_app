@@ -1,0 +1,819 @@
+INFO 2025-05-03 12:45:04,662 autoreload Watching for file changes with StatReloader
+ERROR 2025-05-03 12:45:07,747 parse_indonesian_date Error parsing date '2025-05-01': module 'datetime' has no attribute 'strptime'
+ERROR 2025-05-03 12:45:07,747 search_views Error processing dates: module 'datetime' has no attribute 'strptime'
+INFO 2025-05-03 12:45:09,870 search_views Found 51 papers for query: oBject
+INFO 2025-05-03 12:47:55,922 autoreload D:\Data-Kuliah\Semester-6\Assets-TA\temupaper_app\app\utils\parse_indonesian_date.py changed, reloading.
+INFO 2025-05-03 12:47:57,047 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 12:47:59,792 parse_indonesian_date Parsing date: 1 Mei 2025
+INFO 2025-05-03 12:47:59,792 parse_indonesian_date Formatted date: 2025-05-01
+ERROR 2025-05-03 12:47:59,792 parse_indonesian_date Error parsing date '1 Mei 2025': module 'datetime' has no attribute 'strptime'
+ERROR 2025-05-03 12:47:59,792 search_views Error processing dates: module 'datetime' has no attribute 'strptime'
+INFO 2025-05-03 12:48:01,885 search_views Found 51 papers for query: oBject
+INFO 2025-05-03 12:48:33,779 autoreload D:\Data-Kuliah\Semester-6\Assets-TA\temupaper_app\app\views\search_views.py changed, reloading.
+INFO 2025-05-03 12:48:34,732 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 12:48:37,112 parse_indonesian_date Parsing date: 1 Mei 2025
+INFO 2025-05-03 12:48:37,112 parse_indonesian_date Formatted date: 2025-05-01
+ERROR 2025-05-03 12:48:37,112 parse_indonesian_date Error parsing date '1 Mei 2025': module 'datetime' has no attribute 'strptime'
+ERROR 2025-05-03 12:48:37,113 search_views Error processing dates: module 'datetime' has no attribute 'strptime'
+INFO 2025-05-03 12:48:39,184 search_views Found 51 papers for query: oBject
+INFO 2025-05-03 12:50:19,718 autoreload D:\Data-Kuliah\Semester-6\Assets-TA\temupaper_app\app\utils\parse_indonesian_date.py changed, reloading.
+INFO 2025-05-03 12:50:20,658 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 12:50:23,536 parse_indonesian_date Parsing date: 1 Mei 2025
+INFO 2025-05-03 12:50:23,536 parse_indonesian_date Formatted date: 2025-05-01
+ERROR 2025-05-03 12:50:23,536 parse_indonesian_date Error parsing date '1 Mei 2025': module 'datetime' has no attribute 'strptime'
+ERROR 2025-05-03 12:50:23,536 search_views Error processing dates: module 'datetime' has no attribute 'strptime'
+INFO 2025-05-03 12:50:25,617 search_views Found 51 papers for query: oBject
+INFO 2025-05-03 12:51:08,469 autoreload D:\Data-Kuliah\Semester-6\Assets-TA\temupaper_app\app\utils\parse_indonesian_date.py changed, reloading.
+INFO 2025-05-03 12:51:09,388 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 12:51:11,998 parse_indonesian_date Parsing date: 1 Mei 2025
+INFO 2025-05-03 12:51:12,002 parse_indonesian_date Formatted date: 2025-05-01
+INFO 2025-05-03 12:51:12,005 parse_indonesian_date Parsing date: 6 Mei 2025
+INFO 2025-05-03 12:51:12,006 parse_indonesian_date Formatted date: 2025-05-06
+INFO 2025-05-03 12:51:14,193 search_views Found 0 papers for query: oBject
+INFO 2025-05-03 12:51:39,083 autoreload D:\Data-Kuliah\Semester-6\Assets-TA\temupaper_app\app\utils\parse_indonesian_date.py changed, reloading.
+INFO 2025-05-03 12:51:40,054 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 12:51:44,714 search_views Found 0 papers for query: oBject
+INFO 2025-05-03 12:52:04,315 autoreload D:\Data-Kuliah\Semester-6\Assets-TA\temupaper_app\app\views\search_views.py changed, reloading.
+INFO 2025-05-03 12:52:05,376 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 12:52:10,282 search_views Found 0 papers for query: oBject
+INFO 2025-05-03 12:52:13,465 search_views Found 51 papers for query: oBject
+INFO 2025-05-03 12:55:05,239 search_views Found 51 papers for query: oBject
+INFO 2025-05-03 12:56:26,919 search_views Found 51 papers for query: oBject
+INFO 2025-05-03 12:57:35,594 search_views Found 51 papers for query: oBject
+INFO 2025-05-03 12:58:00,667 search_views Found 51 papers for query: oBject
+INFO 2025-05-03 12:58:16,934 search_views Found 51 papers for query: oBject
+INFO 2025-05-03 13:00:22,027 search_views Found 4 papers for query: oBject
+INFO 2025-05-03 13:03:13,099 search_views Found 4 papers for query: oBject
+INFO 2025-05-03 13:05:19,246 autoreload D:\Data-Kuliah\Semester-6\Assets-TA\temupaper_app\app\context_processors.py changed, reloading.
+INFO 2025-05-03 14:37:07,424 autoreload Watching for file changes with StatReloader
+WARNING 2025-05-03 14:37:14,989 log Not Found: /favicon.ico
+ERROR 2025-05-03 14:39:24,072 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,072 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,074 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,074 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,075 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,075 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,075 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,077 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,077 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,078 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,078 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,078 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,080 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,080 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,081 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,081 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,081 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,081 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,081 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,084 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,084 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,084 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,084 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,086 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,087 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,087 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,087 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,089 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,089 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,089 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,089 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,089 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,092 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,092 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,093 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,093 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,093 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,095 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,095 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,097 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,097 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,099 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,099 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,101 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,101 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,101 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,101 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,103 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,103 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,103 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,105 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,105 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,105 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,107 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,107 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,109 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,109 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,109 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,111 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,111 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,111 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,113 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,113 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,114 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,114 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,114 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,116 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,116 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,118 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,120 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,120 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,120 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,120 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,123 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,123 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,123 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,123 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,128 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,129 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,129 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,129 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,129 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,132 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,132 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,132 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,134 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,134 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,134 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,134 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,134 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,137 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,138 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,138 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,138 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,140 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,140 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,140 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,140 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,142 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,142 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,142 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,142 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,142 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,142 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,142 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,142 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,142 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,142 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,148 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,148 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,148 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,148 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,148 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,148 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,148 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,153 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,153 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,153 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,153 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,153 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,153 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,153 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,156 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,156 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,156 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,156 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,156 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,156 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,156 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,159 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,160 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,160 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,160 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,160 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,160 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,160 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,160 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,160 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,160 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,160 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,160 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,160 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,166 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,166 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,167 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,167 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,167 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,168 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,168 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,168 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,169 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,170 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,171 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,171 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,171 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,171 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,171 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,171 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,171 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,171 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,171 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,175 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,175 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,175 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,175 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,175 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,175 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,175 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,178 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,178 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,178 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,179 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,179 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,179 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,179 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,181 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,182 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,182 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,182 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,182 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,182 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,182 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,185 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,185 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,185 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,185 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,185 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,185 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,185 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,185 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,185 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,185 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,185 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,189 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,189 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,189 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,189 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,189 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,192 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,192 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,193 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,193 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,193 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,193 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,193 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,196 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,196 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,196 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,196 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,198 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,198 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,198 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,198 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,198 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,198 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,200 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,200 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,200 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,200 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,202 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,202 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,203 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,204 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,204 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,204 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,204 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,204 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,207 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,207 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,207 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,207 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,207 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,207 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,210 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,210 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,210 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,211 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,212 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,212 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,212 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,213 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,213 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,213 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,213 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,213 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,215 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,215 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,215 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,216 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,216 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,216 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,216 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,218 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,218 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,220 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,220 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,220 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,220 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,221 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,221 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,221 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,221 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,221 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,221 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,221 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,221 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,221 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,221 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,221 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,221 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,225 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,226 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,226 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,226 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,226 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,226 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,226 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,226 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,230 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,230 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,230 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,231 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,231 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,231 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,231 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,231 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,231 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,231 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,231 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,231 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,231 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,231 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,231 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,235 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,235 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,235 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,237 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,237 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,237 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,237 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,237 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,239 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,239 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,239 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,241 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,241 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,241 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,241 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,241 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,241 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,241 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,241 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,241 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,241 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,241 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,241 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,241 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,241 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,246 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,246 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,247 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,247 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,247 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,247 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,247 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,249 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,250 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,250 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,250 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,250 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,250 search_views Error processing paper: 'NoneType' object is not iterable
+ERROR 2025-05-03 14:39:24,250 search_views Error processing paper: 'NoneType' object is not iterable
+INFO 2025-05-03 14:39:24,250 search_views Found 0 papers for query: design pattern
+INFO 2025-05-03 14:42:37,394 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\search_views.py changed, reloading.
+INFO 2025-05-03 14:42:39,520 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 14:42:45,765 search_views Found 332 papers for query: design pattern
+INFO 2025-05-03 14:43:01,465 autoreload D:\Kuliah\TA FIX\temupaper_app\app\views\search_views.py changed, reloading.
+INFO 2025-05-03 14:43:03,491 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 13:48:11,542 autoreload Watching for file changes with StatReloader
+WARNING 2025-05-04 13:48:23,428 log Not Found: /favicon.ico
+WARNING 2025-05-04 13:48:28,778 unicorn_template_response The HTML in 'input-field' appears to be missing a closing tag. That can potentially cause errors in Unicorn.
+WARNING 2025-05-04 13:48:28,781 unicorn_template_response The 'input-field' component appears to have multiple root elements.
+WARNING 2025-05-04 13:48:28,813 unicorn_template_response The HTML in 'input-field' appears to be missing a closing tag. That can potentially cause errors in Unicorn.
+WARNING 2025-05-04 13:48:28,816 unicorn_template_response The 'input-field' component appears to have multiple root elements.
+WARNING 2025-05-04 13:48:33,595 unicorn_template_response The HTML in 'input-field' appears to be missing a closing tag. That can potentially cause errors in Unicorn.
+WARNING 2025-05-04 13:48:33,598 unicorn_template_response The 'input-field' component appears to have multiple root elements.
+WARNING 2025-05-04 13:49:42,961 log Not Found: /favicon.ico
+INFO 2025-05-04 13:51:04,042 autoreload D:\College\semester 6\rekomendasi_app\temupaper_app\app\views\similarity_access_recommendation_views.py changed, reloading.
+INFO 2025-05-04 13:51:05,038 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 13:51:23,578 autoreload D:\College\semester 6\rekomendasi_app\temupaper_app\app\views\similarity_access_recommendation_views.py changed, reloading.
+INFO 2025-05-04 13:51:24,511 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 13:51:39,050 autoreload D:\College\semester 6\rekomendasi_app\temupaper_app\app\views\similarity_access_recommendation_views.py changed, reloading.
+INFO 2025-05-04 13:51:39,950 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 13:51:57,542 autoreload D:\College\semester 6\rekomendasi_app\temupaper_app\app\views\similarity_access_recommendation_views.py changed, reloading.
+INFO 2025-05-04 13:51:58,466 autoreload Watching for file changes with StatReloader
+WARNING 2025-05-04 13:52:24,749 unicorn_template_response The 'edit-profile-modal' component appears to have multiple root elements.
+INFO 2025-05-04 16:48:49,240 autoreload D:\College\semester 6\rekomendasi_app\temupaper_app\app\views\topic_recommendation_views.py changed, reloading.
+INFO 2025-05-04 16:48:50,840 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 16:50:01,837 autoreload D:\College\semester 6\rekomendasi_app\temupaper_app\app\views\topic_recommendation_views.py changed, reloading.
+INFO 2025-05-04 16:50:02,771 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 16:50:29,403 autoreload D:\College\semester 6\rekomendasi_app\temupaper_app\app\views\topic_recommendation_views.py changed, reloading.
+INFO 2025-05-04 16:50:30,401 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 17:02:58,243 autoreload D:\College\semester 6\rekomendasi_app\temupaper_app\app\views\topic_recommendation_views.py changed, reloading.
+INFO 2025-05-04 17:02:59,352 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 17:04:35,972 autoreload D:\College\semester 6\rekomendasi_app\temupaper_app\app\views\topic_recommendation_views.py changed, reloading.
+INFO 2025-05-04 17:04:36,978 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 17:08:16,758 autoreload D:\College\semester 6\rekomendasi_app\temupaper_app\app\views\topic_recommendation_views.py changed, reloading.
+INFO 2025-05-04 17:08:17,692 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 17:09:34,277 autoreload D:\College\semester 6\rekomendasi_app\temupaper_app\app\views\topic_recommendation_views.py changed, reloading.
+INFO 2025-05-04 17:09:35,507 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 17:10:14,077 autoreload D:\College\semester 6\rekomendasi_app\temupaper_app\app\views\topic_recommendation_views.py changed, reloading.
+INFO 2025-05-04 17:10:15,110 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 17:10:42,658 autoreload D:\College\semester 6\rekomendasi_app\temupaper_app\app\views\topic_recommendation_views.py changed, reloading.
+INFO 2025-05-04 17:10:43,718 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 17:11:07,402 autoreload D:\College\semester 6\rekomendasi_app\temupaper_app\app\views\topic_recommendation_views.py changed, reloading.
+INFO 2025-05-04 17:11:08,395 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 17:21:08,650 autoreload D:\College\semester 6\rekomendasi_app\temupaper_app\app\views\topic_recommendation_views.py changed, reloading.
+INFO 2025-05-04 17:21:09,866 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 17:22:09,707 autoreload D:\College\semester 6\rekomendasi_app\temupaper_app\app\views\topic_recommendation_views.py changed, reloading.
+INFO 2025-05-04 17:22:10,684 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 17:23:08,718 autoreload D:\College\semester 6\rekomendasi_app\temupaper_app\app\views\topic_recommendation_views.py changed, reloading.
+INFO 2025-05-04 17:23:09,760 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 17:23:38,769 autoreload D:\College\semester 6\rekomendasi_app\temupaper_app\app\views\topic_recommendation_views.py changed, reloading.
+INFO 2025-05-04 17:23:39,747 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 17:23:53,940 autoreload D:\College\semester 6\rekomendasi_app\temupaper_app\app\views\topic_recommendation_views.py changed, reloading.
+INFO 2025-05-04 17:23:54,945 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 17:24:06,102 autoreload D:\College\semester 6\rekomendasi_app\temupaper_app\app\views\topic_recommendation_views.py changed, reloading.
+INFO 2025-05-04 17:24:07,088 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 17:24:21,417 autoreload D:\College\semester 6\rekomendasi_app\temupaper_app\app\views\topic_recommendation_views.py changed, reloading.
+INFO 2025-05-04 17:24:22,426 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 17:24:27,681 autoreload D:\College\semester 6\rekomendasi_app\temupaper_app\app\views\topic_recommendation_views.py changed, reloading.
+INFO 2025-05-04 17:24:28,868 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 17:24:47,276 autoreload D:\College\semester 6\rekomendasi_app\temupaper_app\app\views\topic_recommendation_views.py changed, reloading.
+INFO 2025-05-04 17:24:48,234 autoreload Watching for file changes with StatReloader
+ERROR 2025-05-04 17:28:25,659 log Internal Server Error: /topic-recommendation/
+Traceback (most recent call last):
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\template\base.py", line 891, in _resolve_lookup
+    current = current[bit]
+              ~~~~~~~^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\template\context.py", line 88, in __getitem__
+    raise KeyError(key)
+KeyError: 'topic=topic'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\template\base.py", line 897, in _resolve_lookup
+    if isinstance(current, BaseContext) and getattr(
+                                            ^^^^^^^^
+AttributeError: type object 'RequestContext' has no attribute 'topic=topic'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\template\base.py", line 907, in _resolve_lookup
+    current = current[int(bit)]
+                      ^^^^^^^^
+ValueError: invalid literal for int() with base 10: 'topic=topic'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\app\views\topic_recommendation_views.py", line 34, in topic_list
+    return render(request, "base.html", {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\template\base.py", line 171, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\template\defaulttags.py", line 327, in render
+    return nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\template\loader_tags.py", line 210, in render
+    return template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\template\base.py", line 173, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\template\defaulttags.py", line 243, in render
+    nodelist.append(node.render_annotated(context))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django_unicorn\templatetags\unicorn.py", line 99, in render
+    resolved_arg = template.Variable(value).resolve(context)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\template\base.py", line 854, in resolve
+    value = self._resolve_lookup(context)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\template\base.py", line 914, in _resolve_lookup
+    raise VariableDoesNotExist(
+django.template.base.VariableDoesNotExist: Failed lookup for key [topic=topic] in [{'True': True, 'False': False, 'None': None}, {}, {}, {'content_template': 'topic-recommendation/index.html', 'body_class': 'bg-gray-100', 'show_search_form': False, 'topic': [{'name': 'Artificial Intelligence', 'id': '18'}, {'name': 'Bioinformatics', 'id': '47'}, {'name': 'Computer Aided Design', 'id': '117'}, {'name': 'Computer Hardware', 'id': '131'}, {'name': 'Computer Imaging and Vision', 'id': '132'}, {'name': 'Computer Networks', 'id': '138'}, {'name': 'Computer Programming', 'id': '141'}, {'name': 'Computer Security', 'id': '144'}, {'name': 'Computer Systems', 'id': '148'}, {'name': 'Data Mining', 'id': '176'}, {'name': 'Human Computer Interaction', 'id': '319'}, {'name': 'Information Retrieval', 'id': '343'}, {'name': 'Information Technology', 'id': '349'}, {'name': 'Internet', 'id': '361'}, {'name': 'Operating Systems', 'id': '466'}, {'name': 'Pattern Matching', 'id': '478'}, {'name': 'Robotics', 'id': '529'}, {'name': 'Software', 'id': '549'}, {'name': 'Software Engineering', 'id': '554'}, {'name': 'Theoretical Computer Science', 'id': '600'}]}]
+INFO 2025-05-04 17:28:55,707 autoreload D:\College\semester 6\rekomendasi_app\temupaper_app\app\urls.py changed, reloading.
+INFO 2025-05-04 17:28:56,684 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 17:40:57,006 autoreload Watching for file changes with StatReloader
+ERROR 2025-05-04 17:41:11,405 log Internal Server Error: /topic-recommendation/
+Traceback (most recent call last):
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\app\views\topic_recommendation_views.py", line 34, in topic_list
+    return render(request, "base.html", {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\template\base.py", line 171, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\template\defaulttags.py", line 327, in render
+    return nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\template\loader_tags.py", line 210, in render
+    return template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\template\base.py", line 173, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\template\defaulttags.py", line 243, in render
+    nodelist.append(node.render_annotated(context))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django_unicorn\templatetags\unicorn.py", line 198, in render
+    rendered_component = self.view.render(init_js=True, extra_context=extra_context)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\decorator.py", line 235, in fun
+    return caller(func, *(extras + args), **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django_unicorn\decorators.py", line 20, in timed
+    result = func(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django_unicorn\components\unicorn_view.py", line 382, in render
+    response.render()
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\decorator.py", line 235, in fun
+    return caller(func, *(extras + args), **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django_unicorn\decorators.py", line 20, in timed
+    result = func(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django_unicorn\components\unicorn_template_response.py", line 180, in render
+    response = super().render()
+               ^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\template\response.py", line 114, in render
+    self.content = self.rendered_content
+                   ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\template\response.py", line 92, in rendered_content
+    return template.render(context, self._request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\template\base.py", line 171, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\template\defaulttags.py", line 480, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\urls\base.py", line 98, in reverse
+    resolved_url = resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\urls\resolvers.py", line 831, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'topic_result' with keyword arguments '{'topic': ''}' not found. 2 pattern(s) tried: ['topic\\-recommendation/(?P<topic>[^/]+)\\Z', 'api/topic\\-recommendation/(?P<topic>[^/]+)\\Z']
+INFO 2025-05-04 17:44:51,994 autoreload D:\College\semester 6\rekomendasi_app\temupaper_app\app\components\topic_item.py changed, reloading.
+INFO 2025-05-04 17:44:52,983 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 17:46:21,630 autoreload D:\College\semester 6\rekomendasi_app\temupaper_app\app\components\topic_item.py changed, reloading.
+INFO 2025-05-04 17:46:22,799 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 17:51:51,770 autoreload D:\College\semester 6\rekomendasi_app\temupaper_app\app\components\topic_item.py changed, reloading.
+INFO 2025-05-04 17:51:52,959 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 17:54:28,839 autoreload D:\College\semester 6\rekomendasi_app\temupaper_app\app\views\topic_recommendation_views.py changed, reloading.
+INFO 2025-05-04 17:54:29,880 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 17:55:25,993 autoreload D:\College\semester 6\rekomendasi_app\temupaper_app\app\views\topic_recommendation_views.py changed, reloading.
+INFO 2025-05-04 17:55:26,929 autoreload Watching for file changes with StatReloader
+ERROR 2025-05-04 17:55:31,601 topic_recommendation_views Error in peer_institution view: 'Result' object has no attribute 'split'
+INFO 2025-05-04 17:55:43,542 autoreload D:\College\semester 6\rekomendasi_app\temupaper_app\app\views\topic_recommendation_views.py changed, reloading.
+INFO 2025-05-04 17:55:44,693 autoreload Watching for file changes with StatReloader
+ERROR 2025-05-04 17:55:49,650 topic_recommendation_views Error in peer_institution view: 'Result' object has no attribute 'split'
+ERROR 2025-05-04 17:55:54,615 topic_recommendation_views Error in peer_institution view: 'Result' object has no attribute 'split'
+INFO 2025-05-04 17:57:48,751 autoreload D:\College\semester 6\rekomendasi_app\temupaper_app\app\views\topic_recommendation_views.py changed, reloading.
+INFO 2025-05-04 17:57:49,870 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 17:58:39,732 autoreload D:\College\semester 6\rekomendasi_app\temupaper_app\app\views\topic_recommendation_views.py changed, reloading.
+INFO 2025-05-04 17:58:40,678 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 17:58:58,340 autoreload D:\College\semester 6\rekomendasi_app\temupaper_app\app\views\topic_recommendation_views.py changed, reloading.
+INFO 2025-05-04 17:58:59,318 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 17:59:44,164 autoreload D:\College\semester 6\rekomendasi_app\temupaper_app\app\views\topic_recommendation_views.py changed, reloading.
+INFO 2025-05-04 17:59:45,106 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 18:00:58,017 autoreload D:\College\semester 6\rekomendasi_app\temupaper_app\app\views\topic_recommendation_views.py changed, reloading.
+INFO 2025-05-04 18:00:59,028 autoreload Watching for file changes with StatReloader
+ERROR 2025-05-04 18:01:24,249 log Internal Server Error: /topic-recommendation/
+Traceback (most recent call last):
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\app\views\topic_recommendation_views.py", line 34, in topic_list
+    return render(request, "base.html", {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\template\base.py", line 171, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\template\defaulttags.py", line 327, in render
+    return nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\template\loader_tags.py", line 210, in render
+    return template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\template\base.py", line 173, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\template\defaulttags.py", line 243, in render
+    nodelist.append(node.render_annotated(context))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django_unicorn\templatetags\unicorn.py", line 198, in render
+    rendered_component = self.view.render(init_js=True, extra_context=extra_context)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\decorator.py", line 235, in fun
+    return caller(func, *(extras + args), **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django_unicorn\decorators.py", line 20, in timed
+    result = func(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django_unicorn\components\unicorn_view.py", line 382, in render
+    response.render()
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\decorator.py", line 235, in fun
+    return caller(func, *(extras + args), **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django_unicorn\decorators.py", line 20, in timed
+    result = func(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django_unicorn\components\unicorn_template_response.py", line 180, in render
+    response = super().render()
+               ^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\template\response.py", line 114, in render
+    self.content = self.rendered_content
+                   ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\template\response.py", line 92, in rendered_content
+    return template.render(context, self._request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\template\base.py", line 171, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\template\defaulttags.py", line 480, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\urls\base.py", line 98, in reverse
+    resolved_url = resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\College\semester 6\rekomendasi_app\temupaper_app\.venv\Lib\site-packages\django\urls\resolvers.py", line 831, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'topic_result' with arguments '('',)' not found. 2 pattern(s) tried: ['topic\\-recommendation/(?P<topic>[^/]+)\\Z', 'api/topic\\-recommendation/(?P<topic>[^/]+)\\Z']
+INFO 2025-05-04 18:05:06,606 autoreload D:\College\semester 6\rekomendasi_app\temupaper_app\app\components\topic_item.py changed, reloading.
+INFO 2025-05-04 18:05:07,617 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 18:11:03,564 autoreload D:\College\semester 6\rekomendasi_app\temupaper_app\app\views\topic_recommendation_views.py changed, reloading.
+INFO 2025-05-04 18:11:04,674 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 18:11:44,625 autoreload D:\College\semester 6\rekomendasi_app\temupaper_app\app\views\topic_recommendation_views.py changed, reloading.
+INFO 2025-05-04 18:11:45,677 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 18:11:51,809 autoreload D:\College\semester 6\rekomendasi_app\temupaper_app\app\views\topic_recommendation_views.py changed, reloading.
+INFO 2025-05-04 18:11:52,791 autoreload Watching for file changes with StatReloader
+WARNING 2025-05-04 18:12:57,726 unicorn_template_response The 'edit-profile-modal' component appears to have multiple root elements.
+INFO 2025-05-04 18:13:28,897 search_views Found 408 papers for query: machine learning
+INFO 2025-05-04 20:50:55,899 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 20:53:27,086 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 08:29:41,745 autoreload Watching for file changes with StatReloader
+WARNING 2025-05-05 08:30:36,917 unicorn_template_response The HTML in 'input-field' appears to be missing a closing tag. That can potentially cause errors in Unicorn.
+WARNING 2025-05-05 08:30:36,918 unicorn_template_response The 'input-field' component appears to have multiple root elements.
+WARNING 2025-05-05 08:31:33,041 unicorn_template_response The 'result-confirmation' component appears to have multiple root elements.
+INFO 2025-05-05 13:45:05,772 autoreload Watching for file changes with StatReloader
+WARNING 2025-05-05 13:45:18,746 log Not Found: /favicon.ico
+WARNING 2025-05-05 13:48:09,824 unicorn_template_response The HTML in 'input-field' appears to be missing a closing tag. That can potentially cause errors in Unicorn.
+WARNING 2025-05-05 13:48:09,824 unicorn_template_response The 'input-field' component appears to have multiple root elements.
+INFO 2025-05-05 13:48:45,214 search_views Found 408 papers for query: machine learning
+INFO 2025-05-05 13:51:15,421 search_views Found 377 papers for query: learning
+WARNING 2025-05-05 14:46:15,177 unicorn_template_response The 'result-confirmation' component appears to have multiple root elements.
+WARNING 2025-05-05 14:49:52,756 unicorn_template_response The 'result-confirmation' component appears to have multiple root elements.
+INFO 2025-05-06 10:23:22,977 autoreload Watching for file changes with StatReloader
+INFO 2025-05-06 10:24:27,747 autoreload D:\College\semester 6\rekomendasi_app\temupaper_app\app\urls.py changed, reloading.
+INFO 2025-05-06 10:24:28,842 autoreload Watching for file changes with StatReloader
