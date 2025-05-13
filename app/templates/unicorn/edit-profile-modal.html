@@ -50,7 +50,7 @@
                                 <select id="institution" name="institution" class="institution-select w-full">
                                     <option value=""></option>
                                     {% for institution in institutions %}
-                                        <option value="{{ institution.institutionId }}" {% if institution.name == user_data.institution %}selected{% endif %}>{{ institution.name }}</option>
+                                        <option value="{{ institution.institutionId }}" {% if institution.names == user_data.institution %}selected{% endif %}>{{ institution.names }}</option>
                                     {% endfor %}
                                 </select>
                             </div>
