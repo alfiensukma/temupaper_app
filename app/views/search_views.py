@@ -159,7 +159,8 @@ def find_seed_papers(session, paper_id, date_filter, params):
         CALL gds.knn.stream('myGraph', {
             topK: 1,
             nodeProperties: ['search_embedding'],
-            concurrency: 4,
+            randomSeed: 42,
+            concurrency: 1,
             sampleRate: 0.8,
             deltaThreshold: 0.1
         })
@@ -214,9 +215,10 @@ def find_similar_papers(session, seed_paper_ids, date_filter, params):
             paper.publicationDate AS date,
             paper.year AS year,
             paper.citationCount AS citation_count,
+            paper.pagerank AS pagerank,
             r.score AS similarity_score,
             collect(DISTINCT author.name) AS authors
-        ORDER BY similarity_score DESC
+        ORDER BY similarity_score DESC, paper.pagerank DESC
         LIMIT 20
     """
     

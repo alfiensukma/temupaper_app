@@ -15,7 +15,7 @@ from .views.profile_views import reset_password, profile_view, edit_profile
 from .views.logout_view import logout_view
 from .views.save_paper import save_paper_list
 from .views.embedding_views import EmbeddingView
-from .views.preprocessing_views import create_similar_paper_relation
+from .views.preprocessing_views import create_similar_paper_relation, create_page_rank
 
 urlpatterns = [
     path('', index, name='index'),
@@ -48,4 +48,5 @@ urlpatterns = [
     path('record-paper-read/', record_paper_read, name='record_paper_read'),
     path('create-search-embedding/', EmbeddingView.as_view(), name='create_search_embedding'),
     path('create-similar-paper-relation/', create_similar_paper_relation, name='create_similar_paper_relation'),
+    path('create-page-rank/', create_page_rank, name='create_page_rank'),
 ]
