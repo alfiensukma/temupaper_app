@@ -101,19 +101,18 @@ def create_graph_projection_page(driver):
     with driver.session() as session:
         try:
             # Cek dulu apakah graph sudah ada
-            check_result = session.run("CALL gds.graph.exists('myGraph') YIELD exists RETURN exists")
+            check_result = session.run("CALL gds.graph.exists('pageGraph') YIELD exists RETURN exists")
             if check_result.single()["exists"]:
                 logger.info("Graph 'myGraph' already exists. Dropping it first...")
-                session.run("CALL gds.graph.drop('myGraph')")
+                session.run("CALL gds.graph.drop('pageGraph')")
             
             # Buat graph projection baru
             result = session.run("""
                 MATCH (source:Paper)-[r:REFERENCES]->(target:Paper)
                 RETURN gds.graph.project(
-                    'myGraph',
+                    'pageGraph',
                     source,
-                    target,
-                    { relationshipProperties: r { .weight } }
+                    target
                 )
             """)
 
@@ -141,12 +140,12 @@ def create_page_rank(request):
             # Buat relasi HIGHEST_SIMILAR baru (topK = 1)
             session.run(
                 """
-                CALL gds.pageRank.stream('myGraph', {
-                    relationshipWeightProperty: 'score',
+                CALL gds.pageRank.write('pageGraph', {
+                    maxIterations: 20,
+                    dampingFactor: 0.85,
                     writeProperty: 'pagerank'
                 })
-                YIELD nodeId, score
-                RETURN gds.util.asNode(nodeId).title AS title, score
+                YIELD nodePropertiesWritten, ranIterations
                 """
             )
             logger.info("PageRank calculated successfully.")
