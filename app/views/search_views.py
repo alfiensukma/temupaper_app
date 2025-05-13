@@ -103,13 +103,192 @@ def delete_query_node(paper_id, driver):
         except Exception as e:
             logger.error(f"Error deleting query node: {e}")
 
+# Helper functions for search functionality
+def prepare_search_params(request):
+    """Prepare and validate search parameters from request"""
+    user_query = request.GET.get('query', '').strip()
+    start_date = request.GET.get('start_date', '')
+    end_date = request.GET.get('end_date', '')
+    
+    return {
+        'query': user_query,
+        'start_date': start_date,
+        'end_date': end_date,
+        'page': request.GET.get("page", 1)
+    }
+
+def build_date_filter(start_date, end_date):
+    """Build date filter for Cypher query"""
+    date_filter = ""
+    params = {}
+    
+    if start_date and end_date:
+        try:
+            start_dt = parse_indonesian_date(start_date)
+            end_dt = parse_indonesian_date(end_date)
+            start_str = start_dt.strftime("%Y-%m-%d")
+            end_str = end_dt.strftime("%Y-%m-%d")
+            
+            date_filter = """
+                AND (
+                    (paper.publicationDate IS NOT NULL AND 
+                     left(paper.publicationDate, 10) >= $start_date AND
+                     left(paper.publicationDate, 10) <= $end_date)
+                    OR
+                    (paper.year IS NOT NULL AND 
+                     paper.year >= $start_year AND
+                     paper.year <= $end_year)
+                )
+            """
+            params = {
+                "start_date": start_str,
+                "end_date": end_str,
+                "start_year": start_dt.year,
+                "end_year": end_dt.year
+            }
+            logger.info(f"Date filter applied: {start_str} to {end_str}")
+        except Exception as e:
+            logger.error(f"Error processing dates: {e}")
+    
+    return date_filter, params
+
+def find_seed_papers(session, paper_id, date_filter, params):
+    """Find initial seed papers using KNN similarity search"""
+    knn_query = """
+        MATCH (p:Paper {paperId: $paperId})
+        CALL gds.knn.stream('myGraph', {
+            topK: 1,
+            nodeProperties: ['search_embedding'],
+            concurrency: 4,
+            sampleRate: 0.8,
+            deltaThreshold: 0.1
+        })
+        YIELD node1, node2, similarity
+        WHERE id(p) = node1
+        WITH gds.util.asNode(node2) AS paper, similarity
+        WHERE paper.paperId <> $paperId
+        """ + date_filter + """
+        RETURN DISTINCT paper.paperId AS paperId, similarity AS knn_similarity
+        ORDER BY knn_similarity DESC
+        LIMIT 1
+    """
+    
+    knn_results = session.run(knn_query, **params)
+    seed_paper_ids = [record["paperId"] for record in knn_results]
+    logger.info(f"Found {len(seed_paper_ids)} seed papers")
+    
+    return seed_paper_ids
+
+def find_similar_papers(session, seed_paper_ids, date_filter, params):
+    """Find papers similar to seed papers"""
+    if not seed_paper_ids:
+        return [], []
+    
+    # Get details of seed papers
+    knn_detail_query = """
+        UNWIND $paperIds AS knnPaperId
+        MATCH (p:Paper {paperId: knnPaperId})
+        OPTIONAL MATCH (p)-[:AUTHORED_BY]->(author:Author)
+        RETURN 
+            p.paperId AS paperId,
+            p.title AS title, 
+            p.abstract AS abstract,
+            p.publicationDate AS date,
+            p.year AS year,
+            p.citationCount AS citation_count,
+            1.0 AS similarity_score,
+            collect(DISTINCT author.name) AS authors
+    """
+    
+    # Get papers similar to seed papers
+    similar_query = """
+        UNWIND $paperIds AS topPaperId
+        MATCH (top:Paper {paperId: topPaperId})
+        OPTIONAL MATCH (top)-[r:SIMILAR]->(paper:Paper)
+        WHERE 1=1 """ + date_filter + """
+        OPTIONAL MATCH (paper)-[:AUTHORED_BY]->(author:Author)
+        RETURN 
+            paper.paperId AS paperId,
+            paper.title AS title, 
+            paper.abstract AS abstract,
+            paper.publicationDate AS date,
+            paper.year AS year,
+            paper.citationCount AS citation_count,
+            r.score AS similarity_score,
+            collect(DISTINCT author.name) AS authors
+        ORDER BY similarity_score DESC
+        LIMIT 20
+    """
+    
+    knn_details = session.run(knn_detail_query, paperIds=seed_paper_ids)
+    similar_results = session.run(similar_query, paperIds=seed_paper_ids, **params)
+    
+    return knn_details, similar_results
+
+def format_paper_data(record, is_seed=False):
+    """Format paper data from Neo4j record to dictionary"""
+    paper_id_result = record["paperId"]
+    
+    paper_data = {
+        "paperId": paper_id_result,
+        "title": record["title"] or "Untitled",
+        "abstract": record["abstract"] or "",
+        "citation_count": record["citation_count"] or 0,
+        "similarity": record["similarity_score"],
+        "authors": record["authors"],
+        "is_seed": is_seed
+    }
+    
+    # Format date
+    if record["date"]:
+        try:
+            date_str = record["date"].split()[0] if ' ' in record["date"] else record["date"]
+            dt = datetime.strptime(date_str, "%Y-%m-%d")
+            paper_data["date"] = dt.strftime("%d %B %Y")
+        except Exception as e:
+            logger.debug(f"Error formatting date '{record['date']}': {e}")
+            paper_data["date"] = record["date"]
+    elif record["year"]:
+        paper_data["date"] = str(record["year"])
+    else:
+        paper_data["date"] = "Unknown date"
+    
+    return paper_data
+
+def process_search_results(knn_details, similar_results):
+    """Process search results and remove duplicates"""
+    papers = []
+    seen_ids = set()
+    
+    # Process KNN results (seed papers)
+    for record in knn_details:
+        paper_id = record["paperId"]
+        if paper_id not in seen_ids:
+            seen_ids.add(paper_id)
+            papers.append(format_paper_data(record, is_seed=True))
+    
+    # Process similar papers
+    for record in similar_results:
+        paper_id = record["paperId"]
+        if paper_id not in seen_ids:
+            seen_ids.add(paper_id)
+            papers.append(format_paper_data(record, is_seed=False))
+    
+    # Sort by similarity score, handle None values
+    papers.sort(key=lambda x: x["similarity"] if x["similarity"] is not None else 0.0, reverse=True)
+    
+    return papers
+
+# Main search function
 def search(request):
+    paper_id = None
+    driver = None
+    
     try:
-        user_query = request.GET.get('query', '')
-        start_date = request.GET.get('start_date', '')
-        end_date = request.GET.get('end_date', '')
+        # Prepare search parameters
+        search_params = prepare_search_params(request)
         
-        if not user_query:
+        if not search_params['query']:
             return render(request, "base.html", {
                 "content_template": "search-paper/search-result.html",
                 "body_class": "bg-gray-100",
@@ -122,7 +301,7 @@ def search(request):
         driver = neo4j_connection.get_driver()
         
         # Create search node with embedding
-        paper_id = create_search_node(query=user_query)
+        paper_id = create_search_node(query=search_params['query'])
         
         # Create graph projection
         projection_success = create_graph_projection(driver)
@@ -130,118 +309,50 @@ def search(request):
             raise Exception("Failed to create graph projection")
         
         with driver.session() as session:
-            keywords = user_query.lower().split()
-            params = {"keywords": keywords, "paperId": paper_id}
+            # Build query parameters
+            date_filter, date_params = build_date_filter(
+                search_params['start_date'], 
+                search_params['end_date']
+            )
             
-            # Build date filter
-            date_filter = ""
-            if start_date and end_date:
-                try:
-                    start_dt = parse_indonesian_date(start_date)
-                    end_dt = parse_indonesian_date(end_date)
-                    start_str = start_dt.strftime("%Y-%m-%d")
-                    end_str = end_dt.strftime("%Y-%m-%d")
-                    date_filter = """
-                        AND (
-                            (recommendedPaper.publicationDate IS NOT NULL AND 
-                             left(recommendedPaper.publicationDate, 10) >= $start_date AND
-                             left(recommendedPaper.publicationDate, 10) <= $end_date)
-                            OR
-                            (recommendedPaper.year IS NOT NULL AND 
-                             recommendedPaper.year >= $start_year AND
-                             recommendedPaper.year <= $end_year)
-                        )
-                    """
-                    params.update({
-                        "start_date": start_str,
-                        "end_date": end_str,
-                        "start_year": start_dt.year,
-                        "end_year": end_dt.year
-                    })
-                except Exception as e:
-                    logger.error(f"Error processing dates: {e}")
+            params = {
+                "paperId": paper_id,
+                **date_params
+            }
             
-            # Search papers using KNN similarity search
-            result = """
-                MATCH (p:Paper {paperId: $paperId})
-                CALL gds.knn.stream('myGraph', {
-                    topK: 1,
-                    nodeProperties: ['search_embedding'],
-                    concurrency: 4,  
-                    sampleRate: 0.8,  
-                    deltaThreshold: 0.1  
+            # Find seed papers using KNN
+            seed_paper_ids = find_seed_papers(session, paper_id, date_filter, params)
+            
+            if not seed_paper_ids:
+                return render(request, "base.html", {
+                    "content_template": "search-paper/search-result.html",
+                    "body_class": "bg-gray-100", 
+                    "show_search_form": True,
+                    "error": "No results found for your query"
                 })
-                YIELD node1, node2, similarity
-                WHERE id(p) = node1
-                WITH gds.util.asNode(node2) AS recommendedPaper, similarity
-                OPTIONAL MATCH (recommendedPaper)-[:AUTHORED_BY]->(author:Author)
-                WHERE recommendedPaper.paperId <> $paperId
-                """ + date_filter + """
-                RETURN 
-                    recommendedPaper.paperId AS paperId,
-                    recommendedPaper.title AS title, 
-                    recommendedPaper.abstract AS abstract,
-                    recommendedPaper.publicationDate AS date,
-                    recommendedPaper.year AS year,
-                    recommendedPaper.citationCount AS citation_count,
-                    similarity,
-                    collect(DISTINCT author.name) AS authors
-                ORDER BY similarity DESC
-            """
             
-            result = session.run(result, **params)
+            # Find similar papers
+            knn_details, similar_results = find_similar_papers(
+                session, seed_paper_ids, date_filter, params
+            )
             
-            # Process results
-            papers = []
-            for record in result:
-                try:
-                    # Get basic paper info
-                    paper_data = {
-                        "paperId": record["paperId"],
-                        "title": record["title"] or "Untitled",
-                        "abstract": record["abstract"] or "",
-                        "citation_count": record["citation_count"] or 0,
-                        "similarity": record["similarity"],
-                        "authors": record["authors"],
-                    }
-                    
-                    # Format date
-                    if record["date"]:
-                        try:
-                            dt = datetime.strptime(record["date"].split()[0], "%Y-%m-%d")
-                            paper_data["date"] = dt.strftime("%d %B %Y")
-                        except:
-                            paper_data["date"] = record["date"]
-                    elif record["year"]:
-                        paper_data["date"] = str(record["year"])
-                    else:
-                        paper_data["date"] = "Unknown date"
-                    
-                    # Add to results
-                    papers.append(paper_data)
-                
-                except Exception as e:
-                    logger.error(f"Error processing paper result: {e}")
-                    continue
+            # Process and combine results
+            papers = process_search_results(knn_details, similar_results)
         
-        # Clean up
-
         # Pagination
         paginator = Paginator(papers, 10)
-        page_number = request.GET.get("page", 1)
-        page_obj = paginator.get_page(page_number)
+        page_obj = paginator.get_page(search_params['page'])
 
-        logger.info(f"Found {len(papers)} papers for query: {user_query}")
+        logger.info(f"Found {len(papers)} papers for query: {search_params['query']}")
         
         return render(request, "base.html", {
             "content_template": "search-paper/search-result.html",
             "body_class": "bg-gray-100",
             "show_search_form": True,
             "page_obj": page_obj,
-            "query": user_query,
-            "keywords": keywords,
-            "start_date": start_date,
-            "end_date": end_date,
+            "query": search_params['query'],
+            "start_date": search_params['start_date'],
+            "end_date": search_params['end_date'],
             "results_count": len(papers),
         })
 
@@ -254,6 +365,8 @@ def search(request):
             "error": f"An error occurred: {str(e)}"
         })
     finally:
-        if driver:
+        # Clean up resources
+        if paper_id and driver:
             delete_query_node(paper_id, driver)
+        if driver:
             driver.close()

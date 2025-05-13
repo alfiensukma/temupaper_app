@@ -22,6 +22,12 @@ class HasReadRel(StructuredRel):
     read_at = DateTimeProperty(default=lambda: datetime.datetime.now())
     access_method = StringProperty(choices={'doi': 'DOI Link', 'semantic': 'Semantic Scholar'})
 
+class PaperSimilarityRel(StructuredRel):
+    score = IntegerProperty()
+
+class PaperHighestSimilarityRel(StructuredRel):
+    score = IntegerProperty()
+
 
 class User(StructuredNode):
     userId = UniqueIdProperty()
@@ -46,7 +52,7 @@ class User(StructuredNode):
 
 class Institution(StructuredNode):
     institutionId = StringProperty(unique_index=True)
-    name = StringProperty(index=True)
+    names = StringProperty(index=True)
 
 class Author(StructuredNode):
     authorId = StringProperty(unique_index=True)
@@ -72,5 +78,7 @@ class Paper(StructuredNode):
     
     saved_by = RelationshipFrom('User', 'SAVES_PAPER', model=SavesPaperRel)
     authored_by = RelationshipTo('Author', 'AUTHORED_BY')
-
     read_by = RelationshipFrom('User', 'HAS_READ', model=HasReadRel)
+    similar = RelationshipTo('Paper', 'SIMILAR', model=PaperSimilarityRel)
+    highest_similar = RelationshipTo('Paper', 'HIGHEST_SIMILAR', model=PaperHighestSimilarityRel)
+    references = RelationshipTo('Paper', 'REFERENCES')

@@ -18,7 +18,7 @@ class SearchableDropdownView(UnicornView):
     def load_options(self):
         if self.name == "institution":
             institutions = Institution.nodes.all()
-            self.options = [institution.name for institution in institutions]
+            self.options = [institution.names for institution in institutions]
     
     def filter_options(self):
         if self.search_query:

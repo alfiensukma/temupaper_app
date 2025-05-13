@@ -1,5 +1,6 @@
-from app.utils.neo4j_connection import get_neo4j_driver
+from app.utils.neo4j_connection import Neo4jConnection
 import logging
+from django.http import HttpResponse
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -38,21 +39,60 @@ def create_graph_projection(driver):
             return False
 
 
-def create_similar_paper_relation():
+def create_similar_paper_relation(request):
     try:
-        driver = get_neo4j_driver()
+        neo4j_connection = Neo4jConnection()
+        driver = neo4j_connection.get_driver()
 
-        create_graph_projection(driver)
+        if not create_graph_projection(driver):
+            logger.error("Failed to create graph projection. Aborting...")
+            return HttpResponse("Failed to create graph projection.", status=500)
 
         with driver.session() as session:
+            # Hapus relasi HIGHEST_SIMILAR yang sudah ada
+            session.run("MATCH ()-[r:HIGHEST_SIMILAR]->() DELETE r")
+            logger.info("Existing HIGHEST_SIMILAR relationships deleted.")
+
+            # Buat relasi HIGHEST_SIMILAR baru (topK = 1)
             session.run(
                 """
-                MATCH (p1:Paper), (p2:Paper)
-                WHERE p1.paper_id <> p2.paper_id AND p1.similarity_score > 0.8
-                CREATE (p1)-[:SIMILAR_TO {similarity_score: p1.similarity_score}]->(p2)
+                CALL gds.knn.write('myGraph', {
+                    writeRelationshipType: 'HIGHEST_SIMILAR',
+                    writeProperty: 'score',
+                    topK: 1,
+                    randomSeed: 42,
+                    concurrency: 1,
+                    nodeProperties: ['embedding']
+                })
+                YIELD nodesCompared, relationshipsWritten
                 """
             )
-            print("Similar paper relationships created successfully.")
+            logger.info("Highest similarity relationship created successfully.")
+
+            # Hapus relasi SIMILAR yang sudah ada
+            session.run("MATCH ()-[r:SIMILAR]->() DELETE r")
+            logger.info("Existing SIMILAR relationships deleted.")
+
+            # Buat relasi SIMILAR baru (topK = 10)
+            session.run(
+                """
+                CALL gds.knn.write('myGraph', {
+                    writeRelationshipType: 'SIMILAR',
+                    writeProperty: 'score',
+                    topK: 50,
+                    randomSeed: 42,
+                    concurrency: 1,
+                    nodeProperties: ['embedding']
+                })
+                YIELD nodesCompared, relationshipsWritten
+                """
+            )
+            logger.info("Similar paper relationships created successfully.")
+        
+        return HttpResponse("Relationships created successfully.", status=200)
     except Exception as e:
-        print(f"Error connecting to Neo4j: {e}")
-        return
+        logger.exception("Error connecting to Neo4j")
+        return HttpResponse(f"Error: {e}", status=500)
+    finally:
+        if 'driver' in locals() and driver:
+            driver.close()

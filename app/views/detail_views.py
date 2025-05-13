@@ -4,7 +4,6 @@ from app.utils.neo4j_connection import Neo4jConnection
 from dotenv import load_dotenv
 import logging
 from datetime import datetime
-import ast
 from app.models import User, Paper
 
 
@@ -13,168 +12,153 @@ logger = logging.getLogger(__name__)
 load_dotenv()
 
 def get_recommendation(paper_id):
-    if not paper_id:
-        return JsonResponse({'error': 'Missing paperId'}, status=400)
-
-    driver = None
+    paper_recommendation = []  # Inisialisasi list di awal
+    
     try:
         neo4j_connection = Neo4jConnection()
-        driver = neo4j_connection.get_driver()
-
+        driver = neo4j_connection.get_driver()  
+        
         with driver.session() as session:
-            graph_exists = session.run("""
-                CALL gds.graph.exists('detailGraph')
-                YIELD exists
-                RETURN exists
-            """).single()["exists"]
+            # Ambil paper yang mirip
+            result = session.run(
+                """
+                MATCH (p:Paper {paperId: $paperId})-[r:SIMILAR]->(s:Paper)
+                RETURN s AS similar_paper, r.score AS score
+                ORDER BY r.score DESC
+                LIMIT 5
+                """,
+                paperId=paper_id
+            )
 
-        if graph_exists:
-            with driver.session() as session:
-                session.run("""
-                    CALL gds.graph.drop('detailGraph', false)
-                    YIELD graphName
-                    RETURN graphName
-                """)
-                print("Existing 'detailGraph' dropped.")
-
-        with driver.session() as session:
-            session.run("""
-                MATCH (p:Paper)
-                RETURN gds.graph.project(
-                    'detailGraph',
-                    p,
-                    null,
-                    {
-                        sourceNodeProperties: p { .embedding },
-                        targetNodeProperties: {}
-                    }
-                )
-            """)
-            print("Graph 'detailGraph' created, excluding papers without embeddings.")
-
-        with driver.session() as session:
-            result = session.run("""
-                MATCH (p:Paper {paperId: $paperId})
-                WITH id(p) AS targetId
-                CALL gds.knn.stream('detailGraph', {
-                    topK: 5,
-                    nodeProperties: ['embedding'],
-                    randomSeed: 42,
-                    concurrency: 1,
-                    sampleRate: 1.0,
-                    deltaThreshold: 0.0
-                })
-                YIELD node1, node2, similarity
-                WHERE node1 = targetId
-                WITH gds.util.asNode(node2) AS recommendedPaper, similarity
-                OPTIONAL MATCH (recommendedPaper)-[:AUTHORED_BY]->(author:Author)
-                RETURN 
-                    recommendedPaper.paperId AS paperId,
-                    recommendedPaper.title AS title, 
-                    recommendedPaper.publicationDate AS date,
-                    recommendedPaper.abstract AS abstract,
-                    recommendedPaper.year AS year,
-                    similarity,
-                    collect({name: author.name, id: author.authorId}) AS authors
-                ORDER BY similarity DESC
-            """, paperId=paper_id)
-
-            data = [{
-                "paperId": record["paperId"],
-                "title": record["title"],
-                "date": record["date"],
-                "similarity": record["similarity"],
-                "abstract": record["abstract"],
-                "authors": record["authors"],
-                "year": record["year"]
-            } for record in result]
-
-            for paper in data:
-                if paper["date"]:
-                    try:
-                        try:
-                            dt = datetime.strptime(paper["date"], "%Y-%m-%d %H:%M:%S")
-                        except ValueError:
-                            dt = datetime.strptime(paper["date"], "%Y-%m-%d")
-                        paper["date"] = dt.strftime("%d %B %Y")
-                    except Exception as e:
-                        logger.error(f"Date parse error for paper {paper['paperId']}: {e}")
-                        paper["date"] = paper.get("year", "Unknown date")
-                else:
-                    paper["date"] = paper.get("year", "Unknown date")
+            # Iterasi hasil query
+            for record in result:
+                similar_paper_node = record["similar_paper"]
+                similarity_score = record["score"]
+                
+                # Pastikan kita mengakses properti paperId dengan benar
+                try:
+                    similar_paper_id = similar_paper_node.get("paperId")
+                    if not similar_paper_id:
+                        # Cek jika property diakses dengan cara berbeda di Neo4j
+                        if hasattr(similar_paper_node, "id") and similar_paper_node.id:
+                            similar_paper_id = similar_paper_node.id
+                        else:
+                            logger.error(f"Cannot extract paperId from Neo4j node: {similar_paper_node}")
+                            continue
+                            
+                    # Ambil paper lengkap dari database dengan neomodel
+                    paper_obj = Paper.nodes.get(paperId=similar_paper_id)
                     
-        return data
-
+                    # Ambil author
+                    authors = []
+                    for author in paper_obj.authored_by.all():
+                        authors.append({
+                            "name": author.name
+                        })
+                    
+                    # Buat data paper
+                    paper_data = {
+                        "paperId": paper_obj.paperId,
+                        "title": paper_obj.title,
+                        "abstract": paper_obj.abstract,
+                        "score": similarity_score,
+                        "authors": authors,
+                        "date": paper_obj.publicationDate,
+                        "doi": paper_obj.doi,
+                        "url": paper_obj.url,
+                        "year": paper_obj.year
+                    }
+                    
+                    # Format tanggal
+                    if paper_data["date"]:
+                        try:
+                            try:
+                                dt = datetime.strptime(paper_data["date"], "%Y-%m-%d %H:%M:%S")
+                            except ValueError:
+                                dt = datetime.strptime(paper_data["date"], "%Y-%m-%d")
+                            paper_data["date"] = dt.strftime("%d %B %Y")
+                        except Exception as e:
+                            logger.error(f"Date parse error for paper {paper_data['paperId']}: {e}")
+                            paper_data["date"] = paper_data.get("year", "Unknown date")
+                    else:
+                        paper_data["date"] = paper_data.get("year", "Unknown date")
+                    
+                    # Tambahkan ke hasil
+                    paper_recommendation.append(paper_data)
+                
+                except Paper.DoesNotExist:
+                    logger.error(f"Paper with ID {similar_paper_id} does not exist.")
+                    continue
+                except Exception as e:
+                    logger.error(f"Error processing paper: {str(e)}")
+                    continue
+        
+        return paper_recommendation
+    
     except Exception as e:
-        print(f"Error in get_recommendation: {str(e)}")
+        logger.error(f"Error in get_recommendation: {str(e)}")
         return []
     finally:
-        if driver:
+        # Pastikan driver didefinisikan sebelum mencoba menutupnya
+        if 'driver' in locals() and driver is not None:
             driver.close()
 
-def get_detail_json(request, paper_id):
+def get_detail_paper(request, paper_id):
     if not paper_id:
         return JsonResponse({'error': 'Missing paper_id'}, status=400)
 
-    driver = None
     try:
-        neo4j_connection = Neo4jConnection()
-        driver = neo4j_connection.get_driver()
+        paper = Paper.nodes.get(paperId=paper_id)
 
-        with driver.session() as session:
-            result = session.run("""
-                MATCH (p:Paper {paperId: $paperId})
-                OPTIONAL MATCH (p)-[:AUTHORED_BY]->(a:Author)
-                RETURN p.title as title, 
-                    p.abstract as abstract,
-                    p.publicationDate as date,
-                    p.year as year,
-                    p.doi as doi,
-                    p.url as url,
-                    collect({name: a.name, id: a.authorId}) as authors
-            """, paperId=paper_id)
+        authors = []
+        for author in paper.authored_by.all():
+            authors.append({
+                "name": author.name
+            })
 
-            record = result.single()
+        data_paper = {
+            "paperId": paper.paperId,
+            "title": paper.title,
+            "abstract": paper.abstract,
+            "date": paper.publicationDate,
+            "doi": paper.doi,
+            "url": paper.url,
+            "year": paper.year,
+            "authors": authors
+        }
 
-            if not record:
-                return JsonResponse({'error': 'Paper not found'}, status=404)
-
-            paper = {
-                "paperId": paper_id,
-                "title": record["title"],
-                "abstract": record["abstract"],
-                "date": record["date"],
-                "doi": record["doi"],
-                "url": record["url"],
-                "year": record["year"],
-                "authors": record["authors"]
-            }
-
-            if paper["date"]:
+        if data_paper["date"]:
+            try:
                 try:
-                    try:
-                        dt = datetime.strptime(paper["date"], "%Y-%m-%d %H:%M:%S")
-                    except ValueError:
-                        dt = datetime.strptime(paper["date"], "%Y-%m-%d")
-                    paper["date"] = dt.strftime("%d %B %Y")
-                except Exception as e:
-                    logger.error(f"Date parse error for paper {paper['paperId']}: {e}")
-                    paper["date"] = paper.get("year", "Unknown date")
-            else:
-                paper["date"] = paper.get("year", "Unknown date")
-        
-        driver.close()
+                    dt = datetime.strptime(data_paper["date"], "%Y-%m-%d %H:%M:%S")
+                except ValueError:
+                    dt = datetime.strptime(data_paper["date"], "%Y-%m-%d")
+                data_paper["date"] = dt.strftime("%d %B %Y")
+            except Exception as e:
+                logger.error(f"Date parse error for paper {data_paper['paperId']}: {e}")
+                data_paper["date"] = data_paper.get("year", "Unknown date")
+        else:
+            data_paper["date"] = data_paper.get("year", "Unknown date")
 
+        # Dapatkan rekomendasi paper
         paper_recommendation = get_recommendation(paper_id)
 
         return render(request, "base.html", {
             "content_template": "detail-paper/index.html",
             "body_class": "bg-gray-100",
             "show_search_form": True,
-            "paper": paper,
+            "paper": data_paper,
             "paper_recommendation": paper_recommendation
         })
 
+    except Paper.DoesNotExist:
+        logger.error(f"Paper with ID {paper_id} not found")
+        return render(request, "base.html", {
+            "content_template": "detail-paper/index.html",
+            "body_class": "bg-gray-100",
+            "show_search_form": True,
+            "error": f"Paper not found"
+        })
     except Exception as e:
         logger.error(f"Error getting paper detail: {str(e)}")
         return render(request, "base.html", {
@@ -184,91 +168,7 @@ def get_detail_json(request, paper_id):
             "error": f"An error occurred: {str(e)}"
         })
 
-def get_paper_detail(request, paper_id):
-    try:
-        neo4j_connection = Neo4jConnection()
-        driver = neo4j_connection.get_driver()
-        
-        with driver.session() as session:
-            result = session.run("""
-                MATCH (p:Paper {paperId: $paperId})
-                RETURN p.paperId AS paperId,
-                       p.title AS title,
-                       p.abstract AS abstract,
-                       p.authors AS authors,
-                       p.publicationDate AS date,
-                       p.externalIds AS externalIds,
-                       p.url AS url,
-                       p.cso_topics AS topics
-            """, paperId=paper_id).single()
 
-            if not result:
-                raise Exception("Paper not found")
-            
-            external_ids = {}
-            if result["externalIds"]:
-                try:
-                    external_ids = ast.literal_eval(result["externalIds"])
-                except:
-                    external_ids = {}
-
-            paper = {
-                "id": result["paperId"],
-                "title": result["title"],
-                "abstract": result["abstract"] or "",
-                "authors": result["authors"] or [],
-                "date": result["date"] or "",
-                "doi": external_ids.get('DOI', ''),
-                "url": result["url"] or "",
-            }
-
-            if paper["date"]:
-                dt = datetime.strptime(paper["date"], "%Y-%m-%d %H:%M:%S")
-                paper["date"] = dt.strftime("%d %B %Y")
-
-            paper_recommendation = [
-                {
-                    "id": "1",
-                    "title": "Understanding Deep Learning Requires Rethinking Generalization",
-                    "abstract": "Deep learning has achieved remarkable success in many applications...",
-                    "authors": ["Zhang, Chiyuan", "Bengio, Samy", "Hardt, Moritz"],
-                    "date": "15 March 2024"
-                },
-                {
-                    "id": "2", 
-                    "title": "Attention Is All You Need",
-                    "abstract": "The dominant sequence transduction models are based on complex recurrent neural networks...",
-                    "authors": ["Vaswani, Ashish", "Shazeer, Noam"],
-                    "date": "12 March 2024"
-                },
-                {
-                    "id": "3",
-                    "title": "BERT: Pre-training of Deep Bidirectional Transformers",
-                    "abstract": "We introduce a new language representation model called BERT...",
-                    "authors": ["Devlin, Jacob", "Chang, Ming-Wei"],
-                    "date": "10 March 2024"
-                }
-            ]
-
-        driver.close()
-
-        return render(request, "base.html", {
-            "content_template": "detail-paper/index.html",
-            "body_class": "bg-gray-100",
-            "show_search_form": True,
-            "paper": paper,
-            "paper_recommendation": paper_recommendation
-        })
-
-    except Exception as e:
-        logger.error(f"Error getting paper detail: {str(e)}")
-        return render(request, "base.html", {
-            "content_template": "detail-paper/index.html",
-            "body_class": "bg-gray-100",
-            "show_search_form": True,
-            "error": f"An error occurred: {str(e)}"
-        })
-    
 def record_paper_read(request):
     if request.method == 'POST':
         paper_id = request.POST.get('paper_id')
@@ -280,6 +180,9 @@ def record_paper_read(request):
         
         if not user_id:
             return JsonResponse({'status': 'error', 'message': 'User not authenticated'}, status=401)
+        
+        if not paper_id:
+            return JsonResponse({'status': 'error', 'message': 'Missing paper_id'}, status=400)
         
         try:
             user = User.nodes.get(userId=user_id)
