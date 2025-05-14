@@ -139,7 +139,7 @@ def fetch_papers(request):
 
         # save reference to CSV
         reference_fieldnames = ["source_id", "target_id"]
-        save_to_csv(REFERENCES_PATH, references_list, reference_fieldnames, mode='w')
+        save_to_csv(REFERENCES_PATH, references_list, reference_fieldnames, mode='a')
 
         return JsonResponse({
             "message": "Paper fetched successfully, data saved to CSV",
