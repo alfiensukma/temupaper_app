@@ -1,3 +1,4 @@
+import json
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
 from datetime import datetime, timedelta
@@ -124,31 +125,35 @@ def build_date_filter(start_date, end_date):
     
     if start_date and end_date:
         try:
-            start_dt = parse_indonesian_date(start_date)
-            end_dt = parse_indonesian_date(end_date)
-            start_str = start_dt.strftime("%Y-%m-%d")
-            end_str = end_dt.strftime("%Y-%m-%d")
-            
             date_filter = """
                 AND (
-                    (paper.publicationDate IS NOT NULL AND 
-                     left(paper.publicationDate, 10) >= $start_date AND
-                     left(paper.publicationDate, 10) <= $end_date)
-                    OR
-                    (paper.year IS NOT NULL AND 
-                     paper.year >= $start_year AND
-                     paper.year <= $end_year)
+                    CASE
+                        WHEN paper.publicationDate IS NOT NULL THEN
+                            CASE 
+                                WHEN paper.publicationDate CONTAINS '/' 
+                                THEN toInteger(split(split(paper.publicationDate, ' ')[0], '/')[2]) >= $start_year
+                                     AND toInteger(split(split(paper.publicationDate, ' ')[0], '/')[2]) <= $end_year
+                                WHEN paper.publicationDate CONTAINS '-' 
+                                THEN toInteger(split(paper.publicationDate, '-')[0]) >= $start_year
+                                     AND toInteger(split(paper.publicationDate, '-')[0]) <= $end_year
+                                ELSE false
+                            END
+                        WHEN paper.year IS NOT NULL THEN
+                            toInteger(paper.year) >= $start_year AND toInteger(paper.year) <= $end_year
+                        ELSE false
+                    END
                 )
             """
+            
             params = {
-                "start_date": start_str,
-                "end_date": end_str,
-                "start_year": start_dt.year,
-                "end_year": end_dt.year
+                "start_year": int(start_date),
+                "end_year": int(end_date)
             }
-            logger.info(f"Date filter applied: {start_str} to {end_str}")
+            logger.info(f"Applied date filter: {start_date} to {end_date}")
+            
         except Exception as e:
-            logger.error(f"Error processing dates: {e}")
+            logger.error(f"Error building date filter: {str(e)}")
+            return "", {}
     
     return date_filter, params
 
@@ -244,12 +249,27 @@ def format_paper_data(record, is_seed=False):
     # Format date
     if record["date"]:
         try:
-            date_str = record["date"].split()[0] if ' ' in record["date"] else record["date"]
-            dt = datetime.strptime(date_str, "%Y-%m-%d")
-            paper_data["date"] = dt.strftime("%d %B %Y")
+            date_str = record["date"]
+            
+            # Handle date format "m/d/yyyy 0:00" or "m/d/yyyy"
+            if '/' in date_str:
+                date_str = date_str.split()[0]
+                month, day, year = map(int, date_str.split('/'))
+                dt = datetime(year, month, day)
+                paper_data["date"] = dt.strftime("%d %B %Y")
+            
+            # Handle date format "yyyy-mm-dd"
+            elif '-' in date_str:
+                dt = datetime.strptime(date_str.split()[0], "%Y-%m-%d")
+                paper_data["date"] = dt.strftime("%d %B %Y")
+            
+            else:
+                paper_data["date"] = date_str
+                
         except Exception as e:
-            logger.debug(f"Error formatting date '{record['date']}': {e}")
+            logger.error(f"Error formatting date '{record['date']}': {str(e)}")
             paper_data["date"] = record["date"]
+            
     elif record["year"]:
         paper_data["date"] = str(record["year"])
     else:
@@ -283,8 +303,18 @@ def process_search_results(knn_details, similar_results):
 
 # Main search function
 def search(request):
+    query = request.GET.get('query', '').strip()
     paper_id = None
     driver = None
+    
+    if request.GET.get('state') != 'loaded':
+        return render(request, "base.html", {
+            "content_template": "search-paper/search-result.html",
+            "query": query,
+            "is_loading": True,
+            "body_class": "bg-gray-100",
+            "show_search_form": True
+        })
     
     try:
         # Prepare search parameters
@@ -356,6 +386,7 @@ def search(request):
             "start_date": search_params['start_date'],
             "end_date": search_params['end_date'],
             "results_count": len(papers),
+            "is_loading": False
         })
 
     except Exception as e:
@@ -364,7 +395,8 @@ def search(request):
             "content_template": "search-paper/search-result.html",
             "body_class": "bg-gray-100",
             "show_search_form": True,
-            "error": f"An error occurred: {str(e)}"
+            "error": f"An error occurred: {str(e)}",
+            "is_loading": False
         })
     finally:
         # Clean up resources

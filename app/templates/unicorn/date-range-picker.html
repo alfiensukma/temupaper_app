@@ -1,9 +1,10 @@
 <div 
     x-data="yearRangePicker()" 
-    x-cloak 
+    x-init="init()"
     class="relative">
 
     <button 
+        type="button"
         @click="show = !show"
         class="text-center text-base text-blue-600 border border-blue-600 rounded-2xl px-6 py-2 hover:bg-blue-600 hover:text-white"
     >
@@ -14,55 +15,123 @@
     </button>
 
     <div 
-        x-show="show" 
+        x-show="show"
+        x-transition
         @click.away="show = false"
-        class="absolute z-50 mt-2 w-[300px] p-4 bg-white border rounded-lg shadow-lg"
+        class="absolute z-50 mt-2 w-[300px] p-4 bg-white rounded-lg shadow-lg"
     >
         <div class="grid grid-cols-2 gap-4 mb-4">
-            <div>
-                <label class="block mb-1 text-sm font-medium text-gray-600">Tahun Mulai</label>
-                <select x-model="startYear" class="w-full px-4 py-2 border rounded-md">
-                    <template x-for="year in years">
+            <div class="relative">
+                <select 
+                    x-model="startYear" 
+                    @click="startFocused = !startFocused"
+                    @blur="startFocused = false"
+                    class="appearance-none w-full p-2 pr-8 bg-white border border-gray-200 rounded-lg outline-none transition-all duration-300 focus:ring-2 focus:ring-[#4787FA] focus:ring-offset-0"
+                >
+                    <option value="">Pilih Tahun</option>
+                    <template x-for="year in years" :key="year">
                         <option :value="year" x-text="year"></option>
                     </template>
                 </select>
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2">
+                    <svg 
+                        class="w-4 h-4 text-gray-400" 
+                        :class="{ 'transform rotate-180': startFocused }"
+                        fill="none" 
+                        stroke="currentColor" 
+                        viewBox="0 0 24 24"
+                    >
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </div>
             </div>
-            <div>
-                <label class="block mb-1 text-sm font-medium text-gray-600">Tahun Selesai</label>
-                <select x-model="endYear" class="w-full px-4 py-2 border rounded-md">
-                    <template x-for="year in years">
+
+            <div class="relative">
+                <select 
+                    x-model="endYear"
+                    @click="endFocused = !endFocused"
+                    @blur="endFocused = false"
+                    class="appearance-none w-full p-2 pr-8 bg-white border border-gray-200 rounded-lg outline-none transition-all duration-300 focus:ring-2 focus:ring-[#4787FA] focus:ring-offset-0"
+                >
+                    <option value="">Pilih Tahun</option>
+                    <template x-for="year in years" :key="year">
                         <option :value="year" x-text="year"></option>
                     </template>
                 </select>
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2">
+                    <svg 
+                        class="w-4 h-4 text-gray-400" 
+                        :class="{ 'transform rotate-180': endFocused }"
+                        fill="none" 
+                        stroke="currentColor" 
+                        viewBox="0 0 24 24"
+                    >
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </div>
             </div>
         </div>
 
-        <button
-            @click="applyYearRange()"
-            class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700"
-        >
-            Terapkan
-        </button>
+        <div class="flex gap-2">
+            <button
+                type="button"
+                @click="clearFilter()"
+                class="flex-1 rounded-md text-[#4787FA] border border-[#4787FA] bg-transparent hover:bg-blue-50 transition-colors duration-200 focus:ring-2 focus:outline-none focus:ring-blue-300"
+            >
+                Reset
+            </button>
+            <button
+                type="button"
+                @click="applyYearRange()"
+                class="flex-1 bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700"
+            >
+                Terapkan
+            </button>
+        </div>
     </div>
-</div>
 
-<script>
-function yearRangePicker() {
-    return {
-        show: false,
-        startYear: '',
-        endYear: '',
-        selectedRange: '',
-        years: Array.from({ length: 50 }, (_, i) => new Date().getFullYear() - i), // 50 tahun ke belakang
+    <script>
+        function yearRangePicker() {
+            return {
+                show: false,
+                startYear: new URLSearchParams(window.location.search).get('start_date') || '',
+                endYear: new URLSearchParams(window.location.search).get('end_date') || '',
+                startFocused: false,
+                endFocused: false,
+                selectedRange: '',
+                years: Array.from({ length: 50 }, (_, i) => new Date().getFullYear() - i),
 
-        applyYearRange() {
-            if (this.startYear && this.endYear && parseInt(this.startYear) <= parseInt(this.endYear)) {
-                this.selectedRange = `${this.startYear} - ${this.endYear}`;
-                this.show = false;
-            } else {
-                alert("Pastikan Tahun Mulai tidak lebih besar dari Tahun Selesai.");
+                init() {
+                    if (this.startYear && this.endYear) {
+                        this.selectedRange = `${this.startYear} - ${this.endYear}`;
+                    }
+                },
+
+                clearFilter() {
+                    const url = new URL(window.location.href);
+                    url.searchParams.delete('start_date');
+                    url.searchParams.delete('end_date');
+                    url.searchParams.set('state', 'loaded');
+                    window.location.href = url.toString();
+                },
+
+                applyYearRange() {
+                    if (this.startYear && this.endYear) {
+                        if (parseInt(this.startYear) <= parseInt(this.endYear)) {
+                            const url = new URL(window.location.href);
+                            url.searchParams.set('start_date', this.startYear);
+                            url.searchParams.set('end_date', this.endYear);
+                            url.searchParams.set('state', 'loaded');
+                            url.searchParams.set('page', '1');
+                            window.location.href = url.toString();
+                        } else {
+                            alert("Pastikan Tahun Mulai tidak lebih besar dari Tahun Selesai.");
+                        }
+                    } else {
+                        alert("Silakan pilih tahun mulai dan tahun selesai.");
+                    }
+                }
             }
         }
-    }
-}
-</script>
+    </script>
+</div>
