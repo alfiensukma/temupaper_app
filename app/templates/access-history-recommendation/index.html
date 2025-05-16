@@ -1,44 +1,48 @@
 {% load unicorn %}
 
 <p class="text-2xl md:text-3xl lg:text-4xl font-semibold py-6">Berdasarkan <span class="text-[#4787FA]">Riwayat Akses</span></p>
-{% unicorn "info-alert" title_alert='Informasi' content_alert='Rekomendasi diberikan berdasarkan <span class="text-[#4787FA] font-bold">kelompok riwayat akses</span>, namun Anda <span class="text-[#4787FA] font-bold">dapat memodifikasinya</span> untuk hanya menampilkan rekomendasi dari <span class="text-[#4787FA] font-bold">riwayat akses tertentu</span> jika hasil rekomendasi saat ini dirasa kurang sesuai.' %}
+{% unicorn "info-alert" title_alert='Informasi' content_alert='Rekomendasi diberikan berdasarkan <span class="text-[#4787FA] font-bold">riwayat akses Anda</span>.' %}
 
-<div class="flex flex-col gap-6 md:grid md:grid-cols-4 md:gap-4" x-data="{ 
-    showIndicator: true,
-    scrollToBottom() {
-        window.scrollTo({
-            top: document.documentElement.scrollHeight,
-            behavior: 'smooth'
-        });
-    }
-}">
-    <div class="md:col-span-3">
-        <div class="grid gap-6">
-            {% for t in topics %}
-                {% unicorn "access-history-item" topic=t topic_papers=topic_papers %}
-            {% endfor %}
-        </div>
-    </div>
+<div class="grid gap-6
+  [&_.bg-color]:bg-white
+  [&_.bg-color-author]:bg-gray-100
+    [&_.paper-title]:text-base lg:[&_.paper-title]:text-[25px]
+    [&_.paper-authors]:text-sm md:[&_.paper-authors]:text-base
+    [&_.paper-date]:text-sm md:[&_.paper-date]:text-base
+    [&_.paper-abstract]:text-sm md:[&_.paper-abstract]:text-base
+">
+    {% for paper in page_obj %}
+        {% unicorn "paper-item" title=paper.title authors=paper.authors date=paper.date abstract=paper.abstract %}
+    {% empty %}
+        <p class="text-center text-gray-500 text-xl mt-3">Tidak ada hasil ditemukan.</p>
+    {% endfor %}
+</div>
 
-    <div class="md:col-span-1">
-        {% unicorn "result-confirmation" history_papers=history_papers %}
-    </div>
-
-    <!-- Scroll Indicator -->
-    <div x-show="showIndicator" 
-        @click="scrollToBottom()"
-        x-transition:enter="transition ease-out duration-300"
-        x-transition:enter-start="opacity-0 translate-y-2"
-        x-transition:enter-end="opacity-100 translate-y-0"
-        x-transition:leave="transition ease-in duration-200"
-        x-transition:leave-start="opacity-100"
-        x-transition:leave-end="opacity-0"
-        class="fixed bottom-4 left-1/2 -translate-x-1/2 text-center z-50 bg-white/80 px-4 py-3 rounded-full shadow-md cursor-pointer hover:bg-white hover:shadow-lg transition-all duration-300">
-        <div class="flex flex-col items-center text-gray-500">
-            <span class="text-sm mb-1">Scroll untuk melihat lebih banyak</span>
-            <svg class="w-4 h-4 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+<div class="mt-10 flex justify-start items-center gap-2 font-semibold">
+    {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}"
+            class="px-4 py-2 bg-white border border-gray-300 rounded hover:bg-gray-100">
+            <svg width="8" height="24" viewBox="0 0 9 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M8.16003 1.41L3.58003 6L8.16003 10.59L6.75003 12L0.750034 6L6.75003 0L8.16003 1.41Z"
+                    fill="#C4CDD5" />
             </svg>
-        </div>
-    </div>
+        </a>
+    {% endif %}
+
+    {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+            <span class="px-4 py-2 bg-white text-[#4787FA] rounded border-2 border-[#4787FA]">{{ num }}</span>
+        {% else %}
+            <a href="?page={{ num }}" class="px-4 py-2 bg-white border border-gray-300 rounded hover:bg-gray-100">{{ num }}</a>
+        {% endif %}
+    {% endfor %}
+
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}"
+            class="px-4 py-2 bg-white border border-gray-300 rounded hover:bg-gray-100">
+            <svg width="9" height="24" viewBox="0 0 9 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0.839966 1.41L5.41997 6L0.839966 10.59L2.24997 12L8.24997 6L2.24997 0L0.839966 1.41Z" fill="#C4CDD5"/>
+            </svg>                
+        </a>
+    {% endif %}
 </div>

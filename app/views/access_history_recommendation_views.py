@@ -1,9 +1,33 @@
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
 from datetime import datetime
+from app.models import User, Paper
+import logging
+from neomodel  import db
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 def access_history(request):
-    topic = ["AI", "Data Science", "Machine Learning"]
+    user_id = request.session.get('user_id')
+
+    query = """
+        MATCH (pt:Institution {institutionId: $institutionId})<-[:AFFILIATED_WITH]-(u:User)-[:HAS_READ]->(p:Paper)
+        WITH p, count(u) AS jumlahPembaca
+        OPTIONAL MATCH (p)-[:AUTHORED_BY]->(author:Author)
+        RETURN 
+            p.title AS title,
+            p.paperId as paperId,
+                p.abstract as abstract, 
+                jumlahPembaca,
+                p.publicationDate AS date,
+                p.year AS year,
+                collect(DISTINCT author.name) AS authors
+            ORDER BY jumlahPembaca DESC, p.publicationDate DESC, p.year DESC
+            LIMIT 10
+        """
+        
+    results, meta = db.cypher_query(query)
     
     papers = [
         {
@@ -40,44 +64,14 @@ def access_history(request):
         except Exception as e:
             print(f"Date parse error: {e}")
 
-    # Topic-specific papers for the popup
-    topic_papers = {
-        "AI": [
-            {"title": "Advances in Artificial Intelligence"},
-            {"title": "AI for Healthcare"}
-        ],
-        "Data Science": [
-            {"title": "Data Science for Business"}
-        ],
-        "Machine Learning": [
-            {"title": "Deep Learning Techniques"}
-        ]
-    }
+    paginator = Paginator(papers, 5)
+    page_number = request.GET.get("page", 1)
+    page_obj = paginator.get_page(page_number)
     
-    history_papers = [
-        {
-            "id": 1,
-            "title": "In silico exploration of the fructose-6-phosphate phosphorylation step in glycolysis",
-            "checked": False
-        },
-        {
-            "id": 2,
-            "title": "Deep Learning Applications in Modern Healthcare",
-            "checked": False
-        },
-        {
-            "id": 3,
-            "title": "Advanced Data Science Techniques for Business Analytics",
-            "checked": False
-        }
-    ]
-
     return render(request, "base.html", {
         "content_template": "access-history-recommendation/index.html",
         "body_class": "bg-gray-100",
         "show_search_form": False,
         "papers": papers,
-        "topics": topic,
-        "topic_papers": topic_papers,
-        "history_papers": history_papers,
+        "page_obj": page_obj,
     })
