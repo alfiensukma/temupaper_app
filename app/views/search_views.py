@@ -159,22 +159,25 @@ def build_date_filter(start_date, end_date):
 
 def find_seed_papers(session, paper_id, date_filter, params):
     """Find initial seed papers using KNN similarity search"""
+
+    print(f"Seed paper IDs: {paper_id}")
+
+    logger.info(f"Running KNN query with params: {params}")
     knn_query = """
         MATCH (p:Paper {paperId: $paperId})
         CALL gds.knn.stream('myGraph', {
-            topK: 1,
+            topK: 10,
             nodeProperties: ['search_embedding'],
             randomSeed: 42,
             concurrency: 1,
-            sampleRate: 0.8,
+            sampleRate: 1.0,
             deltaThreshold: 0.1
         })
         YIELD node1, node2, similarity
-        WHERE id(p) = node1
-        WITH gds.util.asNode(node2) AS paper, similarity
-        WHERE paper.paperId <> $paperId
+        WHERE node1 = id(p)
         """ + date_filter + """
-        RETURN DISTINCT paper.paperId AS paperId, similarity AS knn_similarity
+        WITH gds.util.asNode(node2) AS paper, similarity
+        RETURN paper.paperId AS paperId, similarity AS knn_similarity
         ORDER BY knn_similarity DESC
         LIMIT 1
     """
@@ -206,6 +209,16 @@ def find_similar_papers(session, seed_paper_ids, date_filter, params):
             collect(DISTINCT author.name) AS authors
     """
     
+    knn_details = session.run(knn_detail_query, paperIds=seed_paper_ids)
+    
+    # Print or log the titles of seed papers
+    logger.info("Seed paper titles:")
+    for record in knn_details:
+        logger.info(f"Title: {record['title']}")
+    
+    # Reset the cursor for knn_details to be used later
+    knn_details = session.run(knn_detail_query, paperIds=seed_paper_ids)
+    
     # Get papers similar to seed papers
     similar_query = """
         UNWIND $paperIds AS topPaperId
@@ -224,10 +237,9 @@ def find_similar_papers(session, seed_paper_ids, date_filter, params):
             r.score AS similarity_score,
             collect(DISTINCT author.name) AS authors
         ORDER BY similarity_score DESC, paper.pagerank DESC
-        LIMIT 20
+        LIMIT 49
     """
     
-    knn_details = session.run(knn_detail_query, paperIds=seed_paper_ids)
     similar_results = session.run(similar_query, paperIds=seed_paper_ids, **params)
     
     return knn_details, similar_results
@@ -243,10 +255,11 @@ def format_paper_data(record, is_seed=False):
         "citation_count": record["citation_count"] or 0,
         "similarity": record["similarity_score"],
         "authors": record["authors"],
+        "date": record["date"],
+        "year": record["year"],
         "is_seed": is_seed
     }
-    
-    # Format date
+
     if record["date"]:
         try:
             date_str = record["date"]
@@ -273,7 +286,7 @@ def format_paper_data(record, is_seed=False):
     elif record["year"]:
         paper_data["date"] = str(record["year"])
     else:
-        paper_data["date"] = "Unknown date"
+        paper_data["date"] = record.get("year", "Unknown date")
     
     return paper_data
 

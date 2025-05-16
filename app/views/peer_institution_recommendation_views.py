@@ -3,7 +3,7 @@ from django.core.paginator import Paginator
 from app.models import User
 from datetime import datetime
 import logging
-from neomodel  import db
+from app.utils.neo4j_connection import Neo4jConnection
 
 logger = logging.getLogger(__name__)
 
@@ -24,52 +24,58 @@ def peer_institution(request):
         institutions = current_user.affiliated_with.all()
         institution = institutions[0]
         institutionId = institution.institutionId
+
+        neo4j_connection = Neo4jConnection()
+        driver = neo4j_connection.get_driver()
         
-        # Menggunakan Cypher query via neomodel
-        query = """
-            MATCH (pt:Institution {institutionId: $institutionId})<-[:AFFILIATED_WITH]-(u:User)-[:HAS_READ]->(p:Paper)
-            WITH p, count(u) AS jumlahPembaca
-            OPTIONAL MATCH (p)-[:AUTHORED_BY]->(author:Author)
-            RETURN 
-                p.title AS title,
-                p.paperId as paperId,
-                p.abstract as abstract, 
-                jumlahPembaca,
-                p.publicationDate AS date,
-                p.year AS year,
-                collect(DISTINCT author.name) AS authors
-            ORDER BY jumlahPembaca DESC, p.publicationDate DESC, p.year DESC
-            LIMIT 10
-        """
-        
-        results, meta = db.cypher_query(query, {'institutionId': institutionId})
-        
-        # Transformasi data hasil query
-        papers = []
-        for row in results:
-            papers.append({
-                "paperId": row[1],
-                "title": row[0],
-                "abstract": row[2],
-                "date": row[4],
-                "year": row[5],
-                "authors": row[6]
-            })
-            
-        # Memformat tanggal untuk paper
-        for paper in papers:
-            if paper["date"]:
-                try:
+        with driver.session() as session:
+            result = session.run("""
+                MATCH (pt:Institution {institutionId: $institutionId})<-[:AFFILIATED_WITH]-(u:User)-[:HAS_READ]->(p:Paper)
+                WHERE NOT EXISTS {
+                    MATCH (currentUser:User {userId: $userId})-[:HAS_READ]->(p)
+                }
+                WITH p, count(u) AS jumlahPembaca
+                OPTIONAL MATCH (p)-[:AUTHORED_BY]->(author:Author)
+                RETURN 
+                    p.title AS title,
+                    p.paperId as paperId,
+                    p.abstract as abstract, 
+                    jumlahPembaca,
+                    p.publicationDate AS date,
+                    p.year AS year,
+                    collect(DISTINCT author.name) AS authors
+                ORDER BY jumlahPembaca DESC, p.publicationDate DESC, p.year DESC
+                LIMIT 10
+            """, institutionId=institutionId, userId=user_id) 
+
+            papers = [{
+                "paperId": record["paperId"],
+                "title": record["title"],
+                "date": record["date"],
+                "abstract": record["abstract"],
+                "authors": record["authors"],
+                "year": record["year"]
+            } for record in result]       
+
+            for paper in papers:
+                if paper["date"]:
                     try:
-                        dt = datetime.strptime(paper["date"], "%Y-%m-%d %H:%M:%S")
-                    except ValueError:
-                        dt = datetime.strptime(paper["date"], "%Y-%m-%d")
-                    paper["date"] = dt.strftime("%d %B %Y")
-                except Exception as e:
-                    logger.error(f"Date parse error for paper {paper['paperId']}: {e}")
-                    paper["date"] = paper.get("year", "Unknown date")
-            else:
-                paper["date"] = paper.get("year", "Unknown date")
+                        date_str = paper["date"]
+                        # Format "m/d/yyyy 0:00" atau "m/d/yyyy"
+                        if '/' in date_str:
+                            date_str = date_str.split()[0]
+                            month, day, year = map(int, date_str.split('/'))
+                            dt = datetime(year, month, day)
+                            paper["date"] = dt.strftime("%d %B %Y")
+                        # Format "yyyy-mm-dd"
+                        elif '-' in date_str:
+                            dt = datetime.strptime(date_str.split()[0], "%Y-%m-%d")
+                            paper["date"] = dt.strftime("%d %B %Y")
+                        else:
+                            paper["date"] = date_str
+                    except Exception as e:
+                        logger.error(f"Error formatting date '{paper['date']}': {str(e)}")
+                        paper["date"] = paper["date"]
 
         # Paginasi hasil
         paginator = Paginator(papers, 5)
@@ -92,3 +98,6 @@ def peer_institution(request):
             "show_search_form": False,
             "error": f"Terjadi kesalahan: {str(e)}"
         })
+    finally:
+        if driver:
+            driver.close()
