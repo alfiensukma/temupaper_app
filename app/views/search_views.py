@@ -237,7 +237,7 @@ def find_similar_papers(session, seed_paper_ids, date_filter, params):
             r.score AS similarity_score,
             collect(DISTINCT author.name) AS authors
         ORDER BY similarity_score DESC, paper.pagerank DESC
-        LIMIT 20
+        LIMIT 49
     """
     
     similar_results = session.run(similar_query, paperIds=seed_paper_ids, **params)

@@ -29,9 +29,9 @@ def profile_view(request):
         print(f"Found {len(affiliated_institutions)} affiliated institutions")
         
         for rel in affiliated_institutions:
-            user_data['institution'] = rel.name
+            user_data['institution'] = rel.names
             user_data['institution_id'] = rel.institutionId
-            print(f"Setting institution to: {rel.name} (ID: {rel.institutionId})")
+            print(f"Setting institution to: {rel.names} (ID: {rel.institutionId})")
             break
             
     except User.DoesNotExist:
