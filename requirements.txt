@@ -8,5 +8,4 @@ rdflib
 django-unicorn
 django-neomodel
 django-browser-reload
-python-dotenv
-pandas
+neo4j-graphrag[sentence-transformers]

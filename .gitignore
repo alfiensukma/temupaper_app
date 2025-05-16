@@ -9,3 +9,5 @@ logs/
 __pycache__/
 debug.log
 data-csv/
+db.sqlite3
+*.sqlite3
