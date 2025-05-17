@@ -1,17 +1,13 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.core.paginator import Paginator
-from datetime import datetime
-from app.utils.neo4j_connection import get_neo4j_driver
-import logging
 from app.models import User
+from datetime import datetime
+import logging
+from app.utils.neo4j_connection import Neo4jConnection
 
-logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 def peer_institution(request):
-    driver = None
-    
-    # Cek autentikasi user
     if not request.session.get('is_authenticated', False):
         return render(request, "base.html", {
             "content_template": "peer-institution-recommendation/index.html",
@@ -25,25 +21,19 @@ def peer_institution(request):
     try:
         # Mendapatkan informasi user dan institusi
         current_user = User.nodes.get(userId=user_id)
-        institutions = list(current_user.affiliated_with.all())
-        
-        if not institutions:
-            return render(request, "base.html", {
-                "content_template": "peer-institution-recommendation/index.html",
-                "body_class": "bg-gray-100",
-                "show_search_form": False,
-                "error": "User tidak memiliki afiliasi institusi"
-            })
-        
-        institutionId = institutions[0].institutionId
-        
-        # Query Neo4j untuk paper rekomendasi
-        driver = get_neo4j_driver()
-        papers = []
+        institutions = current_user.affiliated_with.all()
+        institution = institutions[0]
+        institutionId = institution.institutionId
+
+        neo4j_connection = Neo4jConnection()
+        driver = neo4j_connection.get_driver()
         
         with driver.session() as session:
             result = session.run("""
                 MATCH (pt:Institution {institutionId: $institutionId})<-[:AFFILIATED_WITH]-(u:User)-[:HAS_READ]->(p:Paper)
+                WHERE NOT EXISTS {
+                    MATCH (currentUser:User {userId: $userId})-[:HAS_READ]->(p)
+                }
                 WITH p, count(u) AS jumlahPembaca
                 OPTIONAL MATCH (p)-[:AUTHORED_BY]->(author:Author)
                 RETURN 
@@ -56,9 +46,8 @@ def peer_institution(request):
                     collect(DISTINCT author.name) AS authors
                 ORDER BY jumlahPembaca DESC, p.publicationDate DESC, p.year DESC
                 LIMIT 10
-            """, institutionId=institutionId)
+            """, institutionId=institutionId, userId=user_id) 
 
-            # Transformasi data hasil query
             papers = [{
                 "paperId": record["paperId"],
                 "title": record["title"],
@@ -66,22 +55,27 @@ def peer_institution(request):
                 "abstract": record["abstract"],
                 "authors": record["authors"],
                 "year": record["year"]
-            } for record in result]
-            
-        # Memformat tanggal untuk paper
-        for paper in papers:
-            if paper["date"]:
-                try:
+            } for record in result]       
+
+            for paper in papers:
+                if paper["date"]:
                     try:
-                        dt = datetime.strptime(paper["date"], "%Y-%m-%d %H:%M:%S")
-                    except ValueError:
-                        dt = datetime.strptime(paper["date"], "%Y-%m-%d")
-                    paper["date"] = dt.strftime("%d %B %Y")
-                except Exception as e:
-                    logger.error(f"Date parse error for paper {paper['paperId']}: {e}")
-                    paper["date"] = paper.get("year", "Unknown date")
-            else:
-                paper["date"] = paper.get("year", "Unknown date")
+                        date_str = paper["date"]
+                        # Format "m/d/yyyy 0:00" atau "m/d/yyyy"
+                        if '/' in date_str:
+                            date_str = date_str.split()[0]
+                            month, day, year = map(int, date_str.split('/'))
+                            dt = datetime(year, month, day)
+                            paper["date"] = dt.strftime("%d %B %Y")
+                        # Format "yyyy-mm-dd"
+                        elif '-' in date_str:
+                            dt = datetime.strptime(date_str.split()[0], "%Y-%m-%d")
+                            paper["date"] = dt.strftime("%d %B %Y")
+                        else:
+                            paper["date"] = date_str
+                    except Exception as e:
+                        logger.error(f"Error formatting date '{paper['date']}': {str(e)}")
+                        paper["date"] = paper["date"]
 
         # Paginasi hasil
         paginator = Paginator(papers, 5)
@@ -96,14 +90,6 @@ def peer_institution(request):
             "page_obj": page_obj,
         })
     
-    except User.DoesNotExist:
-        logger.error(f"User with ID {user_id} not found")
-        return render(request, "base.html", {
-            "content_template": "peer-institution-recommendation/index.html",
-            "body_class": "bg-gray-100",
-            "show_search_form": False,
-            "error": "User tidak ditemukan dalam sistem"
-        })
     except Exception as e:
         logger.error(f"Error in peer_institution view: {str(e)}")
         return render(request, "base.html", {
