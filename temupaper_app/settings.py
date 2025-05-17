@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_neomodel',
     'app',
+    'admin_app',
     'django_unicorn',
     'django_browser_reload',
 ]

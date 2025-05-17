@@ -37,9 +37,18 @@ def login_view(request):
                 request.session['user_email'] = user.email
                 request.session['user_name'] = user.name
                 request.session['is_authenticated'] = True
+
+                roles = user.get_roles()
+                request.session['user_roles'] = roles
+                request.session['is_admin'] = 'Admin' in roles
                 
-                messages.success(request, "Anda Berhasil Login")
-                return redirect('index')
+
+                if 'Admin' in roles:
+                    messages.success(request, "Anda Berhasil Login sebagai Admin")
+                    return redirect('/admin-app/') 
+                else:
+                    messages.success(request, "Anda Berhasil Login")
+                    return redirect('index')
             else:
                 messages.error(request, 'Email atau password salah.')
         except User.DoesNotExist:
