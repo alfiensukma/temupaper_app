@@ -29,6 +29,10 @@ class PaperHighestSimilarityRel(StructuredRel):
     score = IntegerProperty()
 
 
+class Role(StructuredNode):
+    role_id = StringProperty(unique_index=True)
+    nama = StringProperty(required=True)
+
 class User(StructuredNode):
     userId = UniqueIdProperty()
     name = StringProperty(required=True)
@@ -39,16 +43,23 @@ class User(StructuredNode):
     
     # Relationships
     affiliated_with = RelationshipTo('Institution', 'AFFILIATED_WITH')
-    # Updated to use the relationship model
     saves_papers = RelationshipTo('Paper', 'SAVES_PAPER', model=SavesPaperRel)
-    
     has_read = RelationshipTo('Paper', 'HAS_READ', model=HasReadRel)
-
+    has_role = RelationshipTo('Role', 'HAS_ROLE')  # Tambahan relasi ke Role
+    
     def set_password(self, raw_password):
         self.password = make_password(raw_password)
         
     def check_password(self, raw_password):
         return check_password(raw_password, self.password)
+    
+    def get_roles(self):
+        """Mendapatkan semua role yang dimiliki user"""
+        return [role.nama for role in self.has_role.all()]
+    
+    def is_admin(self):
+        """Memeriksa apakah user memiliki role admin"""
+        return 'Admin' in self.get_roles()
 
 class Institution(StructuredNode):
     institutionId = StringProperty(unique_index=True)

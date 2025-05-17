@@ -1,0 +1,113 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TemuPaper-Administrator</title>
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+
+    <link rel="stylesheet" href="{% static 'vendor/iconly/bold.css' %}">
+
+    <link rel="stylesheet" href="{% static 'vendor/perfect-scrollbar/perfect-scrollbar.css' %}">
+    <link rel="stylesheet" href="{% static 'vendor/bootstrap-icons/bootstrap-icons.css' %}">
+    <link rel="stylesheet" href="{% static 'css/app.css' %}">
+    <link rel="shortcut icon" href="{% static 'images/favicon.svg' %}" type="image/x-icon">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Dropzone CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/dropzone.min.css" />
+
+    <!-- Font Awesome for file icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    {% block extra_css %}
+
+    {% endblock %}
+
+</head>
+
+<body>
+    <div id="app">
+        <div id="sidebar" class="active">
+            <div class="sidebar-wrapper active">
+                <div class="sidebar-header">
+                    <div class="d-flex justify-content-between">
+                        <div class="logo text-center" style="width: 100%;">
+                            <a href="/admin-app/">
+                                Tem<span style="color: #4787FA;">uP</span>a<span style="color: #4787FA;"></span>per
+                            </a>
+                        </div>
+                        <div class="toggler">
+                            <a href="#" class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="sidebar-menu">
+                    <ul class="menu">
+                       
+                        <li class="sidebar-item {% if request.path == '/admin-app/' %}active{% endif %}">
+                            <a href="/admin-app/" class='sidebar-link'>
+                                <i class="bi bi-grid-fill"></i>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                       <li class="sidebar-item {% if request.path == '/admin-app/kelola-karya-ilmiah/' %}active{% endif %}">
+                            <a href="/admin-app/kelola-karya-ilmiah/" class="sidebar-link">
+                                <i class="bi bi-book-half"></i>
+                                <span>Kelola Karya Ilmiah</span>
+                            </a>
+                        </li>
+                        <div class="sidebar-menu-divider my-2 border-top pt-2"></div>
+                        <li class="sidebar-item">
+                            <a href="{% url 'logout' %}" class='sidebar-link text-danger'>
+                                <i class="bi bi-box-arrow-right text-danger"></i>
+                                <span>Logout</span>
+                            </a>
+                        </li>
+                      
+                    </ul>
+                </div>
+                <button class="sidebar-toggler btn x"><i data-feather="x"></i></button>
+            </div>
+        </div>
+        <div id="main">
+            <header class="mb-3">
+                <a href="#" class="burger-btn d-block d-xl-none">
+                    <i class="bi bi-justify fs-3"></i>
+                </a>
+            </header>
+
+             <div class="page-heading">
+                <h3>{% block page_heading %}Heading{% endblock %}</h3>
+            </div>
+            
+            <div class="page-content">
+                {% block content %}
+                <!-- Page content goes here -->
+                {% endblock %}
+            </div>
+
+
+        </div>
+    </div>
+
+
+    <script src="{% static 'vendor/perfect-scrollbar/perfect-scrollbar.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+
+    <script src="{% static 'vendor/apexcharts/apexcharts.js' %}"></script>
+    <script src="{% static 'js/pages/dashboard.js' %}"></script>
+    <script src="{% static 'vendor/choices.js/choices.min.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+
+    {% block extra_js %}
+          
+    {% endblock %}
+
+    
+</body>
+
+</html>

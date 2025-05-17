@@ -49,4 +49,5 @@ urlpatterns = [
     path('create-search-embedding/', EmbeddingView.as_view(), name='create_search_embedding'),
     path('create-similar-paper-relation/', create_similar_paper_relation, name='create_similar_paper_relation'),
     path('create-page-rank/', create_page_rank, name='create_page_rank'),
+
 ]
