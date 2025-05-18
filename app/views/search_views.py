@@ -24,7 +24,7 @@ def index(request):
         "show_search_form": False
     })
 
-def create_search_node(query=""):
+def create_search_node(query="", driver=None):
     """Buat node query sementara dengan embedding"""
     try:
         # Generate ID unik untuk node query
@@ -37,15 +37,17 @@ def create_search_node(query=""):
         # Convert embedding ke format yang benar
         if hasattr(query_embedding, 'tolist'):
             query_embedding = query_embedding.tolist()
+
+        logger.info(f"Convert embedding successed")
         
         # Simpan node query
-        paper = Paper(
-            paperId=paper_id,
-            title=query,
-            abstract="Query node for semantic search",
-            search_embedding=query_embedding,
-        )
-        paper.save()
+        with driver.session() as session:
+            session.run("""
+                CREATE (p:Paper {paperId: $paper_id})
+                        SET p.title = $title,
+                            p.search_embedding = $embedding
+            """, paper_id=paper_id, title=query, embedding=query_embedding)
+        logger.info(f"create node successed")
         
         return paper_id
     except Exception as e:
@@ -168,8 +170,7 @@ def find_seed_papers(session, paper_id, date_filter, params):
         CALL gds.knn.stream('myGraph', {
             topK: 10,
             nodeProperties: ['search_embedding'],
-            randomSeed: 42,
-            concurrency: 1,
+            concurrency: 4,
             sampleRate: 1.0,
             deltaThreshold: 0.1
         })
@@ -329,91 +330,99 @@ def search(request):
             "show_search_form": True
         })
     
-    try:
-        # Prepare search parameters
-        search_params = prepare_search_params(request)
-        
-        if not search_params['query']:
+    search_params = prepare_search_params(request)
+    query_key = f"search_{search_params['query']}_{search_params['start_date']}_{search_params['end_date']}"
+
+    if query_key in request.session:
+        papers = request.session[query_key]
+    else:
+        try:
+            # Prepare search parameters
+            search_params = prepare_search_params(request)
+            
+            if not search_params['query']:
+                return render(request, "base.html", {
+                    "content_template": "search-paper/search-result.html",
+                    "body_class": "bg-gray-100",
+                    "show_search_form": True,
+                    "error": "Please enter a search query"
+                })
+
+            # Get Neo4j driver
+            neo4j_connection = Neo4jConnection()
+            driver = neo4j_connection.get_driver()
+            
+            # Create search node with embedding
+            paper_id = create_search_node(query=search_params['query'], driver=driver)
+            
+            # Create graph projection
+            projection_success = create_graph_projection(driver)
+            if not projection_success:
+                raise Exception("Failed to create graph projection")
+            
+            with driver.session() as session:
+                # Build query parameters
+                date_filter, date_params = build_date_filter(
+                    search_params['start_date'], 
+                    search_params['end_date']
+                )
+                
+                params = {
+                    "paperId": paper_id,
+                    **date_params
+                }
+                
+                # Find seed papers using KNN
+                seed_paper_ids = find_seed_papers(session, paper_id, date_filter, params)
+                
+                if not seed_paper_ids:
+                    return render(request, "base.html", {
+                        "content_template": "search-paper/search-result.html",
+                        "body_class": "bg-gray-100", 
+                        "show_search_form": True,
+                        "error": "No results found for your query"
+                    })
+                
+                # Find similar papers
+                knn_details, similar_results = find_similar_papers(
+                    session, seed_paper_ids, date_filter, params
+                )
+                
+                # Process and combine results
+                papers = process_search_results(knn_details, similar_results)
+            
+            request.session[query_key] = papers
+
+        except Exception as e:
+            logger.error(f"Error during search: {str(e)}")
             return render(request, "base.html", {
                 "content_template": "search-paper/search-result.html",
                 "body_class": "bg-gray-100",
                 "show_search_form": True,
-                "error": "Please enter a search query"
+                "error": f"An error occurred: {str(e)}",
+                "is_loading": False
             })
+        finally:
+            # Clean up resources
+            if paper_id and driver:
+                delete_query_node(paper_id, driver)
+            if driver:
+                driver.close()
+    
+    # Pagination
+    paginator = Paginator(papers, 10)
+    page_obj = paginator.get_page(search_params['page'])
 
-        # Get Neo4j driver
-        neo4j_connection = Neo4jConnection()
-        driver = neo4j_connection.get_driver()
-        
-        # Create search node with embedding
-        paper_id = create_search_node(query=search_params['query'])
-        
-        # Create graph projection
-        projection_success = create_graph_projection(driver)
-        if not projection_success:
-            raise Exception("Failed to create graph projection")
-        
-        with driver.session() as session:
-            # Build query parameters
-            date_filter, date_params = build_date_filter(
-                search_params['start_date'], 
-                search_params['end_date']
-            )
-            
-            params = {
-                "paperId": paper_id,
-                **date_params
-            }
-            
-            # Find seed papers using KNN
-            seed_paper_ids = find_seed_papers(session, paper_id, date_filter, params)
-            
-            if not seed_paper_ids:
-                return render(request, "base.html", {
-                    "content_template": "search-paper/search-result.html",
-                    "body_class": "bg-gray-100", 
-                    "show_search_form": True,
-                    "error": "No results found for your query"
-                })
-            
-            # Find similar papers
-            knn_details, similar_results = find_similar_papers(
-                session, seed_paper_ids, date_filter, params
-            )
-            
-            # Process and combine results
-            papers = process_search_results(knn_details, similar_results)
-        
-        # Pagination
-        paginator = Paginator(papers, 10)
-        page_obj = paginator.get_page(search_params['page'])
-
-        logger.info(f"Found {len(papers)} papers for query: {search_params['query']}")
-        
-        return render(request, "base.html", {
-            "content_template": "search-paper/search-result.html",
-            "body_class": "bg-gray-100",
-            "show_search_form": True,
-            "page_obj": page_obj,
-            "query": search_params['query'],
-            "start_date": search_params['start_date'],
-            "end_date": search_params['end_date'],
-            "results_count": len(papers),
-            "is_loading": False
-        })
-
-    except Exception as e:
-        logger.error(f"Error during search: {str(e)}")
-        return render(request, "base.html", {
-            "content_template": "search-paper/search-result.html",
-            "body_class": "bg-gray-100",
-            "show_search_form": True,
-            "error": f"An error occurred: {str(e)}",
-            "is_loading": False
-        })
-    finally:
-        # Clean up resources
-        if paper_id and driver:
-            delete_query_node(paper_id, driver)
-        if driver:
-            driver.close()
+    logger.info(f"Found {len(papers)} papers for query: {search_params['query']}")
+    
+    return render(request, "base.html", {
+        "content_template": "search-paper/search-result.html",
+        "body_class": "bg-gray-100",
+        "show_search_form": True,
+        "page_obj": page_obj,
+        "query": search_params['query'],
+        "start_date": search_params['start_date'],
+        "end_date": search_params['end_date'],
+        "results_count": len(papers),
+        "is_loading": False
+    })
