@@ -43,8 +43,9 @@ def peer_institution(request):
                     jumlahPembaca,
                     p.publicationDate AS date,
                     p.year AS year,
+                    p.pagerank as pagerank,
                     collect(DISTINCT author.name) AS authors
-                ORDER BY jumlahPembaca DESC, p.publicationDate DESC, p.year DESC
+                ORDER BY jumlahPembaca DESC, p.pagerank DESC, p.publicationDate DESC, p.year DESC
                 LIMIT 10
             """, institutionId=institutionId, userId=user_id) 
 
@@ -72,7 +73,7 @@ def peer_institution(request):
                             dt = datetime.strptime(date_str.split()[0], "%Y-%m-%d")
                             paper["date"] = dt.strftime("%d %B %Y")
                         else:
-                            paper["date"] = date_str
+                            paper["date"] = paper["year"]
                     except Exception as e:
                         logger.error(f"Error formatting date '{paper['date']}': {str(e)}")
                         paper["date"] = paper["date"]

@@ -124,7 +124,7 @@
                             <a href="{% url 'paper_detail' paper.paperId %}" class="font-bold text-gray-800 text-lg group-hover:text-blue-600 transition-colors">{{ paper.title }}</a>
                             <p class="text-sm text-gray-500 mt-4 mb-4 border-b border-gray-100 pb-2">
                                 {% for author in paper.authors|slice:":3" %}
-                                    <span class="px-2 py-1.5 bg-blue-50 text-[#4787FA] rounded-full text-sm md:text-base font-medium hover:bg-blue-100 transition-colors inline-block mb-2 mr-2">{{ author.name }}</span>
+                                    <span class="px-2 py-1.5 bg-blue-50 text-[#4787FA] rounded-full text-sm md:text-base font-medium hover:bg-blue-100 transition-colors inline-block mb-2 mr-2">{{ author }}</span>
                                 {% endfor %}
                                 
                                 {% if paper.authors|length > 3 %}
