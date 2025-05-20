@@ -1,12 +1,15 @@
 {% load static %}
+{% load unicorn %}
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token }}">
     <title>TemuPaper-Administrator</title>
 
+    {% unicorn_scripts %}
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
@@ -18,13 +21,44 @@
     <link rel="stylesheet" href="{% static 'css/app.css' %}">
     <link rel="shortcut icon" href="{% static 'images/favicon.svg' %}" type="image/x-icon">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <!-- Dropzone CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/dropzone.min.css" />
-
     <!-- Font Awesome for file icon -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <!-- Datatables -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.css">
     {% block extra_css %}
+    <style>
+        #csvDropzone:hover,
+        #referensiCsvDropzone:hover {
+            background-color: #dbeafe;
+        }
 
+        .dropzone .dz-preview .dz-image {
+            border-radius: 8px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .dropzone .dz-preview .dz-image img {
+            width: 48px !important;
+            height: 48px !important;
+            object-fit: contain;
+        }
+
+        .dropzone .dz-preview .dz-remove {
+            color: #ef4444 !important;
+            font-weight: 600;
+            cursor: pointer;
+            display: block;
+            text-align: center;
+            margin-top: 5px;
+        }
+    </style>
     {% endblock %}
 
 </head>
@@ -47,14 +81,15 @@
                 </div>
                 <div class="sidebar-menu">
                     <ul class="menu">
-                       
+
                         <li class="sidebar-item {% if request.path == '/admin-app/' %}active{% endif %}">
                             <a href="/admin-app/" class='sidebar-link'>
                                 <i class="bi bi-grid-fill"></i>
                                 <span>Dashboard</span>
                             </a>
                         </li>
-                       <li class="sidebar-item {% if request.path == '/admin-app/kelola-karya-ilmiah/' %}active{% endif %}">
+                        <li
+                            class="sidebar-item {% if request.path == '/admin-app/kelola-karya-ilmiah/' %}active{% endif %}">
                             <a href="/admin-app/kelola-karya-ilmiah/" class="sidebar-link">
                                 <i class="bi bi-book-half"></i>
                                 <span>Kelola Karya Ilmiah</span>
@@ -67,7 +102,7 @@
                                 <span>Logout</span>
                             </a>
                         </li>
-                      
+
                     </ul>
                 </div>
                 <button class="sidebar-toggler btn x"><i data-feather="x"></i></button>
@@ -80,34 +115,37 @@
                 </a>
             </header>
 
-             <div class="page-heading">
+            <div class="page-heading">
                 <h3>{% block page_heading %}Heading{% endblock %}</h3>
             </div>
-            
+
             <div class="page-content">
                 {% block content %}
                 <!-- Page content goes here -->
                 {% endblock %}
             </div>
 
-
         </div>
     </div>
 
+    <script>
+        // Initialize Unicorn
+        document.addEventListener("DOMContentLoaded", function() {
+            if (typeof Unicorn !== 'undefined') {
+                Unicorn.addEventListener('messageError', (message) => {
+                    console.error('Unicorn Error:', message);
+                });
+            }
+        });
+    </script>
 
     <script src="{% static 'vendor/perfect-scrollbar/perfect-scrollbar.min.js' %}"></script>
     <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
-
     <script src="{% static 'vendor/apexcharts/apexcharts.js' %}"></script>
     <script src="{% static 'js/pages/dashboard.js' %}"></script>
     <script src="{% static 'vendor/choices.js/choices.min.js' %}"></script>
     <script src="{% static 'js/main.js' %}"></script>
-
-    {% block extra_js %}
-          
-    {% endblock %}
-
-    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 
 </html>

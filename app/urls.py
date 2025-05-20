@@ -1,6 +1,6 @@
 from django.urls import path, include
-from .views.retrieve_paper_views import fetch_papers, fetch_papers_by_reference_ids, fetch_semantic_scholar_papers
-from .views.graph_views import generate_knowledge_graph
+from .views.retrieve_paper_views import fetch_papers
+from .views.graph_views import generate_knowledge_graph, import_topic, import_institution, import_journal
 from .views.detail_views import get_recommendation, get_detail_paper, record_paper_read
 from .views.search_views import index, search
 from .views.topic_recommendation_views import topic_list, topic_result
@@ -20,12 +20,13 @@ from .views.preprocessing_views import create_similar_paper_relation, create_pag
 urlpatterns = [
     path('', index, name='index'),
     path("unicorn/", include("django_unicorn.urls")),
-    path("fetch-papers/", fetch_papers, name="get_paper"), 
-    path("fetch-papers-semantic/", fetch_semantic_scholar_papers, name="fetch_semantic_scholar_papers"), 
-    path("fetch-references/", fetch_papers_by_reference_ids, name="fetch_papers_by_reference_ids"),
+    path("fetch-papers/", fetch_papers, name="get_paper"),
     path("paper/detail/", get_detail_paper, name="get_detail"),
     path("paper/detail/recommendation", get_recommendation, name="get_recommendation"),
     path("generate-knowledge-graph/", generate_knowledge_graph, name="generate_knowledge_graph"),
+    path('import-topic/', import_topic, name='import_topic'),
+    path('import-institution/', import_institution, name='import_institution'),
+    path('import-journal/', import_journal, name='import_journal'),
 
     path('search/', search, name='search'),
     path('papers/detail/<str:paper_id>/', get_detail_paper, name='paper_detail'),

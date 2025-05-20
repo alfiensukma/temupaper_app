@@ -1,0 +1,23 @@
+{% extends "base_admin.html" %}
+{% load static %}
+{% load unicorn %}
+
+{% block page_heading %}Kelola Karya Ilmiah{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+  <nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a href="{% url 'admin_app:kelola_karya_ilmiah' %}">Home</a>
+      </li>
+      <li class="breadcrumb-item active" aria-current="page">
+        Kelola Karya Ilmiah
+      </li>
+    </ol>
+  </nav>
+
+  {% unicorn 'manage-paper-component' %}
+</div>
+{% endblock %}

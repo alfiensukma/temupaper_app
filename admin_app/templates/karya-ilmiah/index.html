@@ -4,138 +4,17 @@
 {% block title %}Kelola Karya Ilmiah{% endblock %}
 {% block page_heading %}Kelola Karya Ilmiah{% endblock %}
 
-{% block extra_css %}
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.css">
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-
-<style>
-  #csvDropzone:hover {
-    background-color: #dbeafe;
-  }
-
-  .dropzone .dz-preview .dz-image {
-    border-radius: 8px;
-    overflow: hidden;
-  }
-
-  .dropzone .dz-preview .dz-image img {
-    width: 48px !important;
-    height: 48px !important;
-    object-fit: contain;
-  }
-
-  .dropzone .dz-preview .dz-remove {
-    color: #ef4444 !important;
-    font-weight: 600;
-    cursor: pointer;
-  }
-</style>
-{% endblock %}
-
-{% block extra_js %}
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.js"></script>
-
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
-<script>
-  $(document).ready(function () {
-    $('#dataTable').DataTable({
-      responsive: true,
-      language: {
-        url: 'https://cdn.datatables.net/plug-ins/1.13.6/i18n/id.json'
-      }
-    });
-  });
-</script>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        $('.select-topik').select2({
-            dropdownParent: $('#primary'),
-            width: '100%'
-        });
-    });
-</script>
-
-<script>
-new Dropzone("#csvDropzone", {
-  url: "#",
-  maxFiles: 1,
-  acceptedFiles: ".csv",
-  addRemoveLinks: true,
-  autoProcessQueue: false,
-  dictDefaultMessage: "Seret file CSV ke sini atau klik untuk memilih",
-  dictInvalidFileType: "Hanya file CSV yang diperbolehkan.",
-  init: function () {
-    this.on("addedfile", function (file) {
-      const isCSV = file.type === "text/csv" || file.name.toLowerCase().endsWith(".csv");
-
-      if (!isCSV) {
-        this.removeFile(file); 
-        alert("Format file tidak valid. Hanya file .csv yang diperbolehkan.");
-        return;
-      }
-
-      const icon = file.previewElement.querySelector(".dz-image img");
-      if (icon) {
-        icon.src = "https://img.icons8.com/color/48/000000/csv.png";
-      }
-    });
-  }
-});
-</script>
-
-<script>
-new Dropzone("#referensiCsvDropzone", {
-  url: "#",
-  maxFiles: 1,
-  acceptedFiles: ".csv",
-  addRemoveLinks: true,
-  autoProcessQueue: false,
-  dictDefaultMessage: "Seret file CSV ke sini atau klik untuk memilih",
-  dictInvalidFileType: "Hanya file CSV yang diperbolehkan.",
-  init: function () {
-    this.on("addedfile", function (file) {
-      const isCSV = file.type === "text/csv" || file.name.toLowerCase().endsWith(".csv");
-
-      if (!isCSV) {
-        this.removeFile(file);
-        alert("Format file tidak valid. Hanya file .csv yang diperbolehkan.");
-        return;
-      }
-
-      const icon = file.previewElement.querySelector(".dz-image img");
-      if (icon) {
-        icon.src = "https://img.icons8.com/color/48/000000/csv.png";
-      }
-    });
-  }
-});
-</script>
-
-{% endblock %}
-
-
-
 {% block content %}
 <div class="container-fluid">
   <div class="card shadow mb-4">
     <div class="card-header py-3 d-flex justify-content-between align-items-center">
       <div class="d-flex justify-content-end w-100">
-        <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#secondary">
-          + Tambah Data
-        </button>
-        <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#referensiUploadModal">
-            + Upload Referensi
-        </button>
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#primary">
-          + Scraping Data
-        </button>
+        <a class="btn btn-primary me-2" href="{% url 'admin_app:manage_paper' %}">
+          Tambah Data
+        </a>
+        <a type="button" class="btn btn-primary" href="{% url 'admin_app:scraping_view' %}">
+          Scraping Data
+        </a>
       </div>
     </div>
     <div class="card-body">
@@ -150,21 +29,19 @@ new Dropzone("#referensiCsvDropzone", {
             </tr>
           </thead>
             <tbody>
-                {% for i in papers %}
-                    <tr>
-                    <td>{{ i }}</td>
-                    <td>
-                        Object Oriented Programming in Java ArcSin: Adaptive ranged Object Oriented Programming for Language-Driven Visual Tasks
-                    </td>
-                    <td>18 Maret 2020</td>
-                    <td>
-                        <button type="button" class="btn btn-danger btn-sm" id="deleteBtn" data-bs-toggle="modal" data-bs-target="#hapusDataModal">
-                            <i class="fas fa-trash-alt"></i>
-                        </button>
-                    </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
+              {% for paper in papers %}
+                  <tr>
+                      <td>{{ paper.no }}</td>
+                      <td>{{ paper.judul }}</td>
+                      <td>{{ paper.tanggal }}</td>
+                      <td>
+                          <button type="button" class="btn btn-danger btn-sm" id="deleteBtn" data-bs-toggle="modal" data-bs-target="#hapusDataModal">
+                              <i class="fas fa-trash-alt"></i>
+                          </button>
+                      </td>
+                  </tr>
+              {% endfor %}
+          </tbody>
         </table>
       </div>
     </div>
@@ -190,110 +67,85 @@ new Dropzone("#referensiCsvDropzone", {
   </div>
 </div>
 
-<!-- Modal Scraping Data -->
-<div class="modal fade text-left" id="primary" tabindex="-1" role="dialog" aria-labelledby="myModalLabel160" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header bg-primary">
-        <h5 class="modal-title white" id="myModalLabel160">Scraping Data</h5>
-        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-          <i data-feather="x"></i>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="form-group">
-          <h6>Topik</h6>
-          <select class="select-topik form-select">
-            <option selected hidden>--- Pilih Topik ---</option>
-            <option value="ai">Artificial Intelligence</option>
-            <option value="dm1">Data Mining 1</option>
-            <option value="dm2">Data Mining 2</option>
-            <option value="dm3">Data Mining 3</option>
-            <option value="dm4">Data Mining 4</option>
-            <option value="dm5">Data Mining 5</option>
-          </select>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">
-          <i class="bx bx-x d-block d-sm-none"></i>
-          <span class="d-none d-sm-block">Batal</span>
-        </button>
-        <button type="button" class="btn btn-primary ml-1" data-bs-dismiss="modal">
-          <i class="bx bx-check d-block d-sm-none"></i>
-          <span class="d-none d-sm-block">Scrapping Data</span>
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+<script>
+  let paperIdToDelete = null;
 
-<!-- Modal Tambah Data -->
-<div class="modal fade text-left" id="secondary" tabindex="-1" role="dialog" aria-labelledby="myModalLabel160" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header bg-primary">
-        <h5 class="modal-title white" id="myModalLabel160">Tambah Data Karya Ilmiah</h5>
-        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-          <i data-feather="x"></i>
-        </button>
-      </div>
-      <div class="modal-body">
-        <form action="#" class="dropzone" id="csvDropzone" style="border: 2px dashed; border-radius: 12px; padding: 40px 20px; transition: background-color 0.3s ease;">
-          {% csrf_token %}
-          <div class="dz-message text-center" style="cursor: pointer; color: #2563eb;">
-            <i class="fas fa-file-csv fa-5x mb-3" style="color: #3b82f6;"></i>
-            <p style="font-size: 1.25rem; font-weight: 600; margin-bottom: 0;">Seret file CSV di sini atau klik untuk memilih</p>
-            <p style="font-size: 0.9rem; color: #60a5fa;">(Hanya file CSV yang diperbolehkan)</p>
-          </div>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">
-          <i class="bx bx-x d-block d-sm-none"></i>
-          <span class="d-none d-sm-block">Batal</span>
-        </button>
-        <button type="button" class="btn btn-primary ml-1" data-bs-dismiss="modal">
-          <i class="bx bx-check d-block d-sm-none"></i>
-          <span class="d-none d-sm-block">Tambah Data</span>
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
+  $(document).ready(function () {
+    var table = $('#dataTable').DataTable({
+      processing: true,
+      serverSide: true,
+      ajax: {
+        url: "{% url 'admin_app:datatable_paper_json' %}",
+        type: 'GET',
+        error: function (xhr, error, thrown) {
+          console.error('DataTables error:', error);
+        }
+      },
+      columns: [
+        { data: 'no' },
+        { data: 'judul' },
+        { data: 'tanggal' },
+        { 
+          data: 'aksi',
+          orderable: false,
+          searchable: false,
+         }
+      ],
+      language: {
+        url: 'https://cdn.datatables.net/plug-ins/1.13.6/i18n/id.json'
+      }
+    });
 
-<!-- Modal Upload Referensi CSV -->
-<div class="modal fade text-left" id="referensiUploadModal" tabindex="-1" role="dialog" aria-labelledby="referensiUploadModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header bg-primary">
-        <h5 class="modal-title white" id="referensiUploadModalLabel">Upload Referensi (CSV)</h5>
-        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-          <i data-feather="x"></i>
-        </button>
-      </div>
-      <div class="modal-body">
-        <form action="#" class="dropzone" id="referensiCsvDropzone" style="border: 2px dashed; border-radius: 12px; padding: 40px 20px; transition: background-color 0.3s ease;">
-          {% csrf_token %}
-          <div class="dz-message text-center" style="cursor: pointer; color: #2563eb;">
-            <i class="fas fa-file-csv fa-5x mb-3" style="color: #3b82f6;"></i>
-            <p style="font-size: 1.25rem; font-weight: 600; margin-bottom: 0;">Seret file CSV di sini atau klik untuk memilih</p>
-            <p style="font-size: 0.9rem; color: #60a5fa;">(Hanya file CSV yang diperbolehkan)</p>
-          </div>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">
-          <i class="bx bx-x d-block d-sm-none"></i>
-          <span class="d-none d-sm-block">Batal</span>
-        </button>
-        <button type="button" class="btn btn-primary ml-1" data-bs-dismiss="modal">
-          <i class="bx bx-check d-block d-sm-none"></i>
-          <span class="d-none d-sm-block">Upload Referensi</span>
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
+    // modal delete
+    $('#dataTable').on('click', '.deleteBtn', function () {
+        paperIdToDelete = $(this).data('paper-id');
+        $('#hapusDataModal').modal('show');
+    });
 
+    $('#confirmDeleteBtn').on('click', function () {
+        if (!paperIdToDelete) return;
+        fetch("{% url 'admin_app:delete_paper' %}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": "{{ csrf_token }}"
+            },
+            body: JSON.stringify({ paperId: paperIdToDelete })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+              $('#hapusDataModal').modal('hide');
+              $('#dataTable').DataTable().ajax.reload(null, false);
+              Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: 'Data berhasil dihapus.',
+                timer: 1500,
+                showConfirmButton: false
+              });
+            } else {
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Gagal!',
+                  text: data.message || 'Gagal menghapus data.',
+              });
+            }
+        })
+        .catch(err => {
+            Swal.fire({
+              icon: 'error',
+              title: 'Error!',
+              text: 'Terjadi error: ' + err,
+          });
+        });
+    });
+
+    $('#hapusDataModal').on('hidden.bs.modal', function () {
+        paperIdToDelete = null;
+    });
+  });
+</script>
 {% endblock %}
