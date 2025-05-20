@@ -5,6 +5,7 @@ from .institution_importer import InstitutionImporter
 from .field_of_study_importer import FieldOfStudyImporter
 from .publication_type_importer import PublicationTypeImporter
 from .reference_importer import ReferenceImporter
+from .topic_importer import TopicImporter
 
 class ImporterFactory:
     @staticmethod
@@ -16,7 +17,8 @@ class ImporterFactory:
             "institution": InstitutionImporter,
             "field_of_study": FieldOfStudyImporter,
             "publication_type": PublicationTypeImporter,
-            "reference": ReferenceImporter
+            "reference": ReferenceImporter,
+            "topic": TopicImporter,
         }
         importer_class = importers.get(importer_type)
         if not importer_class:

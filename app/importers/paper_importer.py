@@ -1,22 +1,36 @@
 import ast
 import csv
 from .base_importer import CSVDataImporter
-
+import logging
+logger = logging.getLogger(__name__)
 class PaperImporter(CSVDataImporter):
     def __init__(self, file_path, is_reference=False):
         super().__init__(file_path)
         self.is_reference = is_reference
+        self.logger = logging.getLogger(__name__)
 
     def import_data(self, driver):
         papers = []
+        self.logger.info(f"Reading CSV file: {self.file_path}")
+        
         with open(self.file_path, mode='r', encoding='utf-8') as f:
             reader = csv.DictReader(f)
+            
+            # Validasi kolom yang dibutuhkan
+            required_columns = ["paperId", "title", "abstract", "embedding"]
+            missing_columns = [col for col in required_columns if col not in reader.fieldnames]
+            if missing_columns:
+                self.logger.error(f"Missing required columns: {missing_columns}")
+                raise ValueError(f"Missing required columns: {missing_columns}")
+
             for row in reader:
+                self.logger.debug(f"Processing paperId: {row['paperId']}")
                 external_ids_str = row.get("externalIds", "{}")
                 try:
                     external_ids = ast.literal_eval(external_ids_str)
                     doi = external_ids.get("DOI", "")
-                except Exception:
+                except Exception as e:
+                    self.logger.warning(f"Failed to parse externalIds for paperId {row['paperId']}: {str(e)}")
                     doi = ""
 
                 papers.append({

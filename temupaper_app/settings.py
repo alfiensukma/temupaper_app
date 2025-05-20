@@ -37,6 +37,10 @@ NEOMODEL_SIGNALS = True
 NEOMODEL_FORCE_TIMEZONE = False
 NEOMODEL_MAX_CONNECTION_POOL_SIZE = 50
 
+# Media files (Uploads)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -51,6 +55,7 @@ INSTALLED_APPS = [
     'admin_app',
     'django_unicorn',
     'django_browser_reload',
+    'django_extensions',
 ]
 
 TAILWIND_APP_NAME = 'django_browser_reload'

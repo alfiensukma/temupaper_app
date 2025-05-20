@@ -1,0 +1,13 @@
+<div>
+    <form id="scrapingForm">
+        <div class="mb-3">
+            <label for="topics" class="form-label">Pilih Topik (bisa lebih dari satu):</label>
+            <select id="topics" class="form-select" multiple>
+                {% for topic in topics %}
+                <option value="{{ topic.name }}">{{ topic.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="button" class="btn btn-primary" id="startScrapingBtn">Mulai Scraping</button>
+    </form>
+</div>

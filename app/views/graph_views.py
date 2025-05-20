@@ -56,3 +56,75 @@ def generate_knowledge_graph(request):
     finally:
         if manager:
             manager.close_connection()
+            
+@csrf_exempt
+def import_topic(request):
+    try:
+        BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        DATA_TOPIC_DIR = os.path.join(BASE_DIR, "data-topic")
+        TOPIC_PATH = os.path.join(DATA_TOPIC_DIR, "topic.csv")
+
+        neo4j_connection = Neo4jConnection()
+        manager = KnowledgeGraphManager(neo4j_connection)
+
+        import_configs = [
+            {"type": "topic", "file_path": TOPIC_PATH},
+        ]
+        validation_result = manager.import_all(import_configs)
+        return JsonResponse({
+            "message": "Topic imported successfully",
+            "validation": validation_result
+        }, status=200)
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)
+    finally:
+        if 'manager' in locals():
+            manager.close_connection()
+            
+@csrf_exempt
+def import_journal(request):
+    try:
+        BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        DATA_CSV_DIR = os.path.join(BASE_DIR, "data-csv")
+        CSV_PATH = os.path.join(DATA_CSV_DIR, "journalss.csv")
+
+        neo4j_connection = Neo4jConnection()
+        manager = KnowledgeGraphManager(neo4j_connection)
+
+        import_configs = [
+            {"type": "journal", "file_path": CSV_PATH},
+        ]
+        validation_result = manager.import_all(import_configs)
+        return JsonResponse({
+            "message": "Journal imported successfully",
+            "validation": validation_result
+        }, status=200)
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)
+    finally:
+        if 'manager' in locals():
+            manager.close_connection()
+            
+@csrf_exempt
+def import_institution(request):
+    try:
+        BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        DATA_CSV_DIR = os.path.join(BASE_DIR, "data-csv")
+        CSV_PATH = os.path.join(DATA_CSV_DIR, "perguruan-tinggi.csv")
+
+        neo4j_connection = Neo4jConnection()
+        manager = KnowledgeGraphManager(neo4j_connection)
+
+        import_configs = [
+            {"type": "institution", "file_path": CSV_PATH},
+        ]
+        validation_result = manager.import_all(import_configs)
+        return JsonResponse({
+            "message": "Institution imported successfully",
+            "validation": validation_result
+        }, status=200)
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)
+    finally:
+        if 'manager' in locals():
+            manager.close_connection()

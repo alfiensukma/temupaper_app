@@ -1,0 +1,111 @@
+topicId,topic
+1,Deep Learning
+2,Reinforcement Learning
+3,Neural Networks
+4,Natural Language Processing (NLP)
+5,Computer Vision
+6,Data Mining
+7,Big Data Analytics
+8,Predictive Modeling
+9,Data Visualization
+10,Time Series Analysis
+11,Network Security
+12,Blockchain Technology
+13,Intrusion Detection Systems
+14,Zero Trust Security
+15,Agile Methodology
+16,DevOps
+17,Software Testing
+18,Microservices Architecture
+19,Continuous Integration/Continuous Deployment (CI/CD)
+20,Edge Computing
+21,Fog Computing
+22,association rules
+23,classification
+24,clustering algorithms
+25,enterprise resource planning
+26,information retrieval technology
+27,bug reports
+28,web engineering
+29,object oriented programming
+30,unified modeling language
+31,design patterns
+32,Serverless Architecture
+33,Load Balancing
+34,Distributed Databases
+35,Smart Cities
+36,Wireless Sensor Networks
+37,IoT Security
+38,Embedded AI
+39,Cyber-Physical Systems
+40,5G Networks
+41,Software-Defined Networking (SDN)
+42,Network Function Virtualization (NFV)
+43,Quality of Service (QoS)
+44,Internet Protocols
+45,User Experience (UX) Design
+46,Augmented Reality (AR)
+47,Virtual Reality (VR)
+48,Accessibility in Computing
+49,Brain-Computer Interfaces
+50,Graph Algorithms
+51,Quantum Computing
+52,Approximation Algorithms
+53,Computational Complexity
+54,Randomized Algorithms
+55,Object Detection
+56,Autonomous Vehicles
+57,SLAM (Simultaneous Localization and Mapping)
+58,Human-Robot Interaction
+59,Medical Image Analysis
+60,Computer Vision
+61,Theory of Computation
+62,Algorithms
+63,Computer Networks
+64,Internet of Things (IoT)
+65,Cloud Computing
+66,Distributed Systems
+67,Software Engineering
+68,Software Development
+69,Cybersecurity
+70,Cryptography
+71,Data Science
+72,Big Data
+73,Artificial Intelligence
+74,Machine Learning
+75,Evolutionary Computation
+76,Swarm Intelligence
+77,Knowledge Representation & Reasoning
+78,Automated Planning & Scheduling
+79,Graph Databases
+80,Neo4j
+81,Time Series Databases
+82,Data Warehousing
+83,Malware Analysis
+84,Penetration Testing
+85,Homomorphic Encryption
+86,Secure Multi-Party Computation
+87,Digital Forensics
+88,Anomaly Detection in Networks
+89,Formal Methods
+90,Software Architecture (Monolith vs. Microservices)
+91,Code Smell Detection
+92,Empirical Software Engineering
+93,Network Protocols
+94,Network Virtualization
+95,Voice User Interfaces (VUI)
+96,Eye-Tracking Systems
+97,Haptic Feedback
+98,Cognitive Modeling in HCI
+99,3D Reconstruction
+100,Neural Radiance Fields (NeRF)
+101,Online Algorithms
+102,Streaming Algorithms
+103,Parameterized Complexity
+104,Computational Geometry
+105,"Consensus Algorithms (Raft, Paxos)"
+106,Distributed Ledger Technologies
+107,Federated Learning Systems
+108,Robot Learning from Demonstration
+109,Soft Robotics Control
+110,Multi-Robot Coordination

@@ -1,0 +1,36 @@
+{% extends "base_admin.html" %}
+{% load static %}
+{% load unicorn %}
+
+{% block page_heading %}Scraping Karya Ilmiah{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'admin_app:kelola_karya_ilmiah' %}">Home</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Scraping</li>
+    </ol>
+  </nav>
+
+  <div class="card">
+    <div class="card-header">
+      <h5>Topik</h5>
+    </div>
+    <div class="card-body">
+        {% unicorn 'scraping-topic' %}
+      <div id="scrapingInfo" class="mt-4" style="display:none;">
+        <div class="alert alert-info" id="scrapingStepInfo">
+          Proses scraping belum dimulai.
+        </div>
+        <div class="progress mb-2" style="height: 25px;">
+          <div id="scrapingProgressBar" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%;">0%</div>
+        </div>
+        <ul id="scrapingLog" class="list-group small"></ul>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script src="{% static 'js/scraping.js' %}"></script>
+{% endblock %}
