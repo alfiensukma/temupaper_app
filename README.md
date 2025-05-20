@@ -11,7 +11,6 @@
 python -m spacy download en_core_web_lg
 
 ## create component
-python manage.py startunicorn papers navbar
 python manage.py startunicorn app navbar
 
 ## run project
