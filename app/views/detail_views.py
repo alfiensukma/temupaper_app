@@ -23,77 +23,55 @@ def get_recommendation(paper_id):
             result = session.run(
                 """
                 MATCH (p:Paper {paperId: $paperId})-[r:SIMILAR]->(s:Paper)
-                RETURN s AS similar_paper, r.score AS score
+                OPTIONAL MATCH (p)-[:AUTHORED_BY]->(author:Author)
+                RETURN 
+                    s.title AS title,
+                    s.paperId AS paperId,
+                    s.abstract AS abstract,
+                    s.publicationDate AS date,
+                    s.year AS year,
+                    s.pagerank AS pagerank, 
+                    r.score AS score,
+                    collect(DISTINCT author.name) AS authors
                 ORDER BY r.score DESC
                 LIMIT 5
                 """,
                 paperId=paper_id
             )
 
-            # Iterasi hasil query
-            for record in result:
-                similar_paper_node = record["similar_paper"]
-                similarity_score = record["score"]
-                
-                # Pastikan kita mengakses properti paperId dengan benar
-                try:
-                    similar_paper_id = similar_paper_node.get("paperId")
-                    if not similar_paper_id:
-                        # Cek jika property diakses dengan cara berbeda di Neo4j
-                        if hasattr(similar_paper_node, "id") and similar_paper_node.id:
-                            similar_paper_id = similar_paper_node.id
+            papers = [{
+                "paperId": record["paperId"],
+                "title": record["title"],
+                "date": record["date"],
+                "abstract": record["abstract"],
+                "authors": record["authors"],
+                "year": record["year"]
+            } for record in result]
+
+            for paper in papers:
+                if paper["date"]:
+                    try:
+                        date_str = paper["date"]
+                        # Format "m/d/yyyy 0:00" atau "m/d/yyyy"
+                        if '/' in date_str:
+                            date_str = date_str.split()[0]
+                            month, day, year = map(int, date_str.split('/'))
+                            dt = datetime(year, month, day)
+                            paper["date"] = dt.strftime("%d %B %Y")
+                        # Format "yyyy-mm-dd"
+                        elif '-' in date_str:
+                            dt = datetime.strptime(date_str.split()[0], "%Y-%m-%d")
+                            paper["date"] = dt.strftime("%d %B %Y")
                         else:
-                            logger.error(f"Cannot extract paperId from Neo4j node: {similar_paper_node}")
-                            continue
-                            
-                    # Ambil paper lengkap dari database dengan neomodel
-                    paper_obj = Paper.nodes.get(paperId=similar_paper_id)
-                    
-                    # Ambil author
-                    authors = []
-                    for author in paper_obj.authored_by.all():
-                        authors.append({
-                            "name": author.name
-                        })
-                    
-                    # Buat data paper
-                    paper_data = {
-                        "paperId": paper_obj.paperId,
-                        "title": paper_obj.title,
-                        "abstract": paper_obj.abstract,
-                        "score": similarity_score,
-                        "authors": authors,
-                        "date": paper_obj.publicationDate,
-                        "doi": paper_obj.doi,
-                        "url": paper_obj.url,
-                        "year": paper_obj.year
-                    }
-                    
-                    # Format tanggal
-                    if paper_data["date"]:
-                        try:
-                            try:
-                                dt = datetime.strptime(paper_data["date"], "%Y-%m-%d %H:%M:%S")
-                            except ValueError:
-                                dt = datetime.strptime(paper_data["date"], "%Y-%m-%d")
-                            paper_data["date"] = dt.strftime("%d %B %Y")
-                        except Exception as e:
-                            logger.error(f"Date parse error for paper {paper_data['paperId']}: {e}")
-                            paper_data["date"] = paper_data.get("year", "Unknown date")
-                    else:
-                        paper_data["date"] = paper_data.get("year", "Unknown date")
-                    
-                    # Tambahkan ke hasil
-                    paper_recommendation.append(paper_data)
-                
-                except Paper.DoesNotExist:
-                    logger.error(f"Paper with ID {similar_paper_id} does not exist.")
-                    continue
-                except Exception as e:
-                    logger.error(f"Error processing paper: {str(e)}")
-                    continue
+                            paper["date"] = paper["year"]
+                    except Exception as e:
+                        logger.error(f"Error formatting date '{paper['date']}': {str(e)}")
+                        paper["date"] = paper["date"]
+
+        if driver:
+            driver.close()   
+        return papers
         
-        return paper_recommendation
     
     except Exception as e:
         logger.error(f"Error in get_recommendation: {str(e)}")
@@ -129,16 +107,22 @@ def get_detail_paper(request, paper_id):
 
         if data_paper["date"]:
             try:
-                try:
-                    dt = datetime.strptime(data_paper["date"], "%Y-%m-%d %H:%M:%S")
-                except ValueError:
-                    dt = datetime.strptime(data_paper["date"], "%Y-%m-%d")
-                data_paper["date"] = dt.strftime("%d %B %Y")
+                date_str = data_paper["date"]
+                # Format "m/d/yyyy 0:00" atau "m/d/yyyy"
+                if '/' in date_str:
+                    date_str = date_str.split()[0]
+                    month, day, year = map(int, date_str.split('/'))
+                    dt = datetime(year, month, day)
+                    data_paper["date"] = dt.strftime("%d %B %Y")
+                # Format "yyyy-mm-dd"
+                elif '-' in date_str:
+                    dt = datetime.strptime(date_str.split()[0], "%Y-%m-%d")
+                    data_paper["date"] = dt.strftime("%d %B %Y")
+                else:
+                    data_paper["date"] = data_paper["year"]
             except Exception as e:
-                logger.error(f"Date parse error for paper {data_paper['paperId']}: {e}")
-                data_paper["date"] = data_paper.get("year", "Unknown date")
-        else:
-            data_paper["date"] = data_paper.get("year", "Unknown date")
+                logger.error(f"Error formatting date '{paper['date']}': {str(e)}")
+                data_paper["date"] = data_paper["date"]
 
         # Dapatkan rekomendasi paper
         paper_recommendation = get_recommendation(paper_id)
@@ -151,14 +135,6 @@ def get_detail_paper(request, paper_id):
             "paper_recommendation": paper_recommendation
         })
 
-    except Paper.DoesNotExist:
-        logger.error(f"Paper with ID {paper_id} not found")
-        return render(request, "base.html", {
-            "content_template": "detail-paper/index.html",
-            "body_class": "bg-gray-100",
-            "show_search_form": True,
-            "error": f"Paper not found"
-        })
     except Exception as e:
         logger.error(f"Error getting paper detail: {str(e)}")
         return render(request, "base.html", {

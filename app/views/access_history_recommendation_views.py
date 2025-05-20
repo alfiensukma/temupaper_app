@@ -58,7 +58,7 @@ def access_history(request):
                             dt = datetime.strptime(date_str.split()[0], "%Y-%m-%d")
                             paper["date"] = dt.strftime("%d %B %Y")
                         else:
-                            paper["date"] = date_str
+                            paper["date"] = paper["year"]
                     except Exception as e:
                         logger.error(f"Error formatting date '{paper['date']}': {str(e)}")
                         paper["date"] = paper["date"]
