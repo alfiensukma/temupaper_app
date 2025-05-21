@@ -24,10 +24,6 @@ class NavbarView(UnicornView):
                 {"name": "Kemiripan Akses", "url": "/similarity-access-recommendation"},
                 {"name": "Riwayat Akses", "url": "/access-history-recommendation"},
             ]
-        else:
-            self.dropdown_items = [
-                {"name": "Popularitas", "url": "/topic-recommendation"},
-            ]
 
         self.active_paths = [item["url"] for item in self.dropdown_items if item["url"] != "#"]
 

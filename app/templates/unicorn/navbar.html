@@ -61,6 +61,7 @@
                         {% if request.path != '/' %}text-[#A6A6A6] hover:text-[#4787FA] {% else %}text-[#4787FA] hover:text-blue-600 {% endif %}
                         md:p-0" aria-current="page">Home</a>
                 </li>
+                {% if user.is_authenticated %}
                 <li class="relative">
                     <button id="rekomendasi-dropdown-btn" 
                         unicorn:click="toggle_dropdown"
@@ -89,7 +90,7 @@
                         </ul>
                     </div>
                 </li>
-
+`               {% endif %}
                 {% if user.is_authenticated %}
                 <li class="relative mt-2 md:mt-0">
                     <button id="user-dropdown-btn" onclick="toggleUserDropdown()" 
