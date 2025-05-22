@@ -19,9 +19,7 @@ class NavbarView(UnicornView):
         
         if is_authenticated:
             self.dropdown_items = [
-                {"name": "Popularitas", "url": "/topic-recommendation"},
                 {"name": "Institusi Sejawat", "url": "/peer-institution-recommendation"},
-                {"name": "Kemiripan Akses", "url": "/similarity-access-recommendation"},
                 {"name": "Riwayat Akses", "url": "/access-history-recommendation"},
             ]
 

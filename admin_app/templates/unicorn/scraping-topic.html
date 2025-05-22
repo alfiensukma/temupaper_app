@@ -4,10 +4,11 @@
             <label for="topics" class="form-label">Pilih Topik (bisa lebih dari satu):</label>
             <select id="topics" class="form-select" multiple>
                 {% for topic in topics %}
-                <option value="{{ topic.name }}">{{ topic.name }}</option>
+                <option value="{{ topic.id }}|{{ topic.name }}">{{ topic.name }}</option>
                 {% endfor %}
             </select>
         </div>
-        <button type="button" class="btn btn-primary" id="startScrapingBtn">Mulai Scraping</button>
+        <button type="button" class="btn btn-primary me-2" id="startScrapingBtn">Mulai Scraping</button>
+        <button type="button" class="btn btn-success d-none" id="downloadResultBtn">Download Hasil</button>
     </form>
 </div>

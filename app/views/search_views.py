@@ -18,10 +18,34 @@ logger = logging.getLogger(__name__)
 embedder = SentenceTransformerEmbeddings(model="all-mpnet-base-v2")
 
 def index(request):
+    topics = []
+    
+    try:
+        neo4j_connection = Neo4jConnection()
+        driver = neo4j_connection.get_driver()
+        
+        with driver.session() as session:
+            result = session.run("""
+                MATCH (t:Topic)
+                WHERE t.paperCount IS NOT NULL AND t.paperCount > 0
+                RETURN t.name AS topic_name, t.paperCount AS paper_count
+                ORDER BY rand()
+                LIMIT 5
+            """)
+            
+            topics = [{"name": record["topic_name"], "count": record["paper_count"]} for record in result]
+            
+    except Exception as e:
+        logger.error(f"Error fetching topics for homepage: {str(e)}")
+    finally:
+        if 'driver' in locals():
+            driver.close()
+    
     return render(request, "base.html", {
         "content_template": "search-paper/index.html",
         "body_class": "bg-gradient-to-br from-[#c8dcf8] from-5% to-white to-90%",
-        "show_search_form": False
+        "show_search_form": False,
+        "topics": topics
     })
 
 def create_search_node(query="", driver=None):
@@ -127,29 +151,35 @@ def build_date_filter(start_date, end_date):
     
     if start_date and end_date:
         try:
+            start_year = int(start_date)
+            end_year = int(end_date)
+            
             date_filter = """
                 AND (
-                    CASE
-                        WHEN paper.publicationDate IS NOT NULL THEN
-                            CASE 
-                                WHEN paper.publicationDate CONTAINS '/' 
-                                THEN toInteger(split(split(paper.publicationDate, ' ')[0], '/')[2]) >= $start_year
-                                     AND toInteger(split(split(paper.publicationDate, ' ')[0], '/')[2]) <= $end_year
-                                WHEN paper.publicationDate CONTAINS '-' 
-                                THEN toInteger(split(paper.publicationDate, '-')[0]) >= $start_year
-                                     AND toInteger(split(paper.publicationDate, '-')[0]) <= $end_year
-                                ELSE false
-                            END
-                        WHEN paper.year IS NOT NULL THEN
-                            toInteger(paper.year) >= $start_year AND toInteger(paper.year) <= $end_year
-                        ELSE false
-                    END
+                    (p.year IS NOT NULL AND toInteger(p.year) >= $start_year AND toInteger(p.year) <= $end_year)
+                    OR 
+                    (
+                        p.publicationDate IS NOT NULL AND p.publicationDate <> '' AND
+                        (
+                            (
+                                p.publicationDate CONTAINS '/' AND 
+                                toInteger(split(split(p.publicationDate, ' ')[0], '/')[2]) >= $start_year AND
+                                toInteger(split(split(p.publicationDate, ' ')[0], '/')[2]) <= $end_year
+                            )
+                            OR
+                            (
+                                p.publicationDate CONTAINS '-' AND 
+                                toInteger(substring(p.publicationDate, 0, 4)) >= $start_year AND
+                                toInteger(substring(p.publicationDate, 0, 4)) <= $end_year
+                            )
+                        )
+                    )
                 )
             """
             
             params = {
-                "start_year": int(start_date),
-                "end_year": int(end_date)
+                "start_year": start_year,
+                "end_year": end_year
             }
             logger.info(f"Applied date filter: {start_date} to {end_date}")
             
