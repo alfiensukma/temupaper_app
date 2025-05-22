@@ -66,8 +66,14 @@
 
     <p class="mt-4 font-medium text-gray-900 text-left">
       <strong>Coba:</strong>
-      <a href="#" class="text-[#4787FA] hover:underline">Object Oriented Programming</a>,
-      <a href="#" class="text-[#4787FA] hover:underline">Design Pattern</a>
+      {% if topics %}
+        {% for topic in topics %}
+          <a href="{% url 'search' %}?query={{ topic.name|urlencode }}" class="text-[#4787FA] hover:underline">{{ topic.name }}</a>{% if not forloop.last %},{% endif %}
+        {% endfor %}
+      {% else %}
+        <a href="{% url 'search' %}?query=Object%20Oriented%20Programming" class="text-[#4787FA] hover:underline">Object Oriented Programming</a>,
+        <a href="{% url 'search' %}?query=Design%20Pattern" class="text-[#4787FA] hover:underline">Design Pattern</a>
+      {% endif %}
     </p>
   </div>
 </div>

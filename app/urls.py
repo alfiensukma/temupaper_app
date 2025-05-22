@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .views.retrieve_paper_views import fetch_papers
+from .views.retrieve_paper_views import fetch_papers, scrape_topic, download_results
 from .views.graph_views import generate_knowledge_graph, import_topic, import_institution, import_journal
 from .views.detail_views import get_recommendation, get_detail_paper, record_paper_read
 from .views.search_views import index, search
@@ -21,6 +21,8 @@ urlpatterns = [
     path('', index, name='index'),
     path("unicorn/", include("django_unicorn.urls")),
     path("fetch-papers/", fetch_papers, name="get_paper"),
+    path('scrape-topic/', scrape_topic, name='scrape_topic'),
+    path('download-results/', download_results, name='download_results'),
     path("paper/detail/", get_detail_paper, name="get_detail"),
     path("paper/detail/recommendation", get_recommendation, name="get_recommendation"),
     path("generate-knowledge-graph/", generate_knowledge_graph, name="generate_knowledge_graph"),

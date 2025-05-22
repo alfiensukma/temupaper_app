@@ -6,6 +6,13 @@ class ReferenceImporter(CSVDataImporter):
         reference = []
         with open(self.file_path, mode='r', encoding='utf-8') as f:
             reader = csv.DictReader(f)
+            
+            required_columns = ["source_id", "target_id"]
+            missing_columns = [col for col in required_columns if col not in reader.fieldnames]
+            if missing_columns:
+                self.logger.error(f"Missing required columns: {missing_columns}")
+                raise ValueError(f"Missing required columns: {missing_columns}")
+            
             for row in reader:
                 reference.append({
                     "source_id": row["source_id"],

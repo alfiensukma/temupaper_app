@@ -29,6 +29,11 @@ class KnowledgeGraphManager:
             "institution_count": institution_count,
             "topic_count": topic_count,
         }
+        
+    def get_count(self, label):
+        with self.connection.get_driver().session() as session:
+            result = session.run(f"MATCH (n:{label}) RETURN COUNT(n) as count")
+            return result.single()["count"] if result.peek() else 0
 
     def import_all(self, import_configs):
         # self.clear_graph()

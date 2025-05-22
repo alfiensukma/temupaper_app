@@ -12,6 +12,7 @@ from app.views.preprocessing_views import create_similar_paper_relation, create_
 from app.importers.importer_factory import ImporterFactory
 from app.utils.knowledge_graph_manager import KnowledgeGraphManager
 from app.utils.neo4j_connection import Neo4jConnection
+from admin_app.services.history_service import HistoryService
 
 logger = logging.getLogger(__name__)
 
@@ -60,6 +61,18 @@ def start_import(request):
 
         if process_status['is_processing']:
             return JsonResponse({'error': 'Another process is running'}, status=400)
+        
+        # intial history
+        history_service = HistoryService()
+        history_record = history_service.add_history(
+            operation_type="import",
+            details={
+                "csv_file": os.path.basename(csv_path),
+                "ref_file": os.path.basename(ref_path),
+                "start_time": time.strftime('%Y-%m-%d %H:%M:%S')
+            },
+            status="in_progress"
+        )
 
         process_status = {
             'is_processing': True,
@@ -68,11 +81,19 @@ def start_import(request):
             'progress_percent': 0,
             'progress_message': 'Starting the import process...',
             'message': '',
-            'log': [f"[{time.strftime('%H:%M:%S')}] Starting the import process..."]
+            'log': [f"[{time.strftime('%H:%M:%S')}] Starting the import process..."],
+            'history_id': history_record.get('id') if history_record else None
         }
 
         def process_files():
             global process_status
+            import_stats = {
+                "papers": 0,
+                "authors": 0,
+                "publication_types": 0,
+                "fields_of_study": 0
+            }
+            
             try:
                 # Step 1: Import CSV
                 process_status['step'] = 1
@@ -90,6 +111,15 @@ def start_import(request):
                     {"type": "publication_type", "file_path": csv_path},
                     {"type": "reference", "file_path": ref_path},
                 ]
+                
+                # Add stats to import_stats
+                stats = kg_manager.validate_graph()
+                import_stats = {
+                    "papers": stats["total_papers"],
+                    "authors": stats["total_authors"],
+                    "publication_types": stats["total_publication_type"],
+                    "fields_of_study": stats["total_fields_of_study"]
+                }
 
                 try:
                     validation_result = kg_manager.import_all(import_configs)
@@ -136,6 +166,21 @@ def start_import(request):
                 process_status['message'] = 'Import dan proses selesai.'
                 process_status['progress_message'] = 'Proses selesai!'
                 process_status['log'].append(f"[{time.strftime('%H:%M:%S')}] Import dan proses selesai.")
+                
+                if process_status.get('history_id'):
+                    history_service = HistoryService()
+                    history_service.update_history(
+                    process_status['history_id'],
+                    details={
+                        "csv_file": os.path.basename(csv_path),
+                        "ref_file": os.path.basename(ref_path),
+                        "start_time": time.strftime('%Y-%m-%d %H:%M:%S'),
+                        "end_time": time.strftime('%Y-%m-%d %H:%M:%S'),
+                        "stats": import_stats
+                    },
+                    status="success"
+                )
+                
             except Exception as e:
                 process_status['message'] = f'Error in step {process_status["step"]}: {str(e)}'
                 process_status['progress_message'] = f'Error: {str(e)}'
