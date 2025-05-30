@@ -26,6 +26,22 @@
 .animate-progressBar {
     animation: progressBar 3s linear forwards;
 }
+
+@keyframes fade-in-up {
+  0% {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.6s ease-out forwards;
+}
+
 </style>
 
 <script>
@@ -37,6 +53,9 @@
         }
     }, 3000);
 </script>
+
+
+
 {% endif %}
 
 <div class="flex items-center justify-center h-[400px] md:h-[600px] text-center px-4">
@@ -71,3 +90,162 @@
     </p>
   </div>
 </div>
+
+<section class="mt-2 px-4 md:px-8 max-w-7xl mx-auto">
+
+  <div class="mb-16">
+      
+    <div class="flex justify-between items-center mb-6">
+      <div>
+        <h2 class="text-2xl md:text-3xl font-bold text-gray-800">Rekomendasi Berdasarkan Riwayat Akses</h2>
+      </div>
+      <a href="#" class="text-blue-500 hover:text-blue-700 text-sm font-medium flex items-center gap-1">
+        Lihat semua
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </a>
+    </div>
+
+      <div class="bg-sky-50 border border-sky-200 rounded-lg p-4 mb-8">
+        <div class="flex items-start">
+          <svg class="w-5 h-5 text-sky-500 mr-3 mt-0.5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+          </svg>
+          <div>
+            <h3 class="text-sky-800 font-medium mb-1">Bagaimana rekomendasi ini dihasilkan?</h3>
+            <p class="text-sky-700 text-sm">Rekomendasi ditampilkan berdasarkan riwayat akses Anda</p>
+          </div>
+        </div>
+      </div>
+  
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {% for i in "123" %}
+      <article class="bg-white group rounded-xl shadow-lg overflow-hidden border border-gray-100 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 opacity-0 translate-y-6 animate-fade-in-up">
+        <div class="p-6">
+          <div class="flex justify-between items-start mb-2">
+            <h3 class="text-xl font-bold text-gray-800 group-hover:text-blue-600 transition-colors flex-1">
+              <a href="#">Judul Paper {{i}} - Analisis Algoritma Modern</a>
+            </h3>
+          </div>
+          <p class="text-sm text-gray-600 mb-3">Penulis: Prof. John Doe, Dr. Jane Smith</p>
+          <p class="text-gray-700 text-justify mb-4 line-clamp-3">
+            Penelitian ini menganalisis algoritma modern dalam bidang machine learning dengan pendekatan baru yang meningkatkan efisiensi hingga 40% dibanding metode sebelumnya.
+          </p>
+          <div class="flex justify-between items-center text-sm">
+            <span class="text-gray-500">2023</span>
+            <a href="#" class="text-blue-500 hover:text-blue-700 font-medium flex items-center gap-1">
+              Baca selengkapnya
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="mb-16">
+    <div class="flex justify-between items-center mb-6">
+      <div>
+        <h2 class="text-2xl md:text-3xl font-bold text-gray-800">Rekomendasi dari Institusi Sejawat</h2>
+      </div>
+      <a href="#" class="text-blue-500 hover:text-blue-700 text-sm font-medium flex items-center gap-1">
+        Lihat semua
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </a>
+    </div>
+
+    <div class="bg-sky-50 border border-sky-200 rounded-lg p-4 mb-8">
+        <div class="flex items-start">
+          <svg class="w-5 h-5 text-sky-500 mr-3 mt-0.5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+          </svg>
+          <div>
+            <h3 class="text-sky-800 font-medium mb-1">Bagaimana rekomendasi ini dihasilkan?</h3>
+            <p class="text-sky-700 text-sm">Rekomendasi diberikan berdasarkan karya ilmiah yang paling banyak diakses oleh pengguna dari institusi Anda, namun belum Anda baca</p>
+            
+          </div>
+        </div>
+      </div>
+  
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {% for i in "123" %}
+      <article class="bg-white group rounded-xl shadow-lg overflow-hidden border border-gray-100 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 opacity-0 translate-y-6 animate-fade-in-up">
+        <div class="p-6">
+          <div class="flex justify-between items-start mb-2">
+            <h3 class="text-xl font-bold text-gray-800 group-hover:text-blue-600 transition-colors flex-1">
+              <a href="#">Studi Komparatif Framework {{i}} untuk AI</a>
+            </h3>
+            <span class="bg-sky-100 text-sky-800 text-xs px-2 py-1 rounded-full ml-2">dibaca 200x</span>
+          </div>
+          <p class="text-sm text-gray-600 mb-3">Penulis: Dr. Michael Lee, Prof. Sarah Chen</p>
+          <p class="text-gray-700 text-justify mb-4 line-clamp-3">
+            Penelitian ini membandingkan berbagai framework AI modern dengan fokus pada performa dan skalabilitas dalam lingkungan komputasi terdistribusi.
+          </p>
+          <div class="flex justify-between items-center text-sm">
+            <span class="text-gray-500">2022</span>
+            <a href="#" class="text-blue-500 hover:text-blue-700 font-medium flex items-center gap-1">
+              Baca selengkapnya
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<style>
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  @keyframes fade-in-up {
+    0% {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .animate-fade-in-up {
+    animation: fade-in-up 0.6s ease-out forwards;
+    animation-delay: calc(var(--animation-order) * 100ms);
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, index) => {
+        if (entry.isIntersecting) {
+          entry.target.style.setProperty('--animation-order', index);
+          entry.target.classList.add('animate-fade-in-up');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, {
+      threshold: 0.1
+    });
+
+    document.querySelectorAll('.animate-fade-in-up').forEach(el => {
+      observer.observe(el);
+    });
+  });
+</script>
+
