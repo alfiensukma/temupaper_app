@@ -150,6 +150,8 @@
     
 </div>
 
+
+
 <script>
     function recordPaperRead(paperId, accessMethod) {
         {% if user.is_authenticated %}
@@ -173,4 +175,278 @@
             });
         {% endif %}
     }
-    </script>
+</script>
+
+
+<section class="mt-16 bg-white rounded-2xl p-6 shadow-md">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+        <div class="flex items-center gap-3">
+            <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
+            <h2 class="text-2xl font-bold text-gray-800">Daftar Referensi</h2>
+        </div>
+        
+        <div class="relative w-full md:w-64">
+            <input type="text" id="search-references" placeholder="Cari referensi..." 
+                   class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+            </div>
+        </div>
+    </div>
+    
+    <div class="h-[600px] overflow-y-auto p-6 scroll-smooth bg-gradient-to-b from-blue-50 to-white" style="scrollbar-width: thin; scrollbar-color: #3B82F6 #F3F4F6;">
+        <div class="grid gap-5">                
+
+            <a href="#" class="bg-white p-5 rounded-xl transition-all duration-300 border border-gray-100 hover:border-blue-300 hover:shadow-md group">
+                <div class="flex flex-col">
+                    <h3 class="font-bold text-gray-800 text-lg group-hover:text-blue-600 transition-colors">Deep Learning Approaches for Natural Language Processing</h3>
+                    <p class="text-sm text-gray-500 mt-4 mb-4 border-b border-gray-100 pb-2">
+                        <span class="px-2 py-1.5 bg-blue-50 text-blue-600 rounded-full text-sm font-medium hover:bg-blue-100 transition-colors inline-block mb-2 mr-2">John Smith</span>
+                        <span class="px-2 py-1.5 bg-blue-50 text-blue-600 rounded-full text-sm font-medium hover:bg-blue-100 transition-colors inline-block mb-2 mr-2">Michael Johnson</span>
+                        <span class="px-2 py-1.5 bg-blue-50 text-blue-600 rounded-full text-sm font-medium hover:bg-blue-100 transition-colors inline-block mb-2">+ 3 lainnya</span>
+                    </p>
+                    <p class="text-gray-600 text-sm">2020</p>
+                    <p class="text-gray-600 mt-3 text-sm line-clamp-3">
+                        This paper explores various deep learning techniques applied to NLP tasks including text classification, sentiment analysis, and machine translation. We compare the performance of different architectures...
+                    </p>
+                </div>
+            </a>
+            
+            <a href="#" class="bg-white p-5 rounded-xl transition-all duration-300 border border-gray-100 hover:border-blue-300 hover:shadow-md group">
+                <div class="flex flex-col">
+                    <h3 class="font-bold text-gray-800 text-lg group-hover:text-blue-600 transition-colors">Attention Is All You Need: Transformer Architecture</h3>
+                    <p class="text-sm text-gray-500 mt-4 mb-4 border-b border-gray-100 pb-2">
+                        <span class="px-2 py-1.5 bg-blue-50 text-blue-600 rounded-full text-sm font-medium hover:bg-blue-100 transition-colors inline-block mb-2 mr-2">Ashish Vaswani</span>
+                        <span class="px-2 py-1.5 bg-blue-50 text-blue-600 rounded-full text-sm font-medium hover:bg-blue-100 transition-colors inline-block mb-2 mr-2">Noam Shazeer</span>
+                        <span class="px-2 py-1.5 bg-blue-50 text-blue-600 rounded-full text-sm font-medium hover:bg-blue-100 transition-colors inline-block mb-2">+ 5 lainnya</span>
+                    </p>
+                    <p class="text-gray-600 text-sm">2017</p>
+                    <p class="text-gray-600 mt-3 text-sm line-clamp-3">
+                        We propose a new simple network architecture, the Transformer, based solely on attention mechanisms, dispensing with recurrence and convolutions entirely. Experiments show these models to be superior...
+                    </p>
+                </div>
+            </a>
+            
+            <a href="#" class="bg-white p-5 rounded-xl transition-all duration-300 border border-gray-100 hover:border-blue-300 hover:shadow-md group">
+                <div class="flex flex-col">
+                    <h3 class="font-bold text-gray-800 text-lg group-hover:text-blue-600 transition-colors">BERT: Pre-training of Deep Bidirectional Transformers</h3>
+                    <p class="text-sm text-gray-500 mt-4 mb-4 border-b border-gray-100 pb-2">
+                        <span class="px-2 py-1.5 bg-blue-50 text-blue-600 rounded-full text-sm font-medium hover:bg-blue-100 transition-colors inline-block mb-2 mr-2">Jacob Devlin</span>
+                        <span class="px-2 py-1.5 bg-blue-50 text-blue-600 rounded-full text-sm font-medium hover:bg-blue-100 transition-colors inline-block mb-2 mr-2">Ming-Wei Chang</span>
+                        <span class="px-2 py-1.5 bg-blue-50 text-blue-600 rounded-full text-sm font-medium hover:bg-blue-100 transition-colors inline-block mb-2">+ 4 lainnya</span>
+                    </p>
+                    <p class="text-gray-600 text-sm">2018</p>
+                    <p class="text-gray-600 mt-3 text-sm line-clamp-3">
+                        We introduce a new language representation model called BERT, which stands for Bidirectional Encoder Representations from Transformers. Unlike recent language representation models...
+                    </p>
+                </div>
+            </a>
+            
+            <a href="#" class="bg-white p-5 rounded-xl transition-all duration-300 border border-gray-100 hover:border-blue-300 hover:shadow-md group">
+                <div class="flex flex-col">
+                    <h3 class="font-bold text-gray-800 text-lg group-hover:text-blue-600 transition-colors">Efficient Estimation of Word Representations</h3>
+                    <p class="text-sm text-gray-500 mt-4 mb-4 border-b border-gray-100 pb-2">
+                        <span class="px-2 py-1.5 bg-blue-50 text-blue-600 rounded-full text-sm font-medium hover:bg-blue-100 transition-colors inline-block mb-2 mr-2">Tomas Mikolov</span>
+                        <span class="px-2 py-1.5 bg-blue-50 text-blue-600 rounded-full text-sm font-medium hover:bg-blue-100 transition-colors inline-block mb-2 mr-2">Kai Chen</span>
+                        <span class="px-2 py-1.5 bg-blue-50 text-blue-600 rounded-full text-sm font-medium hover:bg-blue-100 transition-colors inline-block mb-2">+ 2 lainnya</span>
+                    </p>
+                    <p class="text-gray-600 text-sm">2013</p>
+                    <p class="text-gray-600 mt-3 text-sm line-clamp-3">
+                        We propose two novel model architectures for computing continuous vector representations of words from very large data sets. The quality of these representations is measured in a word similarity task...
+                    </p>
+                </div>
+            </a>
+            
+            <a href="#" class="bg-white p-5 rounded-xl transition-all duration-300 border border-gray-100 hover:border-blue-300 hover:shadow-md group">
+                <div class="flex flex-col">
+                    <h3 class="font-bold text-gray-800 text-lg group-hover:text-blue-600 transition-colors">ImageNet Classification with Deep Convolutional Neural Networks</h3>
+                    <p class="text-sm text-gray-500 mt-4 mb-4 border-b border-gray-100 pb-2">
+                        <span class="px-2 py-1.5 bg-blue-50 text-blue-600 rounded-full text-sm font-medium hover:bg-blue-100 transition-colors inline-block mb-2 mr-2">Alex Krizhevsky</span>
+                        <span class="px-2 py-1.5 bg-blue-50 text-blue-600 rounded-full text-sm font-medium hover:bg-blue-100 transition-colors inline-block mb-2 mr-2">Ilya Sutskever</span>
+                        <span class="px-2 py-1.5 bg-blue-50 text-blue-600 rounded-full text-sm font-medium hover:bg-blue-100 transition-colors inline-block mb-2">Geoffrey Hinton</span>
+                    </p>
+                    <p class="text-gray-600 text-sm">2012</p>
+                    <p class="text-gray-600 mt-3 text-sm line-clamp-3">
+                        We trained a large, deep convolutional neural network to classify the 1.2 million high-resolution images in the ImageNet LSVRC-2010 contest into the 1000 different classes...
+                    </p>
+                </div>
+            </a>
+        </div>
+    </div>
+    
+    <div class="mt-6 flex justify-center">
+        <nav class="inline-flex rounded-md shadow">
+            <a href="#" class="px-3 py-2 rounded-l-md border border-gray-300 bg-white text-gray-500 hover:bg-gray-50">
+                Previous
+            </a>
+            <a href="#" class="px-3 py-2 border-t border-b border-gray-300 bg-white text-blue-600 font-medium">
+                1
+            </a>
+            <a href="#" class="px-3 py-2 border border-gray-300 bg-white text-gray-500 hover:bg-gray-50">
+                2
+            </a>
+            <a href="#" class="px-3 py-2 rounded-r-md border border-gray-300 bg-white text-gray-500 hover:bg-gray-50">
+                Next
+            </a>
+        </nav>
+    </div>
+</section>
+
+<section class="mt-10 bg-white rounded-2xl p-6 shadow-md">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+        <div class="flex items-center gap-3">
+            <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5"></path>
+            </svg>
+            <h2 class="text-2xl font-bold text-gray-800">Karya yang Mensitasi</h2>
+            <span class="ml-auto bg-green-100 text-green-800 text-sm font-medium px-3 py-1 rounded-full">
+                42 sitasi
+            </span>
+        </div>
+        
+        <div class="relative w-full md:w-64">
+            <input type="text" id="search-citations" placeholder="Cari sitasi..." 
+                   class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-green-500 focus:border-green-500">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <div class="h-[600px] overflow-y-auto p-6 scroll-smooth bg-gradient-to-b from-green-50 to-white" style="scrollbar-width: thin; scrollbar-color: #10B981 #F3F4F6;">
+        <div class="grid gap-5">                
+            <a href="#" class="bg-white p-5 rounded-xl transition-all duration-300 border border-gray-100 hover:border-green-300 hover:shadow-md group">
+                <div class="flex flex-col">
+                    <h3 class="font-bold text-gray-800 text-lg group-hover:text-green-600 transition-colors">Improving Language Understanding by Generative Pre-Training</h3>
+                    <p class="text-sm text-gray-500 mt-4 mb-4 border-b border-gray-100 pb-2">
+                        <span class="px-2 py-1.5 bg-green-50 text-green-600 rounded-full text-sm font-medium hover:bg-green-100 transition-colors inline-block mb-2 mr-2">Alec Radford</span>
+                        <span class="px-2 py-1.5 bg-green-50 text-green-600 rounded-full text-sm font-medium hover:bg-green-100 transition-colors inline-block mb-2 mr-2">Karthik Narasimhan</span>
+                        <span class="px-2 py-1.5 bg-green-50 text-green-600 rounded-full text-sm font-medium hover:bg-green-100 transition-colors inline-block mb-2">+ 3 lainnya</span>
+                    </p>
+                    <p class="text-gray-600 text-sm">2018</p>
+                    <p class="text-gray-600 mt-3 text-sm line-clamp-3">
+                        Natural language understanding comprises a wide range of diverse tasks such as textual entailment, question answering, semantic similarity assessment, and document classification...
+                    </p>
+
+                </div>
+            </a>
+
+            <a href="#" class="bg-white p-5 rounded-xl transition-all duration-300 border border-gray-100 hover:border-green-300 hover:shadow-md group">
+                <div class="flex flex-col">
+                    <h3 class="font-bold text-gray-800 text-lg group-hover:text-green-600 transition-colors">Language Models are Few-Shot Learners</h3>
+                    <p class="text-sm text-gray-500 mt-4 mb-4 border-b border-gray-100 pb-2">
+                        <span class="px-2 py-1.5 bg-green-50 text-green-600 rounded-full text-sm font-medium hover:bg-green-100 transition-colors inline-block mb-2 mr-2">Tom B. Brown</span>
+                        <span class="px-2 py-1.5 bg-green-50 text-green-600 rounded-full text-sm font-medium hover:bg-green-100 transition-colors inline-block mb-2 mr-2">Benjamin Mann</span>
+                        <span class="px-2 py-1.5 bg-green-50 text-green-600 rounded-full text-sm font-medium hover:bg-green-100 transition-colors inline-block mb-2">+ 5 lainnya</span>
+                    </p>
+                    <p class="text-gray-600 text-sm">2020</p>
+                    <p class="text-gray-600 mt-3 text-sm line-clamp-3">
+                        We show that scaling up language models greatly improves task-agnostic, few-shot performance, sometimes even reaching competitiveness with prior state-of-the-art fine-tuning approaches...
+                    </p>
+
+                </div>
+            </a>
+            
+            <a href="#" class="bg-white p-5 rounded-xl transition-all duration-300 border border-gray-100 hover:border-green-300 hover:shadow-md group">
+                <div class="flex flex-col">
+                    <h3 class="font-bold text-gray-800 text-lg group-hover:text-green-600 transition-colors">RoBERTa: A Robustly Optimized BERT Pretraining Approach</h3>
+                    <p class="text-sm text-gray-500 mt-4 mb-4 border-b border-gray-100 pb-2">
+                        <span class="px-2 py-1.5 bg-green-50 text-green-600 rounded-full text-sm font-medium hover:bg-green-100 transition-colors inline-block mb-2 mr-2">Yinhan Liu</span>
+                        <span class="px-2 py-1.5 bg-green-50 text-green-600 rounded-full text-sm font-medium hover:bg-green-100 transition-colors inline-block mb-2 mr-2">Myle Ott</span>
+                        <span class="px-2 py-1.5 bg-green-50 text-green-600 rounded-full text-sm font-medium hover:bg-green-100 transition-colors inline-block mb-2">+ 4 lainnya</span>
+                    </p>
+                    <p class="text-gray-600 text-sm">2019</p>
+                    <p class="text-gray-600 mt-3 text-sm line-clamp-3">
+                        We present a replication study of BERT pretraining that carefully measures the impact of many key hyperparameters and training data size. We find that BERT was significantly undertrained...
+                    </p>
+
+                </div>
+            </a>
+
+            <a href="#" class="bg-white p-5 rounded-xl transition-all duration-300 border border-gray-100 hover:border-green-300 hover:shadow-md group">
+                <div class="flex flex-col">
+                    <h3 class="font-bold text-gray-800 text-lg group-hover:text-green-600 transition-colors">Exploring the Limits of Transfer Learning with a Unified Text-to-Text Transformer</h3>
+                    <p class="text-sm text-gray-500 mt-4 mb-4 border-b border-gray-100 pb-2">
+                        <span class="px-2 py-1.5 bg-green-50 text-green-600 rounded-full text-sm font-medium hover:bg-green-100 transition-colors inline-block mb-2 mr-2">Colin Raffel</span>
+                        <span class="px-2 py-1.5 bg-green-50 text-green-600 rounded-full text-sm font-medium hover:bg-green-100 transition-colors inline-block mb-2 mr-2">Noam Shazeer</span>
+                        <span class="px-2 py-1.5 bg-green-50 text-green-600 rounded-full text-sm font-medium hover:bg-green-100 transition-colors inline-block mb-2">+ 6 lainnya</span>
+                    </p>
+                    <p class="text-gray-600 text-sm">2019</p>
+                    <p class="text-gray-600 mt-3 text-sm line-clamp-3">
+                        Transfer learning, where a model is first pre-trained on a data-rich task before being fine-tuned on a downstream task, has emerged as a powerful technique in natural language processing...
+                    </p>
+                </div>
+            </a>
+
+            <a href="#" class="bg-white p-5 rounded-xl transition-all duration-300 border border-gray-100 hover:border-green-300 hover:shadow-md group">
+                <div class="flex flex-col">
+                    <h3 class="font-bold text-gray-800 text-lg group-hover:text-green-600 transition-colors">GLUE: A Multi-Task Benchmark and Analysis Platform for Natural Language Understanding</h3>
+                    <p class="text-sm text-gray-500 mt-4 mb-4 border-b border-gray-100 pb-2">
+                        <span class="px-2 py-1.5 bg-green-50 text-green-600 rounded-full text-sm font-medium hover:bg-green-100 transition-colors inline-block mb-2 mr-2">Alex Wang</span>
+                        <span class="px-2 py-1.5 bg-green-50 text-green-600 rounded-full text-sm font-medium hover:bg-green-100 transition-colors inline-block mb-2 mr-2">Amanpreet Singh</span>
+                        <span class="px-2 py-1.5 bg-green-50 text-green-600 rounded-full text-sm font-medium hover:bg-green-100 transition-colors inline-block mb-2">+ 5 lainnya</span>
+                    </p>
+                    <p class="text-gray-600 text-sm">2018</p>
+                    <p class="text-gray-600 mt-3 text-sm line-clamp-3">
+                        For natural language understanding (NLU) technology to be maximally useful, it must be able to process language in a way that is not exclusive to a single task, domain, or dataset...
+                    </p>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <div class="mt-6 flex justify-center">
+        <nav class="inline-flex rounded-md shadow">
+            <a href="#" class="px-3 py-2 rounded-l-md border border-gray-300 bg-white text-gray-500 hover:bg-gray-50">
+                Previous
+            </a>
+            <a href="#" class="px-3 py-2 border-t border-b border-gray-300 bg-white text-green-600 font-medium">
+                1
+            </a>
+            <a href="#" class="px-3 py-2 border border-gray-300 bg-white text-gray-500 hover:bg-gray-50">
+                2
+            </a>
+            <a href="#" class="px-3 py-2 border border-gray-300 bg-white text-gray-500 hover:bg-gray-50">
+                3
+            </a>
+            <a href="#" class="px-3 py-2 rounded-r-md border border-gray-300 bg-white text-gray-500 hover:bg-gray-50">
+                Next
+            </a>
+        </nav>
+    </div>
+</section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchReferences = document.getElementById('search-references');
+    searchReferences.addEventListener('input', function(e) {
+        const term = e.target.value.toLowerCase();
+        document.querySelectorAll('#references-list > a').forEach(card => {
+            const text = card.textContent.toLowerCase();
+            card.style.display = text.includes(term) ? 'block' : 'none';
+        });
+    });
+
+    const searchCitations = document.getElementById('search-citations');
+    searchCitations.addEventListener('input', function(e) {
+        const term = e.target.value.toLowerCase();
+        document.querySelectorAll('#citations-list > a').forEach(card => {
+            const text = card.textContent.toLowerCase();
+            card.style.display = text.includes(term) ? 'block' : 'none';
+        });
+    });
+
+    document.querySelectorAll('.pagination a').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            console.log('Page changed to:', this.textContent);
+        });
+    });
+});
+</script>
