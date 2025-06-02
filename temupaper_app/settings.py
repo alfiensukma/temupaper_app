@@ -26,12 +26,12 @@ SECRET_KEY = 'django-insecure-cmib4a_*z35=m*&u($4v%+kuhim7w35$tah$^x+xl052!l2ptj
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
-neo4j_uri = os.environ.get('NEO4J_URI', 'bolt://localhost:7687').replace('bolt://', '')
-neo4j_username = os.environ.get('NEO4J_USERNAME', 'neo4j')
-neo4j_password = os.environ.get('NEO4J_PASSWORD', '12345678')
-NEOMODEL_NEO4J_BOLT_URL = f"bolt://{neo4j_username}:{neo4j_password}@{neo4j_uri}"
+NEO4J_URI = os.environ.get('NEO4J_URI', 'bolt://localhost:7687').replace('bolt://', '')
+NEO4J_USERNAME = os.environ.get('NEO4J_USERNAME', 'neo4j')
+NEO4J_PASSWORD = os.environ.get('NEO4J_PASSWORD', '12345678')
+NEOMODEL_NEO4J_BOLT_URL = f"bolt://{NEO4J_USERNAME}:{NEO4J_PASSWORD}@{os.environ.get('NEO4J_HOST', 'localhost')}:7687"
 
 NEOMODEL_SIGNALS = True
 NEOMODEL_FORCE_TIMEZONE = False
@@ -144,9 +144,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
-STATICFILES_DIRS = [
-    BASE_DIR / "papers/static",
-]
+STATIC_ROOT = 'static'
 
 
 # Default primary key field type
