@@ -1,8 +1,10 @@
-<div class="p-6 bg-color rounded-xl">
-    {% if paper.paperId %}
-        <a href="{% url 'paper_detail' paper.paperId %}" class="paper-title line-clamp-2 md:line-clamp-3 text-justify font-semibold text-[#4787FA] no-underline hover:underline hover:cursor-pointer">{{ title }}</a>
+{% load unicorn %}
+
+<div class="p-6 bg-color rounded-xl" unicorn:id="{{ pk }}">
+    {% if paper_id %}
+        <a href="{% url 'paper_detail' paper_id %}" class="paper-title line-clamp-2 md:line-clamp-3 text-justify font-semibold text-[#4787FA] no-underline hover:underline hover:cursor-pointer">{{ title }}</a>
     {% else %}
-        <a class="paper-title text-justify line-clamp-2 md:line-clamp-3 font-semibold text-[#4787FA] no-underline hover:underline hover:cursor-pointer">{{ title }}</a>
+        <span class="paper-title text-justify line-clamp-2 md:line-clamp-3 font-semibold text-[#4787FA] no-underline">{{ title }}</span>
     {% endif %}
 
     <div class="flex items-center gap-2 mt-2 mb-1">

@@ -1,22 +1,27 @@
-# Gunakan Python base image
 FROM python:3.10-slim
 
-# Set environment vars
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+# Install dependensi OS minimal
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends gcc && \
+    rm -rf /var/lib/apt/lists/*
 
-# Set workdir
+# Env setting
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
 WORKDIR /app
 
-# Salin semua project
+# Copy requirements, install python dependency
+COPY requirements.txt /app/
+RUN pip install --upgrade pip && pip install -r requirements.txt
+
+# Copy semua source code Django
 COPY . /app/
 
-# Install dependencies
-RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
+# (Opsional, jika menggunakan whitenoise, aktifkan baris ini)
+# RUN python manage.py collectstatic --noinput
 
-# Expose port (opsional)
-EXPOSE 8000
+EXPOSE 8080
 
-# Jalankan server
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+# Gunicorn default Django WSGI (ganti jika struktur tidak biasa)
+CMD ["gunicorn", "temupaper_app.wsgi:application", "--bind", "0.0.0.0:8080"]

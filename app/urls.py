@@ -2,8 +2,7 @@ from django.urls import path, include
 from .views.retrieve_paper_views import fetch_papers, scrape_topic, download_results
 from .views.graph_views import generate_knowledge_graph, import_topic, import_institution, import_journal
 from .views.detail_views import get_recommendation, get_detail_paper, record_paper_read
-from .views.search_views import index, search
-from .views.topic_recommendation_views import topic_list, topic_result
+from .views.search_views import index, search, apply_date_filter, load_page
 from .views.peer_institution_recommendation_views import peer_institution
 from .views.similarity_access_recommendation_views import similarity_access
 from .views.access_history_recommendation_views import access_history
@@ -31,9 +30,9 @@ urlpatterns = [
     path('import-journal/', import_journal, name='import_journal'),
 
     path('search/', search, name='search'),
+    path('apply-date-filter/', apply_date_filter, name='apply_date_filter'),
+    path('load-page/', load_page, name='load_page'),
     path('papers/detail/<str:paper_id>/', get_detail_paper, name='paper_detail'),
-    path('topic-recommendation/', topic_list, name='topic_list'),
-    path("topic-recommendation/<str:topic>", topic_result, name="topic_result"),
     path('peer-institution-recommendation/', peer_institution, name='peer_institution'),
     path('similarity-access-recommendation/', similarity_access, name='similarity_access'),
     path('access-history-recommendation/', access_history, name='access_history'),
