@@ -19,9 +19,9 @@ RUN pip install --upgrade pip && pip install -r requirements.txt
 COPY . /app/
 
 # (Opsional, jika menggunakan whitenoise, aktifkan baris ini)
-# RUN python manage.py collectstatic --noinput
+RUN python manage.py collectstatic --noinput
 
 EXPOSE 8080
 
 # Gunicorn default Django WSGI (ganti jika struktur tidak biasa)
-CMD ["gunicorn", "temupaper_app.wsgi:application", "--bind", "0.0.0.0:8080"]
+CMD python manage.py migrate && gunicorn temupaper_app.wsgi:application --workers 5 --threads 4 --bind 0.0.0.0:8080

@@ -85,7 +85,7 @@ def import_topic(request):
 def import_journal(request):
     try:
         BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        DATA_CSV_DIR = os.path.join(BASE_DIR, "data-csv")
+        DATA_CSV_DIR = os.path.join(BASE_DIR, "data-csv-preprocessing")
         CSV_PATH = os.path.join(DATA_CSV_DIR, "journalss.csv")
 
         neo4j_connection = Neo4jConnection()
@@ -109,7 +109,7 @@ def import_journal(request):
 def import_institution(request):
     try:
         BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        DATA_CSV_DIR = os.path.join(BASE_DIR, "data-csv")
+        DATA_CSV_DIR = os.path.join(BASE_DIR, "data-csv-preprocessing")
         CSV_PATH = os.path.join(DATA_CSV_DIR, "perguruan-tinggi.csv")
 
         neo4j_connection = Neo4jConnection()
