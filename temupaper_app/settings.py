@@ -33,9 +33,20 @@ NEO4J_USERNAME = os.environ.get('NEO4J_USERNAME', 'neo4j')
 NEO4J_PASSWORD = os.environ.get('NEO4J_PASSWORD', '12345678')
 NEOMODEL_NEO4J_BOLT_URL = f"bolt://{NEO4J_USERNAME}:{NEO4J_PASSWORD}@{os.environ.get('NEO4J_HOST', 'localhost')}:7687"
 
+# production settings
+# NEO4J_URI = os.environ.get('NEO4J_URI', 'bolt://34.46.35.127:7687').replace('bolt://', '')
+# NEO4J_USERNAME = os.environ.get('NEO4J_USERNAME', 'neo4j')
+# NEO4J_PASSWORD = os.environ.get('NEO4J_PASSWORD', 'my-password')
+# NEOMODEL_NEO4J_BOLT_URL = f"bolt://{NEO4J_USERNAME}:{NEO4J_PASSWORD}@{os.environ.get('NEO4J_HOST', '34.46.35.127')}:7687"
+
 NEOMODEL_SIGNALS = True
 NEOMODEL_FORCE_TIMEZONE = False
 NEOMODEL_MAX_CONNECTION_POOL_SIZE = 50
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://temupaper-app-753404274294.us-central1.run.app',
+    'http://localhost:8000'
+]
 
 # Media files (Uploads)
 MEDIA_URL = '/media/'
@@ -71,6 +82,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django_browser_reload.middleware.BrowserReloadMiddleware',
     'app.middleware.auth_middleware.AuthenticationMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'temupaper_app.urls'
@@ -143,9 +155,16 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 STATIC_ROOT = 'static'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'app/static'),
+    os.path.join(BASE_DIR, 'admin_app/static'),
+]
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

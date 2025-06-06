@@ -4,13 +4,12 @@ __pycache__/
 *.pyo
 *.pyd
 *.db
-*.sqlite3
+# *.sqlite3
 *.log
 node_modules/
 .idea/
 .git/
 .gitignore
-.env
 .DS_Store
 data/
 dataset/

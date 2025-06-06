@@ -3,7 +3,6 @@ import logging
 import uuid
 
 logger = logging.getLogger(__name__)
-embedder = SentenceTransformerEmbeddings(model="all-mpnet-base-v2")
 
 class Neo4jHandler:
     def __init__(self):
@@ -11,11 +10,19 @@ class Neo4jHandler:
         self.connection = Neo4jConnection()
         self.driver = self.connection.get_driver()
         self.graph_name = None
+        self._embedder = None
+
+    @property
+    def embedder(self):
+        if self._embedder is None:
+            logger.info("Loading SentenceTransformer model...")
+            self._embedder = SentenceTransformerEmbeddings(model="all-mpnet-base-v2")
+        return self._embedder
 
     def create_search_node(self, query):
         try:
             paper_id = f"query-{uuid.uuid4()}"
-            query_embedding = embedder.embed_query(query)
+            query_embedding = self.embedder.embed_query(query)
             if hasattr(query_embedding, 'tolist'):
                 query_embedding = query_embedding.tolist()
             
@@ -156,3 +163,6 @@ class Neo4jHandler:
         finally:
             if self.driver:
                 self.driver.close()
+            if self._embedder is not None:
+                self._embedder = None
+                logger.info("SentenceTransformer model unloaded.")

@@ -19,7 +19,7 @@
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     {% unicorn_scripts %}
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'app/css/style.css' %}">
 </head>
 <body class="{{ body_class|default:'bg-[#f8f9fa]' }} min-h-screen items-center justify-center font-inter">
     {% csrf_token %}
@@ -34,6 +34,6 @@
             {% endif %}
         </div>
     </main>
-    <script src="{% static 'node_modules/flowbite/dist/flowbite.min.js' %}"></script>
+    <script src="{% static 'app/node_modules/flowbite/dist/flowbite.min.js' %}"></script>
 </body>
 </html>

@@ -89,17 +89,23 @@ def datatable_paper_json(request):
         order_column_index = int(request.GET.get('order[0][column]', 0))
         order_dir = request.GET.get('order[0][dir]', 'asc')
 
-        columns = ['no', 'title', 'publicationDate', 'aksi']
+        # Mapping kolom frontend ke field database
+        columns = ['no', 'judul', 'tanggal', 'aksi']
+        db_columns = {
+            'no': 'title',         # fallback ke title
+            'judul': 'title',
+            'tanggal': 'publicationDate',
+            'aksi': 'title'        # fallback ke title
+        }
         order_field = columns[order_column_index]
-        if order_field in ['no', 'aksi']:
-            order_field = 'title'
+        order_field_db = db_columns.get(order_field, 'title')
 
         conn = Neo4jConnection().get_driver()
         session = conn.session()
         service = PaperTableService(session)
 
         total = service.count_papers(search_value)
-        papers = service.fetch_papers(search_value, order_field, order_dir, start, length)
+        papers = service.fetch_papers(search_value, order_field_db, order_dir, start, length)
 
         data = [
             service.to_datatable_row(idx, paper)
@@ -118,8 +124,12 @@ def datatable_paper_json(request):
     except Exception as e:
         logger.error(f"Error in datatable_paper_json: {e}")
         return JsonResponse({
+            'draw': int(request.GET.get('draw', 1)),
+            'recordsTotal': 0,
+            'recordsFiltered': 0,
+            'data': [],
             'error': str(e)
-        }, status=500)
+        }, status=200)
 
 @csrf_exempt
 @require_POST
