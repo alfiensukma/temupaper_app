@@ -97,6 +97,7 @@
   </div>
 </div>
 
+{% if user.is_authenticated %}
 <section class="mt-2 px-4 md:px-8 max-w-7xl mx-auto">
 
   <div class="mb-16">
@@ -246,6 +247,7 @@
     </div>
   </div>
 </section>
+{% endif %}
 
 <style>
   .line-clamp-3 {
