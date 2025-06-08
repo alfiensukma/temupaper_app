@@ -12,6 +12,7 @@ neo4j-graphrag[sentence-transformers]
 django-extensions
 gunicorn
 whitenoise
+numpy
 
 # For CPU-only
 # --find-links https://download.pytorch.org/whl/torch_stable.html

@@ -126,13 +126,16 @@ def get_detail_paper(request, paper_id):
 
         # Dapatkan rekomendasi paper
         paper_recommendation = get_recommendation(paper_id)
+        
+        query = request.GET.get('query', '') or request.session.get('last_search_query', '')
 
         return render(request, "base.html", {
             "content_template": "detail-paper/index.html",
             "body_class": "bg-gray-100",
             "show_search_form": True,
             "paper": data_paper,
-            "paper_recommendation": paper_recommendation
+            "paper_recommendation": paper_recommendation,
+            "query": query
         })
 
     except Exception as e:

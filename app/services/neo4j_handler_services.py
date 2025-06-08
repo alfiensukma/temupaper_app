@@ -50,6 +50,18 @@ class Neo4jHandler:
             self.graph_name = f"search_graph_{uuid.uuid4().hex}"
             with self.driver.session() as session:
                 session.run("""
+                    CALL gds.graph.exists($graph_name) YIELD exists
+                    WITH exists
+                    CALL apoc.do.when(
+                        exists,
+                        'CALL gds.graph.drop($graph_name) YIELD graphName RETURN graphName',
+                        'RETURN null as graphName',
+                        {graph_name: $graph_name}
+                    ) YIELD value
+                    RETURN value
+                """, graph_name=self.graph_name)
+                
+                session.run("""
                     CALL gds.graph.project($graph_name,
                         'Paper',
                         '*',
