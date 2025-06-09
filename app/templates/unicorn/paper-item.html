@@ -19,7 +19,7 @@
                 </span>
             {% endif %}
         {% endwith %}
-        <span class="paper-date text-gray-800">{{ date|default:"(n.d.)" }}</span>
+        <span class="paper-date text-gray-800">{{ date|default:year }}</span>
     </div>
     <p class="paper-abstract text-gray-800 mt-2 text-justify line-clamp-3">
         {{ abstract }}

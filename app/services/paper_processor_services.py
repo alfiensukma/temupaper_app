@@ -1,4 +1,4 @@
-from datetime import datetime
+from app.utils.parse_indonesian_date import format_date_to_indonesian
 import logging
 
 logger = logging.getLogger(__name__)
@@ -18,25 +18,13 @@ class PaperProcessor:
             "is_seed": is_seed
         }
 
-        if record["date"]:
-            try:
-                date_str = record["date"].split()[0]
-                if '/' in date_str:
-                    month, day, year = map(int, date_str.split('/'))
-                    dt = datetime(year, month, day)
-                elif '-' in date_str:
-                    dt = datetime.strptime(date_str, "%Y-%m-%d")
-                else:
-                    paper_data["date"] = date_str
-                    return paper_data
-                paper_data["date"] = dt.strftime("%d %B %Y")
-            except Exception as e:
-                logger.error(f"Error formatting date '{record['date']}': {str(e)}")
-                paper_data["date"] = record["date"]
-        elif record["year"]:
-            paper_data["date"] = str(record["year"])
-        else:
-            paper_data["date"] = "Unknown date"
+        raw_date = paper_data.get("date")
+        fallback_year = paper_data.get("year", "N/A")
+        paper_data["date"] = format_date_to_indonesian(
+            date_str=raw_date, 
+            fallback_year=fallback_year
+        )
+
         return paper_data
 
     @staticmethod

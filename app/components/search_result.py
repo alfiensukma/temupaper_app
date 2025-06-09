@@ -28,9 +28,6 @@ class SearchResultView(UnicornView):
             self.load_from_session()
         else:
             self.is_loading = True
-    
-    def load_search_data(self):
-        self.is_loading = True
             
     def get_pagination_range(self, total_pages, current_page, on_each_side=1, on_ends=1):
         if total_pages <= (on_each_side + on_ends) * 2 + 1:
@@ -73,7 +70,14 @@ class SearchResultView(UnicornView):
                 if status_key in self.request.session:
                     del self.request.session[status_key]
         self.request.session.modified = True
-
+        
+    def set_dates_and_reload(self, start_date, end_date):
+        logger.info(f"Aksi 'set_dates_and_reload' dipanggil dengan tanggal: {start_date}-{end_date}")
+        self.page = 1
+        self.start_date = start_date
+        self.end_date = end_date
+        self.load_from_session()
+        
     def load_from_session(self):
         try:
             session_key = f"pure_search_{self.query}"
@@ -121,7 +125,3 @@ class SearchResultView(UnicornView):
             logger.error(f"Error pada paginasi: {e}", exc_info=True)
             self.error = "Gagal memuat halaman."
             self.is_loading = False
-        
-    def handle_error(self, error_message):
-        self.error = error_message
-        self.is_loading = False
