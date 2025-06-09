@@ -7,10 +7,27 @@ import zipfile
 import traceback
 import shutil
 from semanticscholar import SemanticScholar
+from semanticscholar.Paper import Paper
 from django.http import JsonResponse, FileResponse
 from django.views.decorators.csrf import csrf_exempt
 from datetime import datetime
 from app.utils.neo4j_connection import Neo4jConnection
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+original_paper_init = Paper.__init__
+def patched_paper_init(self, data):
+    if data.get('references') is None:
+        data['references'] = []
+    
+    if data.get('citations') is None:
+        data['citations'] = []
+
+    original_paper_init(self, data)
+
+Paper.__init__ = patched_paper_init
+logger.info("Monkey patch applied to semanticscholar.Paper to handle None for references/citations.")
 
 # init
 sch = SemanticScholar()
@@ -18,9 +35,6 @@ CSV_PATH = "app/data-csv"
 PAPERS_PATH = os.path.join(CSV_PATH, "papers.csv")
 PAPER_REFERENCES_PATH = os.path.join(CSV_PATH, "paper-references.csv")
 REFERENCES_PATH = os.path.join(CSV_PATH, "references.csv")
-
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
 
 if not os.path.exists(CSV_PATH):
     os.makedirs(CSV_PATH)
@@ -39,40 +53,62 @@ def save_to_csv(file_path, data, fieldnames, mode='w'):
             
 # Helper function to create paper info dictionary
 def create_paper_info(paper, include_references=False, reference_limit=None):
-    s2_fields = [f"{field['category']}" for field in (paper.s2FieldsOfStudy or []) if 'category' in field] if hasattr(paper, 's2FieldsOfStudy') else []
-    
-    authors_data = [
-        {"authorId": str(author.authorId), "name": str(author.name).strip()}
-        for author in (paper.authors or []) if hasattr(author, 'authorId') and author.authorId
-    ]
-    
-    paper_info = {
-        "paperId": str(paper.paperId or ""),
-        "corpusId": str(paper.corpusId or ""),
-        "externalIds": str(paper.externalIds or ""),
-        "authors": json.dumps(authors_data),
-        "title": str(paper.title or ""),
-        "year": str(paper.year or ""),
-        "abstract": str(paper.abstract or ""),
-        "url": str(paper.url or ""),
-        "publicationDate": str(paper.publicationDate or ""),
-        "fieldsOfStudy": ";".join(paper.fieldsOfStudy or []),
-        "s2FieldsOfStudy": ";".join(s2_fields),
-        "venue": str(paper.venue or ""),
-        "publicationVenue": str(paper.publicationVenue or ""),
-        "citationCount": str(paper.citationCount or 0),
-        "influentialCitationCount": str(paper.influentialCitationCount or 0),
-        "publicationTypes": ";".join(paper.publicationTypes or []),
-        "journal": str(paper.journal or ""),
-        "citationStyles": str(paper.citationStyles or ""),
-        "embedding": json.dumps(paper.embedding['vector'] if paper.embedding and 'vector' in paper.embedding else []),
-        "referenceCount": str(paper.referenceCount or 0),
-    }
-    if include_references and hasattr(paper, 'references'):
-        refs = paper.references or []
-        ref_ids = [ref.paperId for ref in refs if ref.paperId]
-        paper_info["reference_id"] = ref_ids[:reference_limit] if reference_limit is not None and reference_limit >= 0 else ref_ids
-    return paper_info
+    try:
+        s2_fields = []
+        if hasattr(paper, 's2FieldsOfStudy') and paper.s2FieldsOfStudy:
+            s2_fields = [f"{field['category']}" for field in paper.s2FieldsOfStudy if isinstance(field, dict) and 'category' in field]
+        
+        authors_data = []
+        if hasattr(paper, 'authors') and paper.authors:
+            authors_data = [
+                {"authorId": str(author.authorId), "name": str(author.name).strip()}
+                for author in paper.authors 
+                if hasattr(author, 'authorId') and author.authorId
+            ]
+        
+        paper_info = {
+            "paperId": str(getattr(paper, 'paperId', '') or ''),
+            "corpusId": str(getattr(paper, 'corpusId', '') or ''),
+            "externalIds": str(getattr(paper, 'externalIds', '') or ''),
+            "authors": json.dumps(authors_data),
+            "title": str(getattr(paper, 'title', '') or ''),
+            "year": str(getattr(paper, 'year', '') or ''),
+            "abstract": str(getattr(paper, 'abstract', '') or ''),
+            "url": str(getattr(paper, 'url', '') or ''),
+            "publicationDate": str(getattr(paper, 'publicationDate', '') or ''),
+            "fieldsOfStudy": ";".join(getattr(paper, 'fieldsOfStudy', []) or []),
+            "s2FieldsOfStudy": ";".join(s2_fields),
+            "venue": str(getattr(paper, 'venue', '') or ''),
+            "publicationVenue": str(getattr(paper, 'publicationVenue', '') or ''),
+            "citationCount": str(getattr(paper, 'citationCount', 0) or 0),
+            "influentialCitationCount": str(getattr(paper, 'influentialCitationCount', 0) or 0),
+            "publicationTypes": ";".join(getattr(paper, 'publicationTypes', []) or []),
+            "journal": str(getattr(paper, 'journal', '') or ''),
+            "citationStyles": str(getattr(paper, 'citationStyles', '') or ''),
+            "embedding": json.dumps(paper.embedding.get('vector', []) if getattr(paper, 'embedding', None) else []),
+            "referenceCount": str(getattr(paper, 'referenceCount', 0) or 0),
+        }
+        
+        if include_references:
+            refs = []
+            try:
+                if hasattr(paper, 'references') and paper.references:
+                    refs = [
+                        ref.paperId 
+                        for ref in paper.references 
+                        if ref and hasattr(ref, 'paperId') and ref.paperId
+                    ]
+                    logger.debug(f"Found {len(refs)} valid references for paper {paper.paperId}")
+            except Exception as ref_error:
+                logger.warning(f"Error processing references for paper {paper.paperId}: {str(ref_error)}")
+                refs = []
+            
+            paper_info["reference_id"] = refs[:reference_limit] if reference_limit is not None else refs
+
+        return paper_info
+    except Exception as e:
+        logger.error(f"Error creating paper info: {str(e)}")
+        return None
 
 # Get current paper count and update topic in Neo4j
 def manage_topic(topic_id, topic_name, papers_found=0, update=False):
@@ -171,7 +207,21 @@ def scrape_topic(request):
             current_page += 1
             logger.info(f"Skipped page {current_page} for topic '{query}'")
         
-        papers_result = list(results) if results else []
+        # papers_result = list(results) if results else []
+        
+        papers_result = []
+        if results:
+            logger.info("Iterating through search results to safely handle potential data errors...")
+            for paper_item in results:
+                try:
+                    papers_result.append(paper_item)
+                except TypeError as e:
+                    if "'NoneType' object is not iterable" in str(e):
+                        logger.warning(f"Skipping a paper due to malformed data (likely 'references' is None). Error: {e}")
+                    else:
+                        logger.error(f"An unexpected TypeError occurred while processing a paper: {e}")
+                except Exception as e:
+                    logger.error(f"An unexpected error occurred while processing a paper item: {e}")
         
         if not papers_result:
             return JsonResponse({
@@ -183,11 +233,36 @@ def scrape_topic(request):
             })
 
         # Filter
-        paper_data = [
-            create_paper_info(paper, include_references=True, reference_limit=reference_limit)
-            for paper in papers_result
-            if paper.year and paper.year >= min_year and paper.abstract and paper.fieldsOfStudy and paper.embedding
-        ][:limit]
+        paper_data = []
+        for paper in papers_result:
+            try:
+                required_fields = {
+                    'title': getattr(paper, 'title', None),
+                    'abstract': getattr(paper, 'abstract', None),
+                    'embedding': getattr(paper, 'embedding', None)
+                }
+
+                has_references = False
+                try:
+                    if hasattr(paper, 'references') and paper.references is not None:
+                        has_references = True
+                except Exception as ref_error:
+                    logger.warning(f"Error checking references for paper: {str(ref_error)}")
+
+                if not all(required_fields.values()):
+                    logger.info(f"Skipping paper '{required_fields['title'] or 'Untitled'}': Missing required fields")
+                    logger.debug(f"Missing fields: {[k for k,v in required_fields.items() if not v]}")
+                    continue
+
+                paper_info = create_paper_info(paper, include_references=has_references, reference_limit=reference_limit)
+                if paper_info:
+                    paper_data.append(paper_info)
+                    
+            except Exception as e:
+                logger.warning(f"Error processing paper: {str(e)}")
+                continue
+
+        paper_data = paper_data[:limit]
 
         if not paper_data:
             return JsonResponse({

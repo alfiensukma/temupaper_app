@@ -78,7 +78,7 @@
                     ">
                     {% for paper in date_group.list %}
                         <div class="timeline-item pl-4 border-l-2 border-blue-500">
-                            {% unicorn "paper-item" title=paper.title authors=paper.authors date=paper.formatted_publication_date abstract=paper.abstract %}
+                            {% unicorn "paper-item" title=paper.title authors=paper.authors date=paper.formatted_publication_date abstract=paper.abstract year=paper.year %}
                         </div>
                     {% endfor %}
                 </div>

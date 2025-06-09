@@ -1,16 +1,14 @@
 {% load unicorn %}
 {% load static %}
 
-<div unicorn:id="date-range-picker" class="relative" x-data="{ isOpen: false }">
+<div class="relative" x-data="{ isOpen: false }">
     <button 
-        type="button" 
-        id="date-range-toggle" 
+        type="button"
         @click.stop="isOpen = !isOpen"
         class="text-center text-base text-blue-600 border border-blue-600 rounded-2xl px-6 py-2 hover:bg-blue-600 hover:text-white"
     >
-        <span id="date-range-display">
-            {{ start_date|default:"" }} {% if start_date and end_date %}-{% endif %} {{ end_date|default:"" }}
-            {% if not start_date and not end_date %}Pilih Rentang Tahun{% endif %}
+        <span>
+            {% if start_date and end_date %}{{ start_date }} - {{ end_date }}{% elif start_date %}Dari {{ start_date }}{% elif end_date %}Hingga {{ end_date }}{% else %}Pilih Rentang Tahun{% endif %}
         </span>
         <svg 
             class="w-4 h-4 inline ml-2 transition-transform" 
@@ -23,66 +21,40 @@
         </svg>
     </button>
 
-    <div 
-        id="date-range-dropdown" 
+    <div
         x-show="isOpen"
-        @click.away="isOpen = false"
-        class="absolute z-50 mt-2 w-[300px] p-4 bg-white rounded-lg shadow-lg"
-        style="display: none;"
+        class="absolute mt-2 w-[300px] p-4 bg-white rounded-lg shadow-lg"
+        @click.outside="isOpen = false"
+        x-cloak
     >
         <div class="grid grid-cols-2 gap-4 mb-4">
             <div class="relative">
-                <select 
-                    id="start-year" 
-                    unicorn:model.defer="start_date"
-                    @change="console.log('Start year selected:', this.value)"
+                <select
+                    unicorn:model="start_date"
+                    unicorn:loading.class="opacity-50"
                     class="appearance-none w-full p-2 pr-8 bg-white border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-[#4787FA]"
                 >
-                    <option value="">Pilih Tahun</option>
+                    <option value="">Pilih Tahun Awal</option>
                     {% for year in years %}
                         <option value="{{ year }}" {% if year|stringformat:"s" == start_date %}selected{% endif %}>{{ year }}</option>
                     {% endfor %}
                 </select>
-                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2">
-                    <svg 
-                        class="w-4 h-4 text-gray-400 transition-transform"
-                        :class="{ 'rotate-180': isOpen }"
-                        fill="none" 
-                        stroke="currentColor" 
-                        viewBox="0 0 24 24"
-                    >
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                    </svg>
                 </div>
-            </div>
 
             <div class="relative">
-                <select 
-                    id="end-year" 
-                    unicorn:model.defer="end_date"
-                    @change="console.log('End year selected:', this.value)"
+                <select
+                    unicorn:model="end_date"
+                    unicorn:loading.class="opacity-50"
                     class="appearance-none w-full p-2 pr-8 bg-white border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-[#4787FA]"
                 >
-                    <option value="">Pilih Tahun</option>
+                    <option value="">Pilih Tahun Akhir</option>
                     {% for year in years %}
                         <option value="{{ year }}" {% if year|stringformat:"s" == end_date %}selected{% endif %}>{{ year }}</option>
                     {% endfor %}
                 </select>
-                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2">
-                    <svg 
-                        class="w-4 h-4 text-gray-400 transition-transform"
-                        :class="{ 'rotate-180': isOpen }"
-                        fill="none" 
-                        stroke="currentColor" 
-                        viewBox="0 0 24 24"
-                    >
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                    </svg>
                 </div>
-            </div>
         </div>
 
-        <!-- Error Message -->
         {% if error_message %}
             <div class="text-red-600 text-sm mb-4">{{ error_message }}</div>
         {% endif %}
@@ -91,7 +63,8 @@
             <button 
                 type="button"
                 unicorn:click="clear_date_filter"
-                @click="isOpen = false; setTimeout(() => window.location.reload(), 400)"
+                unicorn:loading.attr="disabled"
+                @click="isOpen = false"
                 class="flex-1 py-2 rounded-md text-[#4787FA] border border-[#4787FA] bg-transparent hover:bg-blue-50"
             >
                 Reset
@@ -99,8 +72,10 @@
             <button 
                 type="button"
                 unicorn:click="apply_filter"
-                @click="isOpen = false; setTimeout(() => window.location.reload(), 400)"
+                unicorn:loading.attr="disabled"
+                @click="isOpen = false"
                 class="flex-1 bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed"
+                {% if error_message %}disabled{% endif %}
             >
                 Terapkan
             </button>

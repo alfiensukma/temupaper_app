@@ -1,0 +1,68 @@
+{% load unicorn %}
+<section class="mt-16 bg-white rounded-2xl p-6 shadow-md">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+        <div class="flex items-center gap-3">
+            <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+            <h2 class="text-2xl font-bold text-gray-800">Daftar Referensi</h2>
+            <span class="ml-auto bg-blue-50 text-[#4787FA] text-sm font-medium px-3 py-1 rounded-full">
+                {{ results_count }} referensi
+            </span>
+        </div>
+        <div class="relative w-full md:w-64">
+            <input type="text" unicorn:model.debounce.300ms="search_query" placeholder="Cari referensi..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg transition-all duration-100 focus:ring-1 focus:ring-[#4787FA] focus:ring-offset-0 focus:outline-none focus:border-[#4787FA]">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            </div>
+        </div>
+    </div>
+    
+    <div class="h-auto overflow-y-auto p-6 scroll-smooth bg-gradient-to-b from-blue-50 to-white rounded-lg" style="scrollbar-width: thin; scrollbar-color: #3B82F6 #F3F4F6;">
+        <div class="grid gap-5">
+            {% for paper in papers %}
+                <a href="{% url 'paper_detail' paper.paperId %}" class="bg-white p-5 rounded-xl transition-all duration-300 border border-gray-100 hover:border-blue-300 hover:shadow-md group">
+                    <div class="flex flex-col">
+                        <h3 class="font-bold text-gray-800 text-lg group-hover:text-blue-600 transition-colors">{{ paper.title }}</h3> 
+                        <p class="text-sm text-gray-500 mt-4 mb-4 border-b border-gray-100 pb-2">
+                            {% for author in paper.authors|slice:":2" %}
+                                <span class="px-2 py-1.5 bg-blue-50 text-[#4787FA] rounded-full text-sm hover:bg-blue-100 transition-colors inline-block mb-2 mr-2">{{ author }}</span>
+                            {% endfor %}
+                            {% if paper.authors|length > 2 %}
+                                <span class="px-2 py-1.5 bg-blue-50 text-[#4787FA] rounded-full text-sm hover:bg-blue-100 transition-colors inline-block mb-2">+ {{ paper.authors|length|add:"-2" }} lainnya</span>
+                            {% endif %}
+                        </p>
+                        <p class="text-sm">{{ paper.date|default:paper.year }}</p>
+                        {% if paper.abstract %}
+                        <p class="text-gray-600 mt-3 text-sm line-clamp-2">
+                            {{ paper.abstract }}
+                        </p>
+                        {% endif %}
+                    </div>
+                </a>
+            {% empty %}
+                <div class="text-center py-16 col-span-full">
+                    <p class="text-gray-500 text-xl mt-4 font-medium">{% if search_query %}Tidak ada referensi cocok.{% else %}Tidak ada referensi ditemukan.{% endif %}</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+    {% if pagination_data and pagination_data.num_pages > 1 %}
+    <div class="mt-6 flex justify-center">
+        <nav class="inline-flex rounded-md shadow">
+            <span unicorn:click="load_page({{ pagination_data.previous_page_number }})" 
+                  class="px-3 py-2 rounded-l-md border border-gray-300 bg-white text-gray-500 
+                         {% if pagination_data.has_previous %}hover:bg-gray-50 cursor-pointer{% else %}opacity-50 cursor-not-allowed{% endif %}">
+                Previous
+            </span>
+            <span class="px-3 py-2 border-t border-b border-gray-300 bg-white text-blue-600 font-medium">
+                {{ pagination_data.number }}
+            </span>
+            <span unicorn:click="load_page({{ pagination_data.next_page_number }})" 
+                  class="px-3 py-2 rounded-r-md border border-gray-300 bg-white text-gray-500 
+                         {% if pagination_data.has_next %}hover:bg-gray-50 cursor-pointer{% else %}opacity-50 cursor-not-allowed{% endif %}">
+                Next
+            </span>
+        </nav>
+    </div>
+    {% endif %}
+</section>
