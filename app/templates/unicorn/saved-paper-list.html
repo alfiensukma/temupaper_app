@@ -1,0 +1,80 @@
+{% load unicorn %}
+<div>
+    <div class="flex justify-between items-center gap-4 mt-4 mb-6">
+        <div>
+            {% unicorn "date-range-picker" start_date=start_date end_date=end_date %}
+        </div>
+        <div class="w-1/2">
+            <div class="relative">
+                <input 
+                    type="text" 
+                    unicorn:model.debounce.300ms="search_query"
+                    placeholder="Cari di karya ilmiah tersimpan..." 
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg transition-all duration-100 focus:ring-1 focus:ring-[#4787FA] focus:ring-offset-0 focus:outline-none focus:border-[#4787FA]"
+                >
+                <button class="absolute right-2 top-2 text-gray-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    {% if error %}
+        <div class="bg-red-100 p-4 rounded-lg text-red-700">{{ error }}</div>
+    {% elif total_paper_count == 0 %}
+        <div class="bg-white rounded-lg shadow-md p-8 text-center mt-6">
+            <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
+            <h3 class="text-lg font-medium text-gray-900 mb-2">Belum ada karya ilmiah tersimpan</h3>
+            <p class="text-gray-600">Simpan karya ilmiah untuk membacanya nanti atau merujuknya kembali.</p>
+            <a href="/" class="mt-4 inline-block px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
+                Jelajahi Karya Ilmiah
+            </a>
+        </div>
+    {% elif results_count == 0 %}
+        <div class="bg-white rounded-lg shadow-md p-8 text-center mt-6">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+            </svg>
+            <h3 class="text-lg font-medium text-gray-900 mb-2">Tidak ada hasil ditemukan</h3>
+            <p class="text-gray-600">Coba ubah kata kunci pencarian atau rentang tahun filter Anda.</p>
+        </div>
+    {% else %}
+        <!-- Timeline View -->
+        <div class="timeline-container">
+            {% for date_group in papers_by_date %}
+                <div class="mb-8">
+                    <h2 class="text-xl font-bold text-gray-700 border-b-2 border-gray-200 pb-2 mb-4">
+                        {{ date_group.grouper }}
+                    </h2>
+                    <div class="grid gap-6
+                      [&_.bg-color]:bg-white
+                      [&_.bg-color-author]:bg-gray-100
+                      [&_.paper-title]:text-base lg:[&_.paper-title]:text-[25px]
+                      [&_.paper-authors]:text-sm md:[&_.paper-authors]:text-base
+                      [&_.paper-date]:text-sm md:[&_.paper-date]:text-base
+                      [&_.paper-abstract]:text-sm md:[&_.paper-abstract]:text-base
+                    ">
+                        {% for paper in date_group.list %}
+                            <div class="timeline-item pl-4 border-l-2 border-blue-500 relative group">
+                                {% unicorn "paper-item" paper_id=paper.paperId title=paper.title authors=paper.authors date=paper.formatted_publication_date year=paper.year abstract=paper.abstract key=paper.paperId %}
+                                
+                                <button unicorn:click="remove_paper('{{ paper.paperId }}')"
+                                        class="absolute top-4 right-4 p-2 bg-white rounded-full text-gray-400 hover:bg-red-50 hover:text-red-600 opacity-0 group-hover:opacity-100 transition-opacity"
+                                        title="Hapus dari simpanan">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                                </button>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Pagination -->
+        {% if pagination_data and pagination_data.num_pages > 1 %}
+            {% unicorn 'pagination' paginator=pagination_data key=pagination_data.number %}
+        {% endif %}
+    {% endif %}
+</div>

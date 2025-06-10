@@ -1,14 +1,74 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from app.components.search_result import Neo4jHandler, PaperProcessor
+from app.models import User
+from app.utils.parse_indonesian_date import format_date_to_indonesian
 import logging
 
 logger = logging.getLogger(__name__)
 
 def index(request):
     topics = []
+    user_id = request.session.get('user_id')
+    access_history_papers = []
+    peer_institution_papers = []
     neo4j_handler = Neo4jHandler()
+    
     try:
+        with neo4j_handler.driver.session() as session:
+            # access history papers
+            history_result = session.run("""
+                MATCH (u:User {userId: $userId})-[:HAS_READ]->(n:Paper)-[r:HIGHEST_SIMILAR]->(p:Paper)
+                WHERE NOT (u)-[:HAS_READ]->(p)
+                OPTIONAL MATCH (p)-[:AUTHORED_BY]->(author:Author)
+                RETURN 
+                    p.title AS title,
+                    p.paperId as paperId,
+                    p.abstract as abstract, 
+                    p.publicationDate AS date,
+                    p.year AS year,
+                    p.pagerank as pagerank,
+                    r.score as score,
+                    collect(DISTINCT author.name) AS authors
+                    ORDER BY r.score DESC, p.pagerank DESC, p.publicationDate DESC
+                    LIMIT 5
+                """,
+                userId=user_id
+            )
+                
+            for record in history_result:
+                paper = dict(record)
+                access_history_papers.append(paper)
+
+            current_user = User.nodes.get(userId=user_id)
+            institutionId = current_user.affiliated_with.all()[0].institutionId
+            
+            # peer institution papers
+            peer_result = session.run("""
+                MATCH (pt:Institution {institutionId: $institutionId})<-[:AFFILIATED_WITH]-(u:User)-[:HAS_READ]->(p:Paper)
+                    WHERE NOT EXISTS {
+                        MATCH (currentUser:User {userId: $userId})-[:HAS_READ]->(p)
+                    }
+                    WITH p, count(u) AS jumlahPembaca
+                    OPTIONAL MATCH (p)-[:AUTHORED_BY]->(author:Author)
+                    RETURN 
+                        p.title AS title,
+                        p.paperId as paperId,
+                        p.abstract as abstract, 
+                        jumlahPembaca,
+                        p.publicationDate AS date,
+                        p.year AS year,
+                        p.pagerank as pagerank,
+                        collect(DISTINCT author.name) AS authors
+                    ORDER BY jumlahPembaca DESC, p.pagerank DESC, p.publicationDate DESC, p.year DESC
+                    LIMIT 5
+                """, institutionId=institutionId, userId=user_id
+            ) 
+                
+            for record in peer_result:
+                paper = dict(record)
+                peer_institution_papers.append(paper)
+        
         with neo4j_handler.driver.session() as session:
             result = session.run("""
                 MATCH (t:Topic)
@@ -29,6 +89,8 @@ def index(request):
         "content_template": "search-paper/index.html",
         "body_class": "bg-gradient-to-br from-[#c8dcf8] from-5% to-white to-90%",
         "show_search_form": False,
+        "access_history_papers": access_history_papers,
+        "peer_institution_papers": peer_institution_papers,
         "topics": topics
     })
 

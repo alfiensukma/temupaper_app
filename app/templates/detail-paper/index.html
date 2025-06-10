@@ -1,6 +1,32 @@
 {% load unicorn %}
 {% load static %}
 
+<!-- scroll indicator -->
+ <div 
+    x-data="{ 
+        showIndicator: true, 
+        atTop: true, 
+        timer: null,
+        handleScroll() {
+            let isNowAtTop = window.scrollY < 50;
+
+            if (isNowAtTop && !this.atTop) {
+                this.atTop = true;
+                clearTimeout(this.timer);
+                this.timer = setTimeout(() => {
+                    this.showIndicator = true;
+                }, 3000);
+            } 
+            else if (!isNowAtTop && this.atTop) {
+                this.atTop = false;
+                this.showIndicator = false;
+                clearTimeout(this.timer);
+            }
+        }
+    }"
+    @scroll.window.debounce.100ms="handleScroll()"
+>
+
     {% if error %}
         <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6" role="alert">
             <p>{{ error }}</p>
@@ -11,9 +37,14 @@
                 <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 mb-4">
                     <span class="text-sm md:text-base text-gray-700 font-medium">
                         DOI: 
-                        <a href="https://doi.org/{{ paper.doi }}" target="_blank" class="text-[#4787FA] hover:underline">
-                            {{ paper.doi|default:"-"}}
-                        </a>
+                        {% if paper.doi %}
+                            <a href="https://doi.org/{{ paper.doi }}" target="_blank" class="text-[#4787FA] hover:underline" 
+                            onclick="recordPaperRead('{{ paper.paperId }}', 'doi');">
+                                {{ paper.doi }}
+                            </a>
+                        {% else %}
+                            <span class="text-gray-500">-</span>
+                        {% endif %}
                     </span>
                     <span class="text-sm md:text-base text-gray-700 font-bold bg-blue-50 px-3 py-1 rounded-full">
                         Terbit pada {{ paper.date|default:paper.year }}
@@ -109,6 +140,26 @@
         <!-- reference and citation list -->
         {% unicorn 'reference-list' paper_id=paper.paperId %}
         {% unicorn 'citation-list' paper_id=paper.paperId %}
+
+        <!-- scroll indicator -->
+        <div x-show="showIndicator"
+            x-transition:enter="transition ease-out duration-300"
+            x-transition:enter-start="opacity-0 transform translate-y-4"
+            x-transition:enter-end="opacity-100 transform translate-y-0"
+            x-transition:leave="transition ease-in duration-300"
+            x-transition:leave-start="opacity-100 transform translate-y-0"
+            x-transition:leave-end="opacity-0 transform translate-y-4"
+            class="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center gap-2 cursor-pointer"
+            @click="window.scrollBy({ top: 200, behavior: 'smooth' })"
+            style="display: none;"
+        >
+            <span class="px-4 py-2 bg-gray-800 text-white rounded-full text-sm font-medium shadow-lg">
+                Scroll ke bawah untuk konten lainnya
+            </span>
+            <svg class="w-8 h-8 text-gray-700 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 13l-7 7-7-7m14-8l-7 7-7-7"></path>
+            </svg>
+        </div>
     {% endif %}
 
 

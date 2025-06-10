@@ -23,14 +23,14 @@
 
     <div
         x-show="isOpen"
-        class="absolute mt-2 w-[300px] p-4 bg-white rounded-lg shadow-lg"
+        class="absolute mt-2 w-[300px] p-4 bg-white rounded-lg shadow-lg z-40"
         @click.outside="isOpen = false"
         x-cloak
     >
         <div class="grid grid-cols-2 gap-4 mb-4">
             <div class="relative">
                 <select
-                    unicorn:model="start_date"
+                    unicorn:model.defer="start_date"
                     unicorn:loading.class="opacity-50"
                     class="appearance-none w-full p-2 pr-8 bg-white border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-[#4787FA]"
                 >
@@ -39,11 +39,11 @@
                         <option value="{{ year }}" {% if year|stringformat:"s" == start_date %}selected{% endif %}>{{ year }}</option>
                     {% endfor %}
                 </select>
-                </div>
+            </div>
 
             <div class="relative">
                 <select
-                    unicorn:model="end_date"
+                    unicorn:model.defer="end_date"
                     unicorn:loading.class="opacity-50"
                     class="appearance-none w-full p-2 pr-8 bg-white border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-[#4787FA]"
                 >
@@ -62,8 +62,7 @@
         <div class="flex gap-2">
             <button 
                 type="button"
-                unicorn:click="clear_date_filter"
-                unicorn:loading.attr="disabled"
+                unicorn:click="clear_date_filter" 
                 @click="isOpen = false"
                 class="flex-1 py-2 rounded-md text-[#4787FA] border border-[#4787FA] bg-transparent hover:bg-blue-50"
             >
@@ -72,7 +71,6 @@
             <button 
                 type="button"
                 unicorn:click="apply_filter"
-                unicorn:loading.attr="disabled"
                 @click="isOpen = false"
                 class="flex-1 bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed"
                 {% if error_message %}disabled{% endif %}

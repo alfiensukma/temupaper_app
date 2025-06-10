@@ -1,0 +1,32 @@
+{% load unicorn %}
+<div>
+    {% if is_loading %}
+        {% unicorn 'loading-skeleton' skeleton_count=6 %}
+    {% elif error %}
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+            <p>{{ error }}</p>
+        </div>
+    {% elif papers %}
+        <div class="grid gap-6
+            [&_.bg-color]:bg-white
+            [&_.bg-color-author]:bg-gray-100
+            [&_.paper-title]:text-base lg:[&_.paper-title]:text-[25px]
+            [&_.paper-authors]:text-sm md:[&_.paper-authors]:text-base
+            [&_.paper-date]:text-sm md:[&_.paper-date]:text-base
+            [&_.paper-abstract]:text-sm md:[&_.paper-abstract]:text-base
+        ">
+            {% for paper in papers %}
+                {% unicorn "paper-item" paper_id=paper.paperId title=paper.title authors=paper.authors date=paper.date abstract=paper.abstract key=paper.paperId %}
+            {% endfor %}
+        </div>
+
+        {% if paginator.num_pages > 1 %}
+            <div class="mt-10 flex justify-start items-center gap-2 font-semibold">
+                {% include 'unicorn/pagination-controls.html' with paginator=paginator %}
+            </div>
+        {% endif %}
+
+    {% else %}
+        <p class="text-center text-gray-500 text-xl mt-3">Tidak ada hasil ditemukan.</p>
+    {% endif %}
+</div>
