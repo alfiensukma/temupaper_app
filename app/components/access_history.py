@@ -23,6 +23,7 @@ class AccessHistoryView(UnicornView):
             with driver.session() as session:
                 result = session.run("""
                     MATCH (u:User {userId: $userId})-[:HAS_READ]->(n:Paper)-[r:HIGHEST_SIMILAR]->(p:Paper)
+                    WHERE NOT (u)-[:HAS_READ]->(p)
                     OPTIONAL MATCH (p)-[:AUTHORED_BY]->(author:Author)
                     RETURN 
                         p.title AS title,

@@ -1,5 +1,6 @@
 from django_unicorn.components import UnicornView
 import logging
+import random
 from app.services.neo4j_handler_services import Neo4jHandler
 from app.services.paper_processor_services import PaperProcessor
 
@@ -72,7 +73,8 @@ class SearchResultView(UnicornView):
         self.request.session.modified = True
         
     def set_dates_and_reload(self, start_date, end_date):
-        logger.info(f"Aksi 'set_dates_and_reload' dipanggil dengan tanggal: {start_date}-{end_date}")
+        self.error = ""
+        self.is_loading = True
         self.page = 1
         self.start_date = start_date
         self.end_date = end_date
