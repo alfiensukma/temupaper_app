@@ -17,6 +17,10 @@ class PeerInstitutionView(UnicornView):
     
     def mount(self):
         user_id = self.request.session.get('user_id')
+        if not user_id:
+            self.error = "Sesi pengguna tidak valid. Silakan login kembali."
+            return
+        
         driver = None
         try:
             current_user = User.nodes.get(userId=user_id)

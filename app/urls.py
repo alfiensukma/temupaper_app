@@ -2,7 +2,7 @@ from django.urls import path, include
 from .views.retrieve_paper_views import fetch_papers, scrape_topic, download_results
 from .views.graph_views import generate_knowledge_graph, import_topic, import_institution, import_journal
 from .views.detail_views import get_recommendation, get_detail_paper, record_paper_read
-from .views.search_views import index, search, load_search_data
+from .views.search_views import index, search, load_search_data, test_search_process
 from .views.peer_institution_recommendation_views import peer_institution
 from .views.similarity_access_recommendation_views import similarity_access
 from .views.access_history_recommendation_views import access_history
@@ -29,6 +29,7 @@ urlpatterns = [
     path('import-institution/', import_institution, name='import_institution'),
     path('import-journal/', import_journal, name='import_journal'),
 
+    path('test-search/', test_search_process, name='test_search_process'),
     path('search/', search, name='search'),
     path('load-search-data/', load_search_data, name='load_search_data'),
     path('papers/detail/<str:paper_id>/', get_detail_paper, name='paper_detail'),

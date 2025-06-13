@@ -12,7 +12,8 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 import os
-
+from dotenv import load_dotenv
+load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -20,33 +21,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-cmib4a_*z35=m*&u($4v%+kuhim7w35$tah$^x+xl052!l2ptj'
+# Production settings
+SECRET_KEY = os.getenv('SECRET_KEY')
+DEBUG = os.getenv('DEBUG', '0') == '1' # default false (0)
+ALLOWED_HOSTS_STR = os.getenv('ALLOWED_HOSTS', '')
+ALLOWED_HOSTS = [host.strip() for host in ALLOWED_HOSTS_STR.split(',') if host]
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = ['*']
-
-NEO4J_URI = os.environ.get('NEO4J_URI', 'bolt://localhost:7687').replace('bolt://', '')
-NEO4J_USERNAME = os.environ.get('NEO4J_USERNAME', 'neo4j')
-NEO4J_PASSWORD = os.environ.get('NEO4J_PASSWORD', '12345678')
-NEOMODEL_NEO4J_BOLT_URL = f"bolt://{NEO4J_USERNAME}:{NEO4J_PASSWORD}@{os.environ.get('NEO4J_HOST', 'localhost')}:7687"
-
-# production settings
-# NEO4J_URI = os.environ.get('NEO4J_URI', 'bolt://34.46.35.127:7687').replace('bolt://', '')
-# NEO4J_USERNAME = os.environ.get('NEO4J_USERNAME', 'neo4j')
-# NEO4J_PASSWORD = os.environ.get('NEO4J_PASSWORD', 'my-password')
-# NEOMODEL_NEO4J_BOLT_URL = f"bolt://{NEO4J_USERNAME}:{NEO4J_PASSWORD}@{os.environ.get('NEO4J_HOST', '34.46.35.127')}:7687"
+CSRF_TRUSTED_ORIGINS = [f"https://{host}" for host in ALLOWED_HOSTS if host]
 
 NEOMODEL_SIGNALS = True
 NEOMODEL_FORCE_TIMEZONE = False
 NEOMODEL_MAX_CONNECTION_POOL_SIZE = 50
-
-CSRF_TRUSTED_ORIGINS = [
-    'https://temupaper-app-753404274294.us-central1.run.app',
-    'http://localhost:8000'
-]
 
 # Media files (Uploads)
 MEDIA_URL = '/media/'
@@ -62,7 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_neomodel',
-    'app',
+    'app.apps.AppConfig',
     'admin_app',
     'django_unicorn',
     'django_browser_reload',

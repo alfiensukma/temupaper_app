@@ -1,3 +1,4 @@
+from django.apps import apps
 from neo4j_graphrag.embeddings.sentence_transformers import SentenceTransformerEmbeddings
 import logging
 import uuid
@@ -9,14 +10,19 @@ class Neo4jHandler:
         from app.utils.neo4j_connection import Neo4jConnection
         self.connection = Neo4jConnection()
         self.driver = self.connection.get_driver()
-        self.graph_name = None
         self._embedder = None
 
     @property
     def embedder(self):
         if self._embedder is None:
-            logger.info("Loading SentenceTransformer model...")
-            self._embedder = SentenceTransformerEmbeddings(model="all-mpnet-base-v2")
+            try:
+                app_config = apps.get_app_config('app')
+                if not app_config or not app_config.embedder:
+                    raise Exception("Global embedder not initialized")
+                self._embedder = app_config.embedder
+            except Exception as e:
+                logger.error(f"Failed to get global embedder: {str(e)}")
+                raise
         return self._embedder
 
     def create_search_node(self, query):
@@ -111,8 +117,15 @@ class Neo4jHandler:
                         deltaThreshold: 0.1
                     })
                     YIELD node1, node2, similarity
-                    WHERE gds.util.asNode(node1).paperId = $paperId
-                    RETURN gds.util.asNode(node2).paperId AS paperId, similarity
+                    WHERE 
+                        gds.util.asNode(node1).paperId = $paperId
+                        AND gds.util.asNode(node2).paperId <> $paperId
+                        AND similarity > 0.5
+                        AND NOT gds.util.asNode(node2).paperId STARTS WITH 'query-'
+                    RETURN 
+                        gds.util.asNode(node2).paperId AS paperId,
+                        similarity,
+                        gds.util.asNode(node2).title as title
                     ORDER BY similarity DESC
                     LIMIT 1
                 """, paperId=paper_id, graph_name=self.graph_name)
@@ -170,11 +183,5 @@ class Neo4jHandler:
             self.drop_graph()
 
     def close(self):
-        try:
-            self.drop_graph()
-        finally:
-            if self.driver:
-                self.driver.close()
-            if self._embedder is not None:
-                self._embedder = None
-                logger.info("SentenceTransformer model unloaded.")
+        if self.driver:
+            self.driver.close()

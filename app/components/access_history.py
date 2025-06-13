@@ -15,6 +15,10 @@ class AccessHistoryView(UnicornView):
     
     def mount(self):
         user_id = self.request.session.get('user_id')
+        if not user_id:
+            self.error = "Sesi pengguna tidak valid. Silakan login kembali."
+            return
+        
         driver = None
         try:
             neo4j_connection = Neo4jConnection()

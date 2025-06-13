@@ -1,27 +1,23 @@
-FROM python:3.10-slim
+# Gunakan base image Python 3.11 yang ringan
+FROM python:3.11-slim
 
-# Install dependensi OS minimal
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends gcc && \
-    rm -rf /var/lib/apt/lists/*
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
 
-# Env setting
-ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1
-
+# Buat dan set direktori kerja
 WORKDIR /app
 
-# Copy requirements, install python dependency
+# Salin file requirements dan instal dependencies
 COPY requirements.txt /app/
-RUN pip install --upgrade pip && pip install -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy semua source code Django
+# Salin seluruh kode proyek ke dalam container
 COPY . /app/
 
-# (Opsional, jika menggunakan whitenoise, aktifkan baris ini)
-RUN python manage.py collectstatic --noinput
+# Buat user non-root untuk keamanan
+RUN adduser --disabled-password appuser
+USER appuser
 
-EXPOSE 8080
-
-# Gunicorn default Django WSGI (ganti jika struktur tidak biasa)
-CMD python manage.py migrate && gunicorn temupaper_app.wsgi:application --workers 5 --threads 4 --bind 0.0.0.0:8080
+# Perintah default (akan di-override oleh docker-compose)
+CMD ["gunicorn", "temupaper_app.asgi:application", "-k", "uvicorn.workers.UvicornWorker", "-b", "0.0.0.0:8000"]

@@ -1,5 +1,7 @@
+import json
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 from app.components.search_result import Neo4jHandler, PaperProcessor
 from app.models import User
 from app.utils.parse_indonesian_date import format_date_to_indonesian
@@ -139,3 +141,94 @@ def load_search_data(request):
     except Exception as e:
         logger.error(f"Error saat pencarian: {str(e)}", exc_info=True)
         return JsonResponse({'success': False, 'error': 'Terjadi kesalahan saat melakukan pencarian.'})
+    
+@csrf_exempt
+def test_search_process(request):
+    if request.method != 'POST':
+        return JsonResponse({
+            'success': False,
+            'error': 'Method tidak diizinkan. Gunakan POST.'
+        }, status=405)
+
+    try:
+        data = json.loads(request.body)
+        query = data.get('query', '').strip()
+
+        if not query:
+            return JsonResponse({
+                'success': False,
+                'error': 'Query pencarian tidak boleh kosong'
+            }, status=400)
+
+        logger.info(f"Testing search process for query: '{query}'")
+        
+        neo4j_handler = Neo4jHandler()
+        try:
+            # Step 1: Create search node
+            paper_id = neo4j_handler.create_search_node(query)
+            logger.info(f"Created search node with ID: {paper_id}")
+
+            # Step 2: Create graph projection
+            graph_name = neo4j_handler.create_graph_projection()
+            logger.info(f"Created graph projection: {graph_name}")
+
+            # Step 3: Find seed papers
+            seed_paper_ids = neo4j_handler.find_seed_papers(paper_id)
+            logger.info(f"Found {len(seed_paper_ids)} seed papers")
+
+            # Step 4: Find similar papers
+            if seed_paper_ids:
+                knn_papers, similar_papers = neo4j_handler.find_similar_papers(seed_paper_ids)
+                logger.info(f"Found {len(similar_papers)} similar papers")
+
+                # Process the results
+                processed_papers = []
+                
+                # Add KNN papers (seed papers details)
+                for paper in knn_papers:
+                    processed_papers.append({
+                        'paperId': paper['paperId'],
+                        'title': paper['title'],
+                    })
+
+                # Add similar papers
+                for paper in similar_papers:
+                    processed_papers.append({
+                        'paperId': paper['paperId'],
+                        'title': paper['title'],
+                    })
+
+                return JsonResponse({
+                    'success': True,
+                    'data': {
+                        'query': query,
+                        'search_node_id': paper_id,
+                        'graph_name': graph_name,
+                        'seed_papers': len(knn_papers),
+                        'similar_papers': len(similar_papers),
+                        'total_papers': len(processed_papers),
+                        'papers': processed_papers
+                    }
+                })
+            else:
+                return JsonResponse({
+                    'success': False,
+                    'error': 'No seed papers found for the given query'
+                })
+
+        finally:
+            if paper_id:
+                neo4j_handler.delete_query_node(paper_id)
+            neo4j_handler.close()
+
+    except json.JSONDecodeError:
+        return JsonResponse({
+            'success': False,
+            'error': 'Invalid JSON format'
+        }, status=400)
+    except Exception as e:
+        logger.error(f"Error in test_search_process: {str(e)}", exc_info=True)
+        return JsonResponse({
+            'success': False,
+            'error': str(e)
+        }, status=500)
