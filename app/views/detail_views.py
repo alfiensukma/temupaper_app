@@ -13,14 +13,12 @@ logger = logging.getLogger(__name__)
 load_dotenv()
 
 def get_recommendation(paper_id):
-    paper_recommendation = []  # Inisialisasi list di awal
     
     try:
         neo4j_connection = Neo4jConnection()
         driver = neo4j_connection.get_driver()  
         
         with driver.session() as session:
-            # Ambil paper yang mirip
             result = session.run(
                 """
                 MATCH (p:Paper {paperId: $paperId})-[r:SIMILAR]->(s:Paper)

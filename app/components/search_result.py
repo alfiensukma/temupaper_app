@@ -1,7 +1,7 @@
 from django_unicorn.components import UnicornView
 import logging
 import random
-from app.services.neo4j_handler_services import Neo4jHandler
+from app.services.search_recommendation_services import Neo4jHandler
 from app.services.paper_processor_services import PaperProcessor
 
 logger = logging.getLogger(__name__)
