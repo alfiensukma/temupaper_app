@@ -351,10 +351,24 @@ def download_results(request):
         
         response = FileResponse(zip_buffer, content_type='application/zip')
         response['Content-Disposition'] = f'attachment; filename="scraping_{timestamp}.zip"'
+
+        # Delete the folder
+        try:
+            shutil.rmtree(folder_path)
+            logger.info(f"Successfully deleted folder: {folder_path}")
+        except Exception as cleanup_error:
+            logger.warning(f"Error deleting folder {folder_path}: {cleanup_error}")
+
         return response
 
     except Exception as e:
         logger.error(f"Error in download_results: {str(e)}\n{traceback.format_exc()}")
+        if folder_path and os.path.exists(folder_path):
+            try:
+                shutil.rmtree(folder_path)
+                logger.info(f"Cleaned up folder after error: {folder_path}")
+            except Exception as cleanup_error:
+                logger.error(f"Error cleaning up folder: {cleanup_error}")
         return JsonResponse({"error": str(e)}, status=500)
 
 @csrf_exempt
