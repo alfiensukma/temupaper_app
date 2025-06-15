@@ -12,8 +12,9 @@ django-neomodel
 django-browser-reload
 django-extensions
 
-# === Machine Learning ===
+# === Machine Learning & Library===
 neo4j-graphrag[sentence-transformers]
+SemanticScholar
 
 # === Database & Data Processing ===
 neomodel

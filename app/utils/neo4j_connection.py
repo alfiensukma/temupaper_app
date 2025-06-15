@@ -6,7 +6,7 @@ class Neo4jConnection:
     def __init__(self):
         self.uri = os.getenv("NEO4J_URI", "bolt://localhost:7687")
         self.user = os.getenv("NEO4J_USERNAME", "neo4j")
-        self.password = os.getenv("NEO4J_PASSWORD", "alfien0310")
+        self.password = os.getenv("NEO4J_PASSWORD", "my-password")
         self.driver = None
         self._connect()
 
