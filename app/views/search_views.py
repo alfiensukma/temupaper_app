@@ -92,7 +92,7 @@ def search(request):
     return render(request, "base.html", {
         "content_template": "search-paper/search-result.html",
         "body_class": "bg-gray-100",
-        "show_search_form": False,
+        "show_search_form": True,
         "query": query
     })
     

@@ -1,13 +1,17 @@
 import numpy as np
 import logging
+from django.apps import apps
 from neo4j_graphrag.embeddings.sentence_transformers import SentenceTransformerEmbeddings
 from app.models import Paper
 
 logger = logging.getLogger(__name__)
 
 class EmbeddingService:
-    def __init__(self, model_name="all-mpnet-base-v2"):
-        self.embedder = SentenceTransformerEmbeddings(model=model_name)
+    def __init__(self):
+        preloaded_model = apps.get_app_config('app').embedder_model
+        if not preloaded_model:
+            raise Exception("Embedding model tidak tersedia. Periksa AppConfig.")
+        self.embedder = SentenceTransformerEmbeddings(model=preloaded_model)
 
     def get_paper_without_embedding(self):
         """

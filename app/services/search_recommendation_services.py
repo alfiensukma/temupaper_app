@@ -5,6 +5,7 @@ from neo4j.exceptions import ServiceUnavailable
 import logging
 import uuid
 import os
+from django.apps import apps
 
 logger = logging.getLogger(__name__)
 
@@ -40,7 +41,10 @@ class Neo4jHandler:
     @property
     def embedder(self):
         if self._embedder is None:
-            raise Exception("Embedder tidak diinisialisasi dengan benar.")
+            preloaded_model = apps.get_app_config('app').embedder_model
+            if not preloaded_model:
+                raise Exception("Embedding model tidak tersedia.")
+            self._embedder = SentenceTransformerEmbeddings(model=preloaded_model)
         return self._embedder
 
     def create_search_node(self, query):

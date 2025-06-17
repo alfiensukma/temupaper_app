@@ -4,6 +4,7 @@ FROM python:3.11-slim
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
+ENV HF_HOME /app/.cache
 
 # Buat dan set direktori kerja
 WORKDIR /app
@@ -17,13 +18,11 @@ COPY . /app/
 
 RUN adduser --system --group appuser
 
-# Menggunakan path yang benar seperti yang Anda sebutkan: /app/app/data-csv
-RUN mkdir -p /app/app/data-csv
+RUN mkdir -p /app/app/data-csv /app/.cache
 
-# Berikan kepemilikan folder data dan seluruh folder aplikasi ke appuser
+#    Berikan kepemilikan seluruh direktori aplikasi (termasuk .cache) ke user yang baru dibuat.
 RUN chown -R appuser:appuser /app
 
-# 4. TERAKHIR, PINDAH KE USER NON-ROOT
 USER appuser
 
 # Perintah default untuk menjalankan aplikasi

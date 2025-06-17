@@ -6,25 +6,17 @@ logger = logging.getLogger(__name__)
 class AppConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'app'
-    _embedder = None
-
-    @property
-    def embedder(self):
-        if self._embedder is None:
-            try:
-                from neo4j_graphrag.embeddings.sentence_transformers import SentenceTransformerEmbeddings
-                logger.info("Initializing SentenceTransformer model...")
-                self._embedder = SentenceTransformerEmbeddings(model="all-mpnet-base-v2")
-                logger.info("SentenceTransformer model loaded successfully")
-            except Exception as e:
-                logger.error(f"Failed to initialize embedder: {str(e)}")
-                raise
-        return self._embedder
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.embedder_model = None
 
     def ready(self):
-        try:
-            _ = self.embedder
-            logger.info("App ready: Embedder initialized successfully")
-        except Exception as e:
-            logger.error(f"App ready failed: {str(e)}")
-            raise
+        if not self.embedder_model:
+            try:
+                logger.info("Server starting: Pre-loading SentenceTransformer model into memory...")
+                from sentence_transformers import SentenceTransformer
+                self.embedder_model = SentenceTransformer("all-mpnet-base-v2")
+                logger.info("Embedding model pre-loaded successfully.")
+            except Exception as e:
+                logger.error(f"FATAL: Failed to load embedding model on startup: {e}")
