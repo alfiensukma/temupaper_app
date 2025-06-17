@@ -10,7 +10,7 @@ services:
     volumes:
       - ./neo4j/data:/data
     environment:
-      NEO4J_PLUGINS: '["apoc", "gds"]'
+      NEO4J_PLUGINS: '["apoc", "graph-data-science"]'
       NEO4J_AUTH: neo4j/${NEO4J_PASSWORD} # Ambil password dari file .env
     restart: unless-stopped
 
@@ -19,7 +19,7 @@ services:
     container_name: django_app
     command: gunicorn temupaper_app.asgi:application -k uvicorn.workers.UvicornWorker -b 0.0.0.0:8000
     volumes:
-      - ./static_volume:/app/static_collected # Volume untuk static files
+      - ./static_volume:/app/staticfiles # Volume untuk static files
     expose:
       - 8000
     env_file:
@@ -36,7 +36,7 @@ services:
       - "443:443"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
-      - ./static_volume:/app/static_collected:ro # 'ro' = read-only
+      - ./static_volume:/app/staticfiles:ro # 'ro' = read-only
       - ./certbot/conf:/etc/letsencrypt
       - ./certbot/www:/var/www/certbot
     depends_on:

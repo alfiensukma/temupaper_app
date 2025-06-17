@@ -1,24 +1,32 @@
+# === Web & Django Framework ===
 Django
-SemanticScholar
+gunicorn
+uvicorn
+whitenoise
 python-dotenv
-neomodel
-neo4j
-spacy
-rdflib
+asgiref
+
+# === Django Apps & Extensions ===
 django-unicorn
 django-neomodel
 django-browser-reload
-neo4j-graphrag[sentence-transformers]
 django-extensions
-gunicorn
-whitenoise
+
+# === Machine Learning & Library===
+neo4j-graphrag[sentence-transformers]
+SemanticScholar
+
+# === Database & Data Processing ===
+neomodel
+neo4j
 numpy
+rdflib
 
 # For CPU-only
-# --find-links https://download.pytorch.org/whl/torch_stable.html
-# torch==2.1.0+cpu
-# torchvision==0.16.0+cpu
-# torchaudio==2.1.0+cpu
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch
+torchvision
+torchaudio
 
 # For CUDA-enabled systems (jika punya GPU NVIDIA)
 # --find-links https://download.pytorch.org/whl/torch_stable.html
