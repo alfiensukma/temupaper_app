@@ -17,11 +17,14 @@ COPY . /app/
 
 RUN adduser --system --group appuser
 
+# Menggunakan path yang benar seperti yang Anda sebutkan: /app/app/data-csv
 RUN mkdir -p /app/app/data-csv
+
+# Berikan kepemilikan folder data dan seluruh folder aplikasi ke appuser
 RUN chown -R appuser:appuser /app
 
-# Buat user non-root untuk keamanan
+# 4. TERAKHIR, PINDAH KE USER NON-ROOT
 USER appuser
 
-# Perintah default (akan di-override oleh docker-compose)
+# Perintah default untuk menjalankan aplikasi
 CMD ["gunicorn", "temupaper_app.asgi:application", "-k", "uvicorn.workers.UvicornWorker", "-b", "0.0.0.0:8000"]
