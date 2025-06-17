@@ -101,20 +101,20 @@ def datatable_paper_json(request):
         order_field_db = db_columns.get(order_field, 'title')
 
         conn = Neo4jConnection().get_driver()
-        session = conn.session()
-        service = PaperTableService(session)
+        if conn is None:
+            raise Exception("Tidak dapat terhubung ke database Neo4j.")
+            
+        with conn.session() as session:
+            service = PaperTableService(session)
 
-        total = service.count_papers(search_value)
-        papers = service.fetch_papers(search_value, order_field_db, order_dir, start, length)
+            total = service.count_papers(search_value)
+            papers = service.fetch_papers(search_value, order_field_db, order_dir, start, length)
 
-        data = [
-            service.to_datatable_row(idx, paper)
-            for idx, paper in enumerate(papers, start=start+1)
-        ]
-
-        session.close()
-        conn.close()
-
+            data = [
+                service.to_datatable_row(idx, paper)
+                for idx, paper in enumerate(papers, start=start+1)
+            ]
+        
         return JsonResponse({
             'draw': draw,
             'recordsTotal': total,
@@ -128,7 +128,7 @@ def datatable_paper_json(request):
             'recordsTotal': 0,
             'recordsFiltered': 0,
             'data': [],
-            'error': str(e)
+            'error': f"Terjadi kesalahan: {str(e)}" 
         }, status=200)
 
 @csrf_exempt

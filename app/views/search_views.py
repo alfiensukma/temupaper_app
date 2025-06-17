@@ -23,39 +23,43 @@ def index(request):
         if not driver:
             raise Exception("Koneksi database Neo4j tidak berhasil diinisialisasi.")
 
-        with driver.session() as session:
-            # history access
-            history_result = session.run("""
-                MATCH (u:User {userId: $userId})-[:HAS_READ]->(:Paper)-[r:HIGHEST_SIMILAR]->(p:Paper)
-                WHERE NOT (u)-[:HAS_READ]->(p)
-                OPTIONAL MATCH (p)-[:AUTHORED_BY]->(author:Author)
-                RETURN p.title AS title, p.paperId as paperId, p.abstract as abstract, 
-                       p.publicationDate AS date, p.year AS year, p.pagerank as pagerank, 
-                       r.score as score, collect(DISTINCT author.name) AS authors
-                ORDER BY r.score DESC, p.pagerank DESC, p.publicationDate DESC LIMIT 5
-            """, userId=user_id)
-            for record in history_result:
-                access_history_papers.append(dict(record))
-
-            # peer institution
-            current_user = User.nodes.get(userId=user_id)
-            institution_node = current_user.affiliated_with.get_or_none()
-            if institution_node:
-                institutionId = institution_node.institutionId
-                peer_result = session.run("""
-                    MATCH (:Institution {institutionId: $institutionId})<-[:AFFILIATED_WITH]-(u:User)-[:HAS_READ]->(p:Paper)
-                    WHERE NOT EXISTS { MATCH (:User {userId: $userId})-[:HAS_READ]->(p) }
-                    WITH p, count(u) AS jumlahPembaca
+        if user_id:
+            with driver.session() as session:
+                # history access
+                history_result = session.run("""
+                    MATCH (u:User {userId: $userId})-[:HAS_READ]->(:Paper)-[r:HIGHEST_SIMILAR]->(p:Paper)
+                    WHERE NOT (u)-[:HAS_READ]->(p)
                     OPTIONAL MATCH (p)-[:AUTHORED_BY]->(author:Author)
                     RETURN p.title AS title, p.paperId as paperId, p.abstract as abstract, 
-                           jumlahPembaca, p.publicationDate AS date, p.year AS year, 
-                           p.pagerank as pagerank, collect(DISTINCT author.name) AS authors
-                    ORDER BY jumlahPembaca DESC, p.pagerank DESC, p.publicationDate DESC, p.year DESC LIMIT 5
-                """, institutionId=institutionId, userId=user_id)
-                for record in peer_result:
-                    peer_institution_papers.append(dict(record))
+                        p.publicationDate AS date, p.year AS year, p.pagerank as pagerank, 
+                        r.score as score, collect(DISTINCT author.name) AS authors
+                    ORDER BY r.score DESC, p.pagerank DESC, p.publicationDate DESC LIMIT 5
+                """, userId=user_id)
+                for record in history_result:
+                    access_history_papers.append(dict(record))
 
-            # take topic
+                # peer institution
+                current_user = User.nodes.get(userId=user_id)
+                institution_node = current_user.affiliated_with.get_or_none()
+                if institution_node:
+                    institutionId = institution_node.institutionId
+                    peer_result = session.run("""
+                        MATCH (:Institution {institutionId: $institutionId})<-[:AFFILIATED_WITH]-(u:User)-[:HAS_READ]->(p:Paper)
+                        WHERE NOT EXISTS { MATCH (:User {userId: $userId})-[:HAS_READ]->(p) }
+                        WITH p, count(u) AS jumlahPembaca
+                        OPTIONAL MATCH (p)-[:AUTHORED_BY]->(author:Author)
+                        RETURN p.title AS title, p.paperId as paperId, p.abstract as abstract, 
+                            jumlahPembaca, p.publicationDate AS date, p.year AS year, 
+                            p.pagerank as pagerank, collect(DISTINCT author.name) AS authors
+                        ORDER BY jumlahPembaca DESC, p.pagerank DESC, p.publicationDate DESC, p.year DESC LIMIT 5
+                    """, institutionId=institutionId, userId=user_id)
+                    for record in peer_result:
+                        peer_institution_papers.append(dict(record))
+        else:
+            logger.info("Pengunjung anonim, tidak mengambil rekomendasi personal.")
+
+        # take topic
+        with driver.session() as session:
             topic_result = session.run("""
                 MATCH (t:Topic) WITH t, rand() as r
                 ORDER BY r LIMIT 2
