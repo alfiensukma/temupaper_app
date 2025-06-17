@@ -5,43 +5,39 @@ from neo4j.exceptions import ServiceUnavailable
 import logging
 import uuid
 import os
+from django.apps import apps
 
 logger = logging.getLogger(__name__)
 
 class Neo4jHandler:
     def __init__(self):
         self.driver = None
-        self._embedder = None
+        self.embedder = None
         self.graph_name = None
 
         try:
             uri = os.getenv("NEO4J_URI", "bolt://localhost:7687")
             user = os.getenv("NEO4J_USERNAME", "neo4j")
             password = os.getenv("NEO4J_PASSWORD")
+            
             if not password:
                 raise ValueError("Password Neo4j (NEO4J_PASSWORD) tidak ditemukan.")
-            
+
             self.driver = GraphDatabase.driver(uri, auth=(user, password))
             self.driver.verify_connectivity()
-            self._embedder = apps.get_app_config('app').embedder
-            if not self._embedder:
-                raise Exception("Global embedder tidak berhasil dimuat dari AppConfig.")
+            
+            self.embedder = apps.get_app_config('app').embedder_wrapper
+            if not self.embedder:
+                raise Exception("Embedder Wrapper tidak tersedia dari AppConfig.")
 
             logger.info("Neo4jHandler berhasil diinisialisasi.")
-
         except (ServiceUnavailable, ValueError, Exception) as e:
             logger.error(f"Gagal saat inisialisasi Neo4jHandler: {e}")
-            self.close()
+            self.close() 
             raise
         
     def get_driver(self):
         return self.driver
-
-    @property
-    def embedder(self):
-        if self._embedder is None:
-            raise Exception("Embedder tidak diinisialisasi dengan benar.")
-        return self._embedder
 
     def create_search_node(self, query):
         try:

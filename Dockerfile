@@ -4,6 +4,7 @@ FROM python:3.11-slim
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
+ENV HF_HOME /app/.cache
 
 # Buat dan set direktori kerja
 WORKDIR /app
@@ -15,12 +16,14 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Salin seluruh kode proyek ke dalam container
 COPY . /app/
 
-RUN mkdir -p /app/data-csv
-RUN chown -R appuser:appuser /app/data-csv
+RUN adduser --system --group appuser
 
-# Buat user non-root untuk keamanan
-RUN adduser --disabled-password appuser
+RUN mkdir -p /app/app/data-csv /app/.cache
+
+#    Berikan kepemilikan seluruh direktori aplikasi (termasuk .cache) ke user yang baru dibuat.
+RUN chown -R appuser:appuser /app
+
 USER appuser
 
-# Perintah default (akan di-override oleh docker-compose)
+# Perintah default untuk menjalankan aplikasi
 CMD ["gunicorn", "temupaper_app.asgi:application", "-k", "uvicorn.workers.UvicornWorker", "-b", "0.0.0.0:8000"]
