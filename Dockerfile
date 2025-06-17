@@ -15,11 +15,12 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Salin seluruh kode proyek ke dalam container
 COPY . /app/
 
-RUN mkdir -p /app/data-csv
-RUN chown -R appuser:appuser /app/data-csv
+RUN adduser --system --group appuser
+
+RUN mkdir -p /app/app/data-csv
+RUN chown -R appuser:appuser /app
 
 # Buat user non-root untuk keamanan
-RUN adduser --disabled-password appuser
 USER appuser
 
 # Perintah default (akan di-override oleh docker-compose)
