@@ -1,7 +1,6 @@
 from django_unicorn.components import UnicornView
 from django.core.paginator import Paginator
-from app.utils.neo4j_connection import Neo4jConnection
-from datetime import datetime
+from neomodel import db
 import logging
 from app.models import User
 from app.utils.parse_indonesian_date import format_date_to_indonesian
@@ -21,42 +20,48 @@ class PeerInstitutionView(UnicornView):
             self.error = "Sesi pengguna tidak valid. Silakan login kembali."
             return
         
-        driver = None
         try:
             current_user = User.nodes.get(userId=user_id)
-            institutions = current_user.affiliated_with.all()
-            institution = institutions[0]
-            institutionId = institution.institutionId
-        
-            neo4j_connection = Neo4jConnection()
-            driver = neo4j_connection.get_driver()
+            institution_node = current_user.affiliated_with.get_or_none()
+            if not institution_node:
+                self._all_papers = []
+                self.paginate()
+                return
 
-            with driver.session() as session:
-                result = session.run("""
-                    MATCH (pt:Institution {institutionId: $institutionId})<-[:AFFILIATED_WITH]-(u:User)-[:HAS_READ]->(p:Paper)
-                    WHERE NOT EXISTS {
-                        MATCH (currentUser:User {userId: $userId})-[:HAS_READ]->(p)
-                    }
-                    WITH p, count(u) AS jumlahPembaca
-                    OPTIONAL MATCH (p)-[:AUTHORED_BY]->(author:Author)
-                    RETURN 
-                        p.title AS title,
-                        p.paperId as paperId,
-                        p.abstract as abstract, 
-                        jumlahPembaca,
-                        p.publicationDate AS date,
-                        p.year AS year,
-                        p.pagerank as pagerank,
-                        collect(DISTINCT author.name) AS authors
-                    ORDER BY jumlahPembaca DESC, p.pagerank DESC, p.publicationDate DESC, p.year DESC
-                """, institutionId=institutionId, userId=user_id) 
-                
-                papers_raw = list(result)
+            institutionId = institution_node.institutionId
+            query = """
+                MATCH (pt:Institution {institutionId: $institutionId})<-[:AFFILIATED_WITH]-(u:User)-[:HAS_READ]->(p:Paper)
+                WHERE NOT EXISTS {
+                MATCH (currentUser:User {userId: $userId})-[:HAS_READ]->(p)
+                }
+                WITH p, count(u) AS jumlahPembaca,
+                    CASE
+                    WHEN p.publicationDate IS NOT NULL AND p.publicationDate CONTAINS '-' 
+                        THEN date(left(p.publicationDate, 10))
+                    WHEN p.publicationDate IS NOT NULL AND p.publicationDate CONTAINS '/' 
+                        THEN date(datetime({epochMillis: apoc.date.parse(split(p.publicationDate, ' ')[0], 'ms', 'M/d/yyyy')}))
+                    ELSE null
+                    END AS normalizedDate
+                ORDER BY jumlahPembaca DESC, normalizedDate DESC, p.year DESC
+                LIMIT 30
+                OPTIONAL MATCH (p)-[:AUTHORED_BY]->(author:Author)
+                RETURN 
+                    p.title AS title,
+                    p.paperId as paperId,
+                    p.abstract as abstract, 
+                    jumlahPembaca,
+                    p.publicationDate AS date,
+                    p.year AS year,
+                    p.pagerank as pagerank,
+                    collect(DISTINCT author.name) AS authors
+            """
+            params = {'institutionId': institutionId, 'userId': user_id}
+            results, meta = db.cypher_query(query, params)
+            papers_raw = [dict(zip(meta, row)) for row in results]
             
             processed_papers = []
             for record in papers_raw:
-                paper = dict(record)
-                
+                paper = record
                 paper["date"] = format_date_to_indonesian(
                     paper.get("date"), 
                     fallback_year=paper.get("year", "N/A")
@@ -67,10 +72,7 @@ class PeerInstitutionView(UnicornView):
 
         except Exception as e:
             logger.error(f"Error di PeerInstitutionView: {e}", exc_info=True)
-            self._error = "Gagal memuat rekomendasi."
-        finally:
-            if driver:
-                driver.close()
+            self.error = "Gagal memuat rekomendasi rekan institusi."
 
     def get_pagination_range(self, total_pages, current_page, on_each_side=1, on_ends=1):
         if total_pages <= (on_each_side + on_ends) * 2 + 1:

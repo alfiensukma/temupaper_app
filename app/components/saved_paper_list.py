@@ -70,12 +70,24 @@ class SavedPaperListView(UnicornView):
                 if query in p['title'].lower() or (p['abstract'] and query in p['abstract'].lower())
             ]
         
-        if self.start_date:
-            start_dt = datetime(int(self.start_date), 1, 1)
-            filtered_papers = [p for p in filtered_papers if p['saved_at'].replace(tzinfo=None) >= start_dt]
-        if self.end_date:
-            end_dt = datetime(int(self.end_date), 12, 31)
-            filtered_papers = [p for p in filtered_papers if p['saved_at'].replace(tzinfo=None) <= end_dt]
+        if self.start_date and self.end_date:
+            try:
+                start_dt = datetime.strptime(self.start_date, "%Y-%m-%d").date()
+                end_dt = datetime.strptime(self.end_date, "%Y-%m-%d").date()
+
+                if start_dt <= end_dt:
+                    filtered_papers = [
+                        p for p in filtered_papers
+                        if p.get('saved_at') and start_dt <= p['saved_at'].date() <= end_dt
+                    ]
+                else:
+                    self.error = "Tanggal awal tidak boleh lebih besar dari tanggal akhir."
+                    logger.warning(f"Invalid date range: start_date={self.start_date}, end_date={self.end_date}")
+                    filtered_papers = []
+            except (ValueError, TypeError) as e:
+                self.error = "Format tanggal tidak valid. Gunakan format YYYY-MM-DD."
+                logger.warning(f"Invalid date format for filter: {e}")
+                filtered_papers = []
 
         self.results_count = len(filtered_papers)
         
@@ -96,23 +108,29 @@ class SavedPaperListView(UnicornView):
             grouped_papers.append({"grouper": key, "list": list(group)})
         self.papers_by_date = grouped_papers
         
-        self.pagination_data = {
-            'number': self._page, 'num_pages': paginator.num_pages,
-            'has_previous': page_obj.has_previous(), 'has_next': page_obj.has_next(),
-            'previous_page_number': page_obj.previous_page_number() if page_obj.has_previous() else None,
-            'next_page_number': page_obj.next_page_number() if page_obj.has_next() else None,
-            'page_range': [i for i in paginator.get_elided_page_range(self._page)],
-            'ELLIPSIS': '...',
-        }
+        if paginator.num_pages > 0:
+            self.pagination_data = {
+                'number': self._page, 'num_pages': paginator.num_pages,
+                'has_previous': page_obj.has_previous(), 'has_next': page_obj.has_next(),
+                'previous_page_number': page_obj.previous_page_number() if page_obj.has_previous() else None,
+                'next_page_number': page_obj.next_page_number() if page_obj.has_next() else None,
+                'page_range': [i for i in paginator.get_elided_page_range(self._page)],
+                'ELLIPSIS': '...',
+            }
+        else:
+            self.pagination_data = None
 
     def updated_search_query(self, value):
         self._page = 1
+        self.error = None
         self.filter_and_paginate()
 
     def set_dates_and_reload(self, start_date, end_date):
         self.start_date = start_date
         self.end_date = end_date
         self._page = 1
+        self.error = None
+        logger.info(f"Setting dates: start_date={start_date}, end_date={end_date}")
         self.filter_and_paginate()
 
     def load_page(self, page):
@@ -130,5 +148,5 @@ class SavedPaperListView(UnicornView):
             self.total_paper_count = len(self._all_papers)
             self.filter_and_paginate()
         except Exception as e:
-            logger.error(f"Async error removing saved paper: {e}", exc_info=True)
+            logger.error(f"Error removing saved paper: {e}", exc_info=True)
             self.error = "Gagal menghapus karya ilmiah."

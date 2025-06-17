@@ -15,7 +15,8 @@ class PaperProcessor:
             "authors": record["authors"],
             "date": record["date"],
             "year": record["year"],
-            "is_seed": is_seed
+            "is_seed": is_seed,
+            "rank": record.get("rank", '')
         }
 
         raw_date = paper_data.get("date")
@@ -26,6 +27,24 @@ class PaperProcessor:
         )
 
         return paper_data
+    
+    @staticmethod
+    def filter_papers_by_quartile(papers, quartile):
+        if not quartile or quartile == "Semua Peringkat":
+            logger.info("No quartile filter applied, returning all papers")
+            return papers
+
+        filtered_papers = []
+        for paper in papers:
+            paper_rank = paper.get('rank', '')
+            if quartile == "Tidak Teridentifikasi":
+                if paper_rank == '':
+                    filtered_papers.append(paper)
+            elif paper_rank == quartile:
+                filtered_papers.append(paper)
+
+        logger.info(f"Filtered {len(papers)} papers to {len(filtered_papers)} for quartile: {quartile}")
+        return filtered_papers
 
     @staticmethod
     def process_search_results(knn_details, similar_results):
@@ -46,10 +65,13 @@ class PaperProcessor:
     @staticmethod
     def filter_papers_by_year(papers, start_date, end_date):
         if not start_date or not end_date:
-            logger.info(f"No filter applied: start_date={start_date}, end_date={end_date}")
+            logger.info(f"No year filter applied: start_date={start_date}, end_date={end_date}")
             return papers
         try:
             start_year, end_year = int(start_date), int(end_date)
+            if start_year > end_year:
+                logger.warning(f"Invalid year range: start_year={start_year} > end_year={end_year}")
+                return papers
             filtered_papers = []
             for paper in papers:
                 paper_year = None
@@ -77,6 +99,6 @@ class PaperProcessor:
                     filtered_papers.append(paper)
             logger.info(f"Filtered {len(papers)} papers to {len(filtered_papers)} for {start_year}-{end_year}")
             return filtered_papers
-        except Exception as e:
+        except ValueError as e:
             logger.error(f"Error filtering papers by year: {str(e)}")
             return papers

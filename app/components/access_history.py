@@ -1,8 +1,8 @@
 from django_unicorn.components import UnicornView
 from django.core.paginator import Paginator
-from app.utils.neo4j_connection import Neo4jConnection
 from app.utils.parse_indonesian_date import format_date_to_indonesian
 import logging
+from neomodel import db
 
 logger = logging.getLogger(__name__)
 
@@ -16,53 +16,43 @@ class AccessHistoryView(UnicornView):
     def mount(self):
         user_id = self.request.session.get('user_id')
         if not user_id:
-            self.error = "Sesi pengguna tidak valid. Silakan login kembali."
+            self.error = "Sesi pengguna tidak valid."
             return
         
-        driver = None
         try:
-            neo4j_connection = Neo4jConnection()
-            driver = neo4j_connection.get_driver()
-
-            with driver.session() as session:
-                result = session.run("""
-                    MATCH (u:User {userId: $userId})-[:HAS_READ]->(n:Paper)-[r:HIGHEST_SIMILAR]->(p:Paper)
-                    WHERE NOT (u)-[:HAS_READ]->(p)
-                    OPTIONAL MATCH (p)-[:AUTHORED_BY]->(author:Author)
-                    RETURN 
-                        p.title AS title,
-                        p.paperId as paperId,
-                        p.abstract as abstract, 
-                        p.publicationDate AS date,
-                        p.year AS year,
-                        p.pagerank as pagerank,
-                        r.score as score,
-                        collect(DISTINCT author.name) AS authors
-                    ORDER BY r.score DESC, p.pagerank DESC, p.publicationDate DESC
-                    """,
-                    userId=user_id
-                )
-                
-                papers_raw = list(result)
+            query = """
+                MATCH (u:User {userId: $userId})-[r_read:HAS_READ]->(:Paper)-[r_sim:HIGHEST_SIMILAR]->(p:Paper)
+                WHERE NOT (u)-[:HAS_READ]->(p)
+                WITH p, r_sim, max(r_read.read_at) AS newest_read
+                ORDER BY newest_read DESC, r_sim.score DESC, p.pagerank DESC
+                OPTIONAL MATCH (p)-[:AUTHORED_BY]->(author:Author)
+                RETURN 
+                    p.title AS title,
+                    p.paperId as paperId,
+                    p.abstract as abstract, 
+                    p.publicationDate AS date,
+                    p.year AS year,
+                    p.pagerank as pagerank, 
+                    r_sim.score as score,
+                    collect(DISTINCT author.name) AS authors
+            """
+            results, meta = db.cypher_query(query, {'userId': user_id})
+            papers_raw = [dict(zip(meta, row)) for row in results]
             
             processed_papers = []
             for record in papers_raw:
-                paper = dict(record)
-                
-                paper["date"] = format_date_to_indonesian(
-                    paper.get("date"), 
-                    fallback_year=paper.get("year", "N/A")
+                record["date"] = format_date_to_indonesian(
+                    record.get("date"), 
+                    fallback_year=record.get("year", "N/A")
                 )
-                processed_papers.append(paper)
+                processed_papers.append(record)
+                
             self._all_papers = processed_papers
             self.paginate()
 
         except Exception as e:
             logger.error(f"Error di AccessHistoryView: {e}", exc_info=True)
-            self._error = "Gagal memuat rekomendasi."
-        finally:
-            if driver:
-                driver.close()
+            self.error = "Gagal memuat rekomendasi riwayat akses."
 
     def get_pagination_range(self, total_pages, current_page, on_each_side=1, on_ends=1):
         if total_pages <= (on_each_side + on_ends) * 2 + 1:
