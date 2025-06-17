@@ -1,34 +1,144 @@
 from django_unicorn.components import UnicornView
-import logging
-import random
+from neo4j.exceptions import ServiceUnavailable
 from app.services.search_recommendation_services import Neo4jHandler
 from app.services.paper_processor_services import PaperProcessor
+from django.core.paginator import Paginator
+import logging
 
 logger = logging.getLogger(__name__)
 
 class SearchResultView(UnicornView):
     papers = []
+    paginator = None
+    is_loading = True
+    error = ""
     query = ""
     start_date = ""
     end_date = ""
+    journal_rank = "Semua Peringkat"
     page = 1
-    results_count = 0
-    is_loading = True
-    error = ""
-    paginator = None
+    _all_papers_cache = []
+    show_search_form = True
 
     def mount(self):
         self.query = self.request.GET.get('query', '').strip()
         self.page = int(self.request.GET.get('page', '1'))
-        logger.info(f"Component SearchResultView Mounted for query: '{self.query}'")
-        self.cleanup_old_sessions()
-            
+        logger.info(f"Component SearchResultView Mounted. Memulai pencarian untuk '{self.query}'...")
+        self.perform_initial_search()
+
+    def perform_initial_search(self):
         session_key = f"pure_search_{self.query}"
-        if self.request.session.get(session_key):
+        handler = None
+
+        try:
+            cached_papers = self.request.session.get(session_key)
+            if cached_papers is not None:
+                logger.info(f"Data ditemukan di session untuk query: '{self.query}'")
+                self._all_papers_cache = cached_papers
+            else:
+                logger.info(f"Melakukan pencarian baru di dalam mount untuk: '{self.query}'")
+                handler = Neo4jHandler()
+                papers_data = []
+                paper_id = None
+                try:
+                    paper_id = handler.create_search_node(self.query)
+                    handler.create_graph_projection()
+                    seed_paper_ids = handler.find_seed_papers(paper_id)
+                    
+                    if seed_paper_ids:
+                        knn_details, similar_results = handler.find_similar_papers(seed_paper_ids)
+                        papers_data = PaperProcessor.process_search_results(knn_details, similar_results)
+
+                finally:
+                    if paper_id: handler.delete_query_node(paper_id)
+                    if hasattr(handler, 'graph_name') and handler.graph_name: handler.drop_graph()
+
+                self.request.session[session_key] = papers_data
+                self._all_papers_cache = papers_data
+            
+            self.apply_filters_and_paginate()
+
+        except ServiceUnavailable:
+            self.error = "Tidak dapat terhubung ke database. Pastikan layanan Neo4j sedang berjalan."
+            logger.error(self.error, exc_info=True)
+        except Exception as e:
+            self.error = "Terjadi kesalahan pada server saat melakukan pencarian."
+            logger.error(f"Error tidak terduga di mount: {str(e)}", exc_info=True)
+        finally:
             self.is_loading = False
-            self.load_from_session()
+            if handler:
+                handler.close()
+
+    def apply_filters_and_paginate(self):
+        papers_to_filter = self._all_papers_cache
+        
+        if self.start_date and self.end_date:
+            try:
+                start_year = int(self.start_date)
+                end_year = int(self.end_date)
+                if start_year <= end_year:
+                    papers_to_filter = PaperProcessor.filter_papers_by_year(papers_to_filter, self.start_date, self.end_date)
+                    logger.info(f"After year filter: {len(papers_to_filter)} papers")
+                else:
+                    logger.warning(f"Invalid year range: start_year={start_year} > end_year={end_year}, skipping year filter")
+            except ValueError:
+                logger.error(f"Invalid year values: start_date={self.start_date}, end_date={self.end_date}")
         else:
+            logger.info("No year filter applied (start_date or end_date empty)")
+
+        if self.journal_rank != "Semua Peringkat":
+            papers_to_filter = PaperProcessor.filter_papers_by_quartile(papers_to_filter, self.journal_rank)
+            logger.info(f"After quartile filter: {len(papers_to_filter)} papers for quartile: {self.journal_rank}")
+        else:
+            logger.info("No quartile filter applied (journal_rank is Semua Peringkat)")
+
+        paginator = Paginator(papers_to_filter, 10)
+        self.page = min(max(1, self.page), paginator.num_pages)
+        page_obj = paginator.get_page(self.page)
+        self.papers = page_obj.object_list
+        
+        if paginator.num_pages > 0:
+            self.paginator = {
+                'num_pages': paginator.num_pages,
+                'number': self.page,
+                'has_previous': page_obj.has_previous(),
+                'has_next': page_obj.has_next(),
+                'previous_page_number': page_obj.previous_page_number() if page_obj.has_previous() else None,
+                'next_page_number': page_obj.next_page_number() if page_obj.has_next() else None,
+                'page_range': self.get_pagination_range(paginator.num_pages, self.page),
+            }
+        else:
+            self.paginator = None
+    
+    def set_dates_and_reload(self, start_date, end_date):
+        self.is_loading = True
+        try:
+            self.start_date = start_date
+            self.end_date = end_date
+            self.page = 1
+            logger.info(f"Setting dates: start_date={start_date}, end_date={end_date}")
+            self.apply_filters_and_paginate()
+        finally:
+            self.is_loading = False
+
+    def set_journal_rank(self, rank):
+        self.is_loading = True
+        try:
+            self.journal_rank = rank
+            self.page = 1
+            logger.info(f"Setting journal rank: {rank}")
+            self.apply_filters_and_paginate()
+        finally:
+            self.is_loading = False
+
+    def load_page(self, page_number):
+        if page_number:
             self.is_loading = True
+            try:
+                self.page = int(page_number)
+                self.apply_filters_and_paginate()
+            finally:
+                self.is_loading = False
             
     def get_pagination_range(self, total_pages, current_page, on_each_side=1, on_ends=1):
         if total_pages <= (on_each_side + on_ends) * 2 + 1:
@@ -58,7 +168,7 @@ class SearchResultView(UnicornView):
             last_page = page
             
         return result
-    
+            
     def cleanup_old_sessions(self):
         session_keys = [key for key in self.request.session.keys() if key.startswith('pure_search_')]
         current_key = f"pure_search_{self.query}"
@@ -71,59 +181,3 @@ class SearchResultView(UnicornView):
                 if status_key in self.request.session:
                     del self.request.session[status_key]
         self.request.session.modified = True
-        
-    def set_dates_and_reload(self, start_date, end_date):
-        self.error = ""
-        self.is_loading = True
-        self.page = 1
-        self.start_date = start_date
-        self.end_date = end_date
-        self.load_from_session()
-        
-    def load_from_session(self):
-        try:
-            session_key = f"pure_search_{self.query}"
-            all_papers = self.request.session.get(session_key, [])
-            logger.info(f"Papers dari sesi: {len(all_papers)} untuk query: '{self.query}'")
-            
-            if not all_papers:
-                self.error = "Tidak ada hasil ditemukan untuk kueri Anda."
-                self.is_loading = False
-                return
-
-            filtered_papers = PaperProcessor.filter_papers_by_year(all_papers, self.start_date, self.end_date)
-            self.results_count = len(filtered_papers)
-            
-            # Pagination
-            per_page = 10
-            total_pages = max(1, (self.results_count + per_page - 1) // per_page)
-            self.page = min(max(1, self.page), total_pages)
-            start_idx = (self.page - 1) * per_page
-            end_idx = start_idx + per_page
-            self.papers = filtered_papers[start_idx:end_idx]
-            self.paginator = {
-                'num_pages': total_pages,
-                'page_range': self.get_pagination_range(total_pages, self.page),
-                'has_previous': self.page > 1,
-                'has_next': self.page < total_pages,
-                'previous_page_number': self.page - 1,
-                'next_page_number': self.page + 1,
-                'number': self.page
-            }
-        except Exception as e:
-            logger.error(f"Error loading from session: {str(e)}", exc_info=True)
-            self.error = f"Error loading results: {str(e)}"
-        finally:
-            self.is_loading = False
-            logger.info(f"is_loading diatur ke: {self.is_loading}")
-            
-    def load_page(self, page):
-        self.is_loading = True
-        logger.info(f"Memuat halaman {page}...")
-        try:
-            self.page = int(page)
-            self.load_from_session()
-        except Exception as e:
-            logger.error(f"Error pada paginasi: {e}", exc_info=True)
-            self.error = "Gagal memuat halaman."
-            self.is_loading = False

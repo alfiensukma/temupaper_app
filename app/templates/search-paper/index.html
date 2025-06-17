@@ -106,12 +106,14 @@
       <div>
         <h2 class="text-2xl md:text-3xl font-bold text-gray-800">Rekomendasi Berdasarkan Riwayat Akses</h2>
       </div>
+      {% if access_history_papers|length > 4 %}
       <a href="{% url 'access_history' %}" class="text-blue-500 hover:text-blue-700 text-sm font-medium flex items-center gap-1">
         Lihat semua
         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
         </svg>
       </a>
+      {% endif %}
     </div>
 
     <div class="bg-sky-50 border border-sky-200 rounded-lg p-4 mb-8">
@@ -188,12 +190,14 @@
       <div>
         <h2 class="text-2xl md:text-3xl font-bold text-gray-800">Rekomendasi dari Institusi Sejawat</h2>
       </div>
+      {% if peer_institution_papers|length > 4 %}
       <a href="{% url 'peer_institution' %}" class="text-blue-500 hover:text-blue-700 text-sm font-medium flex items-center gap-1">
         Lihat semua
         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
         </svg>
       </a>
+      {% endif %}
     </div>
 
     <div class="bg-sky-50 border border-sky-200 rounded-lg p-4 mb-8">
@@ -349,58 +353,88 @@
 class Carousel {
   constructor(carouselId) {
     this.carousel = document.getElementById(carouselId);
+    if (!this.carousel) return; 
+
     this.track = this.carousel.querySelector('.carousel-track');
-    this.slides = this.carousel.querySelectorAll('.carousel-slide');
-    this.prevBtn = this.carousel.parentElement.querySelector('.carousel-prev');
-    this.nextBtn = this.carousel.parentElement.querySelector('.carousel-next');
+    this.slides = Array.from(this.track.children);
+    this.prevBtn = this.carousel.parentElement.querySelector(`.carousel-prev[data-carousel="${carouselId}"]`);
+    this.nextBtn = this.carousel.parentElement.querySelector(`.carousel-next[data-carousel="${carouselId}"]`);
     this.dotsContainer = document.getElementById(`dots${carouselId.slice(-1)}`);
     
+    if (!this.track || !this.prevBtn || !this.nextBtn || !this.dotsContainer) {
+        console.error(`Elemen Carousel tidak lengkap untuk ID: ${carouselId}`);
+        return;
+    }
+
     this.currentIndex = 0;
     this.slidesPerView = this.getSlidesPerView();
     this.totalSlides = this.slides.length;
-    this.maxIndex = Math.max(0, this.totalSlides - this.slidesPerView);
+    this.maxIndex = 0;
     
     this.init();
   }
 
   getSlidesPerView() {
-    if (window.innerWidth >= 1025) return 3;
-    if (window.innerWidth >= 769) return 2;
+    if (window.innerWidth >= 1024) return 3;
+    if (window.innerWidth >= 768) return 2;
     return 1;
   }
 
   init() {
-    this.createDots();
-    this.updateCarousel();
+    this.handleResize();
     this.bindEvents();
     window.addEventListener('resize', () => this.handleResize());
+  }
+  
+  updateControlsVisibility() {
+    const isScrollable = this.track.scrollWidth > this.carousel.clientWidth;
+    
+    if (isScrollable) {
+      this.prevBtn.style.display = 'flex';
+      this.nextBtn.style.display = 'flex';
+      this.dotsContainer.style.display = 'flex';
+    } else {
+      this.prevBtn.style.display = 'none';
+      this.nextBtn.style.display = 'none';
+      this.dotsContainer.style.display = 'none';
+    }
   }
 
   createDots() {
     this.dotsContainer.innerHTML = '';
-    const totalDots = this.maxIndex + 1;
     
+    if (this.maxIndex <= 0) return;
+
     for (let i = 0; i <= this.maxIndex; i++) {
       const dot = document.createElement('button');
-      dot.classList.add('dot');
-      if (i === 0) dot.classList.add('active');
+      dot.classList.add('w-2', 'h-2', 'bg-gray-300', 'rounded-full', 'transition-colors', 'duration-300', 'hover:bg-gray-400');
+      if (i === this.currentIndex) {
+        dot.classList.remove('bg-gray-300');
+        dot.classList.add('bg-blue-500');
+      }
       dot.addEventListener('click', () => this.goToSlide(i));
       this.dotsContainer.appendChild(dot);
     }
   }
 
   updateCarousel() {
-    const slideWidth = 100 / this.slidesPerView;
-    const translateX = -(this.currentIndex * slideWidth);
+    const slideWidth = this.slides[0].offsetWidth;
+    const gap = parseInt(window.getComputedStyle(this.track).gap) || 0;
+    const translateX = -(this.currentIndex * (slideWidth + gap));
     
-    this.track.style.transform = `translateX(${translateX}%)`;
-    
+    this.track.style.transform = `translateX(${translateX}px)`;
     this.prevBtn.disabled = this.currentIndex === 0;
+    this.prevBtn.classList.toggle('opacity-50', this.currentIndex === 0);
     this.nextBtn.disabled = this.currentIndex >= this.maxIndex;
+    this.nextBtn.classList.toggle('opacity-50', this.currentIndex >= this.maxIndex);
     
-    const dots = this.dotsContainer.querySelectorAll('.dot');
+    const dots = this.dotsContainer.querySelectorAll('button');
     dots.forEach((dot, index) => {
-      dot.classList.toggle('active', index === this.currentIndex);
+      dot.classList.remove('bg-blue-500');
+      dot.classList.add('bg-gray-300');
+      if (index === this.currentIndex) {
+        dot.classList.add('bg-blue-500');
+      }
     });
   }
 
@@ -410,28 +444,21 @@ class Carousel {
   }
 
   nextSlide() {
-    if (this.currentIndex < this.maxIndex) {
-      this.currentIndex++;
-      this.updateCarousel();
-    }
+    this.goToSlide(this.currentIndex + 1);
   }
 
   prevSlide() {
-    if (this.currentIndex > 0) {
-      this.currentIndex--;
-      this.updateCarousel();
-    }
+    this.goToSlide(this.currentIndex - 1);
   }
 
   handleResize() {
-    const newSlidesPerView = this.getSlidesPerView();
-    if (newSlidesPerView !== this.slidesPerView) {
-      this.slidesPerView = newSlidesPerView;
-      this.maxIndex = Math.max(0, this.totalSlides - this.slidesPerView);
-      this.currentIndex = Math.min(this.currentIndex, this.maxIndex);
-      this.createDots();
-      this.updateCarousel();
-    }
+    this.slidesPerView = this.getSlidesPerView();
+    this.maxIndex = Math.max(0, this.totalSlides - this.slidesPerView);
+    this.currentIndex = Math.min(this.currentIndex, this.maxIndex);
+    
+    this.createDots();
+    this.updateCarousel();
+    this.updateControlsVisibility(); 
   }
 
   bindEvents() {

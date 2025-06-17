@@ -1,28 +1,46 @@
 from django.apps import apps
 from neo4j_graphrag.embeddings.sentence_transformers import SentenceTransformerEmbeddings
+from neo4j import GraphDatabase
+from neo4j.exceptions import ServiceUnavailable
 import logging
 import uuid
+import os
 
 logger = logging.getLogger(__name__)
 
 class Neo4jHandler:
     def __init__(self):
-        from app.utils.neo4j_connection import Neo4jConnection
-        self.connection = Neo4jConnection()
-        self.driver = self.connection.get_driver()
+        self.driver = None
         self._embedder = None
+        self.graph_name = None
+
+        try:
+            uri = os.getenv("NEO4J_URI", "bolt://localhost:7687")
+            user = os.getenv("NEO4J_USERNAME", "neo4j")
+            password = os.getenv("NEO4J_PASSWORD")
+            if not password:
+                raise ValueError("Password Neo4j (NEO4J_PASSWORD) tidak ditemukan.")
+            
+            self.driver = GraphDatabase.driver(uri, auth=(user, password))
+            self.driver.verify_connectivity()
+            self._embedder = apps.get_app_config('app').embedder
+            if not self._embedder:
+                raise Exception("Global embedder tidak berhasil dimuat dari AppConfig.")
+
+            logger.info("Neo4jHandler berhasil diinisialisasi.")
+
+        except (ServiceUnavailable, ValueError, Exception) as e:
+            logger.error(f"Gagal saat inisialisasi Neo4jHandler: {e}")
+            self.close()
+            raise
+        
+    def get_driver(self):
+        return self.driver
 
     @property
     def embedder(self):
         if self._embedder is None:
-            try:
-                app_config = apps.get_app_config('app')
-                if not app_config or not app_config.embedder:
-                    raise Exception("Global embedder not initialized")
-                self._embedder = app_config.embedder
-            except Exception as e:
-                logger.error(f"Failed to get global embedder: {str(e)}")
-                raise
+            raise Exception("Embedder tidak diinisialisasi dengan benar.")
         return self._embedder
 
     def create_search_node(self, query):
@@ -120,7 +138,7 @@ class Neo4jHandler:
                     WHERE 
                         gds.util.asNode(node1).paperId = $paperId
                         AND gds.util.asNode(node2).paperId <> $paperId
-                        AND similarity > 0.5
+                        AND similarity > 0.7
                         AND NOT gds.util.asNode(node2).paperId STARTS WITH 'query-'
                     RETURN 
                         gds.util.asNode(node2).paperId AS paperId,
@@ -144,6 +162,7 @@ class Neo4jHandler:
                     UNWIND $paperIds AS knnPaperId
                     MATCH (paper:Paper {paperId: knnPaperId})
                     OPTIONAL MATCH (paper)-[:AUTHORED_BY]->(author:Author)
+                    OPTIONAL MATCH (paper)-[:IN_JOURNAL]->(journal:Journal)
                     RETURN 
                         paper.paperId AS paperId,
                         paper.title AS title, 
@@ -152,7 +171,8 @@ class Neo4jHandler:
                         paper.year AS year,
                         paper.citationCount AS citation_count,
                         1.0 AS similarity_score,
-                        collect(DISTINCT author.name) AS authors
+                        collect(DISTINCT author.name) AS authors, 
+                        COALESCE(journal.rank, '') AS rank
                 """, paperIds=seed_paper_ids)
                 knn_records = list(knn_details)
                 
@@ -161,6 +181,7 @@ class Neo4jHandler:
                     MATCH (top:Paper {paperId: topPaperId})
                     OPTIONAL MATCH (top)-[r:SIMILAR]->(paper:Paper)
                     OPTIONAL MATCH (paper)-[:AUTHORED_BY]->(author:Author)
+                    OPTIONAL MATCH (paper)-[:IN_JOURNAL]->(journal:Journal)
                     RETURN 
                         paper.paperId AS paperId,
                         paper.title AS title, 
@@ -170,11 +191,13 @@ class Neo4jHandler:
                         paper.citationCount AS citation_count,
                         paper.pageRank AS pageRank,
                         r.score AS similarity_score,
-                        collect(DISTINCT author.name) AS authors
+                        collect(DISTINCT author.name) AS authors,
+                        COALESCE(journal.rank, '') AS rank
                     ORDER BY similarity_score DESC, pageRank DESC
                     LIMIT 49
                 """, paperIds=seed_paper_ids)
                 similar_records = list(similar_results)
+                
                 return knn_records, similar_records
         except Exception as e:
             logger.error(f"Error finding similar papers: {str(e)}")

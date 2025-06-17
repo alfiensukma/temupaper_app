@@ -1,82 +1,27 @@
 {% load unicorn %}
-{% load static %}
-
-<div class="relative" x-data="{ isOpen: false }">
-    <button 
-        type="button"
-        @click.stop="isOpen = !isOpen"
-        class="text-center text-base text-blue-600 border border-blue-600 rounded-2xl px-6 py-2 hover:bg-blue-600 hover:text-white"
-    >
-        <span>
-            {% if start_date and end_date %}{{ start_date }} - {{ end_date }}{% elif start_date %}Dari {{ start_date }}{% elif end_date %}Hingga {{ end_date }}{% else %}Pilih Rentang Tahun{% endif %}
-        </span>
-        <svg 
-            class="w-4 h-4 inline ml-2 transition-transform" 
-            :class="{ 'rotate-180': isOpen }"
-            fill="none" 
-            stroke="currentColor" 
-            viewBox="0 0 24 24"
-        >
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-        </svg>
-    </button>
-
-    <div
-        x-show="isOpen"
-        class="absolute mt-2 w-[300px] p-4 bg-white rounded-lg shadow-lg z-40"
-        @click.outside="isOpen = false"
-        x-cloak
-    >
-        <div class="grid grid-cols-2 gap-4 mb-4">
-            <div class="relative">
-                <select
-                    unicorn:model.defer="start_date"
-                    unicorn:loading.class="opacity-50"
-                    class="appearance-none w-full p-2 pr-8 bg-white border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-[#4787FA]"
-                >
-                    <option value="">Pilih Tahun Awal</option>
-                    {% for year in years %}
-                        <option value="{{ year }}" {% if year|stringformat:"s" == start_date %}selected{% endif %}>{{ year }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-
-            <div class="relative">
-                <select
-                    unicorn:model.defer="end_date"
-                    unicorn:loading.class="opacity-50"
-                    class="appearance-none w-full p-2 pr-8 bg-white border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-[#4787FA]"
-                >
-                    <option value="">Pilih Tahun Akhir</option>
-                    {% for year in years %}
-                        <option value="{{ year }}" {% if year|stringformat:"s" == end_date %}selected{% endif %}>{{ year }}</option>
-                    {% endfor %}
-                </select>
+<div>
+    <div x-data="{ isOpen: false }"
+    @unicorn:updated.window="isOpen = false"
+    class="relative">
+        <button type="button"
+        @click.stop="setTimeout(() => { isOpen = !isOpen }, 10)"
+        class="text-center text-base text-blue-600 border border-blue-600 rounded-2xl px-6 py-2 hover:bg-blue-600 hover:text-white w-full flex justify-between items-center min-w-[280px]">
+            <span>
+                {% if start_date and end_date %}
+                    {{ start_date }} - {{ end_date }}
+                {% else %}
+                    Pilih Rentang Tanggal
+                {% endif %}
+            </span>
+            <svg class="w-4 h-4 inline ml-2 transition-transform" :class="{ 'rotate-180': isOpen }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+        </button>
+        <div x-show="isOpen" @click.outside="isOpen = false" x-cloak class="absolute mt-2 bg-white rounded-lg shadow-lg z-40 p-2">
+            <div 
+                data-litepicker-container="true" 
+                data-component-id="{{ unicorn.id }}">
                 </div>
-        </div>
-
-        {% if error_message %}
-            <div class="text-red-600 text-sm mb-4">{{ error_message }}</div>
-        {% endif %}
-
-        <div class="flex gap-2">
-            <button 
-                type="button"
-                unicorn:click="clear_date_filter" 
-                @click="isOpen = false"
-                class="flex-1 py-2 rounded-md text-[#4787FA] border border-[#4787FA] bg-transparent hover:bg-blue-50"
-            >
-                Reset
-            </button>
-            <button 
-                type="button"
-                unicorn:click="apply_filter"
-                @click="isOpen = false"
-                class="flex-1 bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed"
-                {% if error_message %}disabled{% endif %}
-            >
-                Terapkan
-            </button>
         </div>
     </div>
 </div>

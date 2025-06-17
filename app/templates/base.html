@@ -15,6 +15,7 @@
     </style>
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="{% static 'app/css/style.css' %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/litepicker/dist/css/litepicker.css"/>
     {% unicorn_scripts %}
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
@@ -35,5 +36,43 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.14.9/cdn.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="{% static 'app/node_modules/flowbite/dist/flowbite.min.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/litepicker/dist/litepicker.js"></script>
+
+    <script>
+function initializeAllDatePickers() {
+    document.querySelectorAll('[data-litepicker-container]').forEach(element => {
+        // Hapus instance lama jika ada
+        if (element.litepickerInstance) {
+            element.litepickerInstance.destroy();
+        }
+        // Inisialisasi Litepicker baru
+        element.litepickerInstance = new Litepicker({
+            element: element.parentElement.parentElement.querySelector('button'),
+            singleMode: false,
+            format: 'YYYY-MM-DD',
+            autoApply: true,
+            setup: (picker) => {
+                picker.on('selected', (start, end) => {
+                    // Kirim tanggal ke komponen Unicorn
+                    const componentId = element.getAttribute('data-component-id');
+                    if (window.Unicorn) {
+                        window.Unicorn.call(componentId, 'apply_date_filter', start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'));
+                    }
+                });
+            }
+        });
+    });
+}
+document.addEventListener('DOMContentLoaded', initializeAllDatePickers);
+document.addEventListener('unicorn:updated', () => {
+    initializeAllDatePickers();
+    // Paksa AlpineJS scan ulang pada elemen baru
+    if (window.Alpine && Alpine.discoverUninitializedComponents) {
+        Alpine.discoverUninitializedComponents((el) => {
+            Alpine.initializeComponent(el)
+        })
+    }
+});
+</script>
 </body>
 </html>
