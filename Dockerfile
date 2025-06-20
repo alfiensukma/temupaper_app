@@ -18,10 +18,9 @@ COPY . /app/
 
 RUN adduser --system --group appuser
 
-RUN mkdir -p /app/app/data-csv /app/.cache
-
-#    Berikan kepemilikan seluruh direktori aplikasi (termasuk .cache) ke user yang baru dibuat.
-RUN chown -R appuser:appuser /app
+RUN mkdir -p /app/staticfiles /app/app/data-csv /app/.cache
+RUN chown -R appuser:appuser /app /app/staticfiles /app/app/data-csv /app/.cache
+RUN chmod -R 755 /app/staticfiles /app/app/data-csv /app/.cache
 
 USER appuser
 
