@@ -28,12 +28,10 @@ DEBUG = os.getenv('DEBUG', '0') == '1' # default false (0)
 ALLOWED_HOSTS_STR = os.getenv('ALLOWED_HOSTS', '')
 ALLOWED_HOSTS = [host.strip() for host in ALLOWED_HOSTS_STR.split(',') if host]
 
+NEO4J_URI = os.getenv('NEO4J_URI', 'bolt://neo4j:7687')
 NEO4J_USERNAME = os.getenv('NEO4J_USERNAME', 'neo4j')
 NEO4J_PASSWORD = os.getenv('NEO4J_PASSWORD')
-NEO4J_HOST = os.getenv('NEO4J_HOST', 'localhost') 
-NEO4J_PORT = os.getenv('NEO4J_PORT', '7687')
-
-config.DATABASE_URL = f'bolt://{NEO4J_USERNAME}:{NEO4J_PASSWORD}@{NEO4J_HOST}:{NEO4J_PORT}'
+config.DATABASE_URL = f'{NEO4J_URI}'
 
 CSRF_TRUSTED_ORIGINS = [f"https://{host}" for host in ALLOWED_HOSTS if host]
 
