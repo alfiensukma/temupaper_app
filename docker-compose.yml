@@ -5,8 +5,8 @@ services:
     image: neo4j:5-community
     container_name: neo4j_db
     ports:
-      - "7474:7474" # Neo4j Browser
-      - "7687:7687" # Bolt protocol
+      - "0.0.0.0:7474:7474" # Neo4j Browser
+      - "0.0.0.0:7687:7687" # Bolt protocol
     volumes:
       - ./neo4j/data:/data
     environment:
