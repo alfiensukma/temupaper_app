@@ -1,9 +1,98 @@
-{% load unicorn %}
-<div class="container mx-auto px-4 py-8">
-    <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-800">Karya Ilmiah Tersimpan</h1>
-        <p class="text-gray-600 mt-2">Daftar karya ilmiah yang Anda simpan</p>
-    </div>
-    
-    {% unicorn 'saved-paper-list' %}
+{% load static %}
+
+<div class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-800">Karya Ilmiah Tersimpan</h1>
+    <p class="text-gray-600 mt-2">Daftar karya ilmiah yang Anda simpan</p>
 </div>
+
+<div id="saved-paper-list">
+    <form id="filter-form" class="flex justify-between items-center gap-4 mt-4 mb-6">
+        <div class="flex gap-4 w-full md:w-auto">
+            <div x-data="{ isOpen: false }" class="relative">
+                <button type="button" @click.stop="isOpen = !isOpen" class="text-center text-base text-blue-600 border border-blue-600 rounded-2xl px-6 py-2 hover:bg-blue-600 hover:text-white w-full flex justify-between items-center min-w-[280px]">
+                    <span id="date-range-text">
+                        {% if start_date and end_date %}
+                            {{ start_date }} - {{ end_date }}
+                        {% else %}
+                            Pilih Rentang Waktu
+                        {% endif %}
+                    </span>
+                    <svg class="w-4 h-4 inline ml-2 transition-transform" :class="{ 'rotate-180': isOpen }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </button>
+                <div x-show="isOpen" @click.outside="isOpen = false" x-cloak class="absolute mt-2 bg-white rounded-lg shadow-lg z-50 p-4 w-[600px] max-w-[650px]">
+                    <div class="litepicker-container grid grid-cols-2 gap-4">
+                        <div class="litepicker-subcontainer" data-litepicker-start>
+                            <label class="block mb-2 text-sm font-semibold">Tanggal Awal</label>
+                            <div class="w-full"></div>
+                        </div>
+                        <div class="litepicker-subcontainer" data-litepicker-end>
+                            <label class="block mb-2 text-sm font-semibold">Tanggal Akhir</label>
+                            <div class="w-full"></div>
+                        </div>
+                    </div>
+                    <div class="flex justify-end gap-2 mt-4 pt-4">
+                        <button 
+                            type="button" 
+                            @click="isOpen = false; clearDatePicker()"
+                            class="px-4 py-2 rounded-md text-gray-700 border hover:bg-gray-50"
+                        >
+                            Reset
+                        </button>
+                        <button 
+                            type="button" 
+                            @click="isOpen = false"
+                            class="px-4 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700"
+                        >
+                            Tutup
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="w-1/2">
+            <div class="relative">
+                <input 
+                    type="text" 
+                    id="search-input"
+                    name="search_query"
+                    value="{{ search_query }}"
+                    placeholder="Cari di karya ilmiah tersimpan..." 
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg transition-all duration-100 focus:ring-1 focus:ring-[#4787FA] focus:outline-none focus:border-[#4787FA]"
+                >
+                <button type="submit" class="absolute right-2 top-2 text-gray-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </form>
+    
+    {% if error %}
+        <div class="bg-red-100 p-4 rounded-lg text-red-700">{{ error }}</div>
+    {% elif total_paper_count == 0 %}
+        <div class="bg-white rounded-lg shadow-md p-8 text-center mt-6">
+            <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
+            <h3 class="text-lg font-medium text-gray-900 mb-2">Belum ada karya ilmiah tersimpan</h3>
+            <p class="text-gray-600">Simpan karya ilmiah untuk membacanya nanti atau merujuknya kembali.</p>
+            <a href="/" class="mt-4 inline-block px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
+                Jelajahi Karya Ilmiah
+            </a>
+        </div>
+    {% else %}
+        <div class="timeline-container" id="papers-container">
+        </div>
+    {% endif %}
+
+    <script>
+        window.allPapers = {{ papers_json|safe }};
+        window.currentPath = "{{ current_path }}";
+    </script>
+    <script src="https://unpkg.com/litepicker/dist/litepicker.js"></script>
+    <script src="{% static 'app/js/saved-paper-list.js' %}"></script>
+</div>
+{% csrf_token %}

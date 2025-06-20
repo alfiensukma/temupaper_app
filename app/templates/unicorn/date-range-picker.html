@@ -1,27 +1,78 @@
 {% load unicorn %}
 <div>
-    <div x-data="{ isOpen: false }"
-    @unicorn:updated.window="isOpen = false"
-    class="relative">
-        <button type="button"
-        @click.stop="setTimeout(() => { isOpen = !isOpen }, 10)"
-        class="text-center text-base text-blue-600 border border-blue-600 rounded-2xl px-6 py-2 hover:bg-blue-600 hover:text-white w-full flex justify-between items-center min-w-[280px]">
-            <span>
-                {% if start_date and end_date %}
-                    {{ start_date }} - {{ end_date }}
-                {% else %}
-                    Pilih Rentang Tanggal
-                {% endif %}
-            </span>
-            <svg class="w-4 h-4 inline ml-2 transition-transform" :class="{ 'rotate-180': isOpen }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+    <div class="flex gap-4">
+        <div class="relative w-full">
+            <input 
+                type="text" 
+                unicorn:model="start_date"
+                placeholder="Tanggal Awal" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg transition-all duration-100 focus:ring-1 focus:ring-[#4787FA] focus:outline-none focus:border-[#4787FA]"
+                data-litepicker-start
+                data-component-id="{{ unicorn.id }}"
+                readonly
+            >
+            <svg class="absolute right-2 top-3 w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
             </svg>
-        </button>
-        <div x-show="isOpen" @click.outside="isOpen = false" x-cloak class="absolute mt-2 bg-white rounded-lg shadow-lg z-40 p-2">
-            <div 
-                data-litepicker-container="true" 
-                data-component-id="{{ unicorn.id }}">
-                </div>
+        </div>
+        <div class="relative w-full">
+            <input 
+                type="text" 
+                unicorn:model="end_date"
+                placeholder="Tanggal Akhir" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg transition-all duration-100 focus:ring-1 focus:ring-[#4787FA] focus:outline-none focus:border-[#4787FA]"
+                data-litepicker-end
+                data-component-id="{{ unicorn.id }}"
+                readonly
+            >
+            <svg class="absolute right-2 top-3 w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+            </svg>
         </div>
     </div>
+
+    <script>
+        function initializeDatePickers() {
+            const startPicker = document.querySelector('[data-litepicker-start]');
+            if (startPicker && !startPicker.litepickerInstance) {
+                startPicker.litepickerInstance = new Litepicker({
+                    element: startPicker,
+                    singleMode: true,
+                    format: 'YYYY-MM-DD',
+                    autoApply: true,
+                    setup: (picker) => {
+                        picker.on('selected', (date) => {
+                            const componentId = startPicker.getAttribute('data-component-id');
+                            if (window.Unicorn) {
+                                console.log('Calling update_start_date with:', date.format('YYYY-MM-DD'));
+                                window.Unicorn.call(componentId, 'update_start_date', date.format('YYYY-MM-DD'));
+                            }
+                        });
+                    }
+                });
+            }
+
+            const endPicker = document.querySelector('[data-litepicker-end]');
+            if (endPicker && !endPicker.litepickerInstance) {
+                endPicker.litepickerInstance = new Litepicker({
+                    element: endPicker,
+                    singleMode: true,
+                    format: 'YYYY-MM-DD',
+                    autoApply: true,
+                    setup: (picker) => {
+                        picker.on('selected', (date) => {
+                            const componentId = endPicker.getAttribute('data-component-id');
+                            if (window.Unicorn) {
+                                console.log('Calling update_end_date with:', date.format('YYYY-MM-DD'));
+                                window.Unicorn.call(componentId, 'update_end_date', date.format('YYYY-MM-DD'));
+                            }
+                        });
+                    }
+                });
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', initializeDatePickers);
+        document.addEventListener('unicorn:updated', initializeDatePickers);
+    </script>
 </div>

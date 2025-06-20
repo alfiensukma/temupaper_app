@@ -19,9 +19,15 @@ class GraphPreprocessorService:
             result = session.run("""
                 CALL gds.graph.project(
                     $graph_name,
-                    'Paper',
                     {
-                        nodeProperties: 'search_embedding'
+                        Paper: {
+                            properties: ['search_embedding']
+                        }
+                    },
+                    {
+                        REFERENCES: {
+                            orientation: 'UNDIRECTED'
+                        }
                     }
                 ) YIELD graphName
                 RETURN graphName
