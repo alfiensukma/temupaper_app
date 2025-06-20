@@ -106,7 +106,7 @@
       <div>
         <h2 class="text-2xl md:text-3xl font-bold text-gray-800">Rekomendasi Berdasarkan Riwayat Akses</h2>
       </div>
-      {% if access_history_papers|length > 4 %}
+      {% if access_history_papers|length >= 5 %}
       <a href="{% url 'access_history' %}" class="text-blue-500 hover:text-blue-700 text-sm font-medium flex items-center gap-1">
         Lihat semua
         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -190,7 +190,7 @@
       <div>
         <h2 class="text-2xl md:text-3xl font-bold text-gray-800">Rekomendasi dari Institusi Sejawat</h2>
       </div>
-      {% if peer_institution_papers|length > 4 %}
+      {% if peer_institution_papers|length >= 5 %}
       <a href="{% url 'peer_institution' %}" class="text-blue-500 hover:text-blue-700 text-sm font-medium flex items-center gap-1">
         Lihat semua
         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">

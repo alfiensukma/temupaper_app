@@ -7,18 +7,20 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-class SearchResultView(UnicornView):
-    papers = []
-    paginator = None
-    is_loading = True
-    error = ""
-    query = ""
-    start_date = ""
-    end_date = ""
-    journal_rank = "Semua Peringkat"
-    page = 1
-    _all_papers_cache = []
-    show_search_form = True
+class SearchResultView:
+    def __init__(self):
+        self.is_loading = True
+        self.error = None
+        self.error_message = None
+        self.query = ''
+        self.start_date = ''
+        self.end_date = ''
+        self.journal_rank = 'Semua Peringkat'
+        self.selected_rank = 'Semua Peringkat'
+        self.page = 1
+        self.papers = []
+        self.paginator = None
+        self._all_papers_cache = []
 
     def mount(self):
         self.query = self.request.GET.get('query', '').strip()
@@ -80,17 +82,21 @@ class SearchResultView(UnicornView):
                     papers_to_filter = PaperProcessor.filter_papers_by_year(papers_to_filter, self.start_date, self.end_date)
                     logger.info(f"After year filter: {len(papers_to_filter)} papers")
                 else:
-                    logger.warning(f"Invalid year range: start_year={start_year} > end_year={end_year}, skipping year filter")
+                    self.error_message = "Tahun awal tidak boleh lebih besar dari tahun akhir."
+                    logger.warning(f"Invalid year range: start_year={start_year} > end_year={end_year}")
+                    return
             except ValueError:
+                self.error_message = "Format tahun tidak valid."
                 logger.error(f"Invalid year values: start_date={self.start_date}, end_date={self.end_date}")
+                return
         else:
-            logger.info("No year filter applied (start_date or end_date empty)")
+            logger.info("No year filter applied")
 
         if self.journal_rank != "Semua Peringkat":
             papers_to_filter = PaperProcessor.filter_papers_by_quartile(papers_to_filter, self.journal_rank)
             logger.info(f"After quartile filter: {len(papers_to_filter)} papers for quartile: {self.journal_rank}")
         else:
-            logger.info("No quartile filter applied (journal_rank is Semua Peringkat)")
+            logger.info("No quartile filter applied")
 
         paginator = Paginator(papers_to_filter, 10)
         self.page = min(max(1, self.page), paginator.num_pages)
@@ -109,24 +115,59 @@ class SearchResultView(UnicornView):
             }
         else:
             self.paginator = None
-    
+
+    def apply_filter(self):
+        self.is_loading = True
+        try:
+            self.page = 1
+            self.error_message = None
+            logger.info(f"Applying filter: start_date={self.start_date}, end_date={self.end_date}")
+            self.apply_filters_and_paginate()
+        finally:
+            self.is_loading = False
+
     def set_dates_and_reload(self, start_date, end_date):
         self.is_loading = True
         try:
             self.start_date = start_date
             self.end_date = end_date
             self.page = 1
+            self.error_message = None
             logger.info(f"Setting dates: start_date={start_date}, end_date={end_date}")
             self.apply_filters_and_paginate()
         finally:
             self.is_loading = False
 
-    def set_journal_rank(self, rank):
+    def clear_date_filter(self):
+        self.is_loading = True
+        try:
+            self.start_date = ''
+            self.end_date = ''
+            self.page = 1
+            self.error_message = None
+            logger.info("Clearing date filter")
+            self.apply_filters_and_paginate()
+        finally:
+            self.is_loading = False
+
+    def set_rank(self, rank):
         self.is_loading = True
         try:
             self.journal_rank = rank
+            self.selected_rank = rank
             self.page = 1
             logger.info(f"Setting journal rank: {rank}")
+            self.apply_filters_and_paginate()
+        finally:
+            self.is_loading = False
+
+    def clear_filter(self):
+        self.is_loading = True
+        try:
+            self.journal_rank = 'Semua Peringkat'
+            self.selected_rank = 'Semua Peringkat'
+            self.page = 1
+            logger.info("Clearing journal rank filter")
             self.apply_filters_and_paginate()
         finally:
             self.is_loading = False

@@ -89,7 +89,6 @@ def get_detail_paper(request, paper_id):
         context = {
             "content_template": "detail-paper/index.html",
             "body_class": "bg-gray-100",
-            "show_search_form": True,
             "paper": data_paper,
             "query": query,
             "paper_recommendation": paper_recommendation,

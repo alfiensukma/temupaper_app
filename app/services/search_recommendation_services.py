@@ -134,7 +134,7 @@ class Neo4jHandler:
                     WHERE 
                         gds.util.asNode(node1).paperId = $paperId
                         AND gds.util.asNode(node2).paperId <> $paperId
-                        AND similarity > 0.7
+                        AND similarity > 0.65
                         AND NOT gds.util.asNode(node2).paperId STARTS WITH 'query-'
                     RETURN 
                         gds.util.asNode(node2).paperId AS paperId,

@@ -1,11 +1,16 @@
 import json
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import csrf_protect, csrf_exempt
+from django.utils.decorators import method_decorator
+from django.views.decorators.http import require_GET
 from app.components.search_result import Neo4jHandler, PaperProcessor
 from neo4j.exceptions import ServiceUnavailable
 from app.models import User
 import logging
+from django.core.paginator import Paginator
+
+logger = logging.getLogger(__name__)
 
 logger = logging.getLogger(__name__)
 
@@ -86,20 +91,89 @@ def index(request):
     })
 
 def search(request):
-    query = request.GET.get('query', '').strip()
+    query = request.GET.get('query', request.session.get('last_search_query', '')).strip()
     if not query:
         return redirect('index')
-
     request.session['last_search_query'] = query
     request.session[f"search_status_{query}"] = "pending"
+    logger.debug(f"Rendering search-result.html with query: '{query}'")
     
-    return render(request, "base.html", {
-        "content_template": "search-paper/search-result.html",
-        "body_class": "bg-gray-100",
-        "show_search_form": True,
-        "query": query
-    })
-    
+    handler = Neo4jHandler()
+    try:
+        paper_id = handler.create_search_node(query.lower())
+        handler.create_graph_projection()
+        seed_paper_ids = handler.find_seed_papers(paper_id)
+        papers_data = []
+        if seed_paper_ids:
+            knn_details, similar_results = handler.find_similar_papers(seed_paper_ids)
+            papers_data = PaperProcessor.process_search_results(knn_details, similar_results)
+        request.session[f"pure_search_{query}"] = papers_data
+        
+        # pagination
+        paginator = Paginator(papers_data, 10)
+        page_number = request.GET.get('page', 1)
+        page_obj = paginator.get_page(page_number)
+        
+        return render(request, "base.html", {
+            "content_template": "search-paper/search-result.html",
+            "body_class": "bg-gray-100",
+            "show_search_form": True,
+            "query": query,
+            "years": range(2025, 2019, -1),
+            "ranks": ["Q1", "Q2", "Q3", "Q4", "Tidak Teridentifikasi"],
+            "pagination_data": paginator,
+            "papers": page_obj.object_list
+        })
+    except Exception as e:
+        logger.error(f"Error in search view: {str(e)}")
+        return render(request, "base.html", {
+            "content_template": "search-paper/search-result.html",
+            "body_class": "bg-gray-100",
+            "show_search_form": True,
+            "query": query,
+            "years": range(2025, 2019, -1),
+            "ranks": ["Q1", "Q2", "Q3", "Q4", "Tidak Teridentifikasi"],
+            "error": f"Terjadi kesalahan: {str(e)}"
+        })
+    finally:
+        if 'handler' in locals():
+            if 'paper_id' in locals():
+                handler.delete_query_node(paper_id)
+            if hasattr(handler, 'graph_name') and handler.graph_name:
+                handler.drop_graph()
+            handler.close()
+
+@csrf_protect
+@require_GET
+def search_api(request):
+    logger.debug(f"search_api called with GET: {request.GET}")
+    query = request.GET.get('query', '').strip()
+    logger.debug(f"Query received: '{query}'")
+    if not query:
+        logger.warning("Empty query received in search_api")
+        return JsonResponse({"error": "Kueri tidak boleh kosong"}, status=400)
+    try:
+        handler = Neo4jHandler()
+        papers_data = []
+        paper_id = handler.create_search_node(query.lower())
+        handler.create_graph_projection()
+        seed_paper_ids = handler.find_seed_papers(paper_id)
+        if seed_paper_ids:
+            knn_details, similar_results = handler.find_similar_papers(seed_paper_ids)
+            papers_data = PaperProcessor.process_search_results(knn_details, similar_results)
+        request.session[f"pure_search_{query}"] = papers_data
+        return JsonResponse({"papers": papers_data}, safe=False)
+    except Exception as e:
+        logger.error(f"Error in search_api: {str(e)}")
+        return JsonResponse({"error": f"Terjadi kesalahan: {str(e)}"}, status=500)
+    finally:
+        if 'handler' in locals():
+            if 'paper_id' in locals():
+                handler.delete_query_node(paper_id)
+            if hasattr(handler, 'graph_name') and handler.graph_name:
+                handler.drop_graph()
+            handler.close()
+            
 @csrf_exempt
 def test_search_process(request):
     if request.method != 'POST':
