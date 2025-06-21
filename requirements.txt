@@ -11,6 +11,7 @@ django-unicorn
 django-neomodel
 django-browser-reload
 django-extensions
+django-anymail
 
 # === Machine Learning & Library===
 neo4j-graphrag[sentence-transformers]
