@@ -28,10 +28,12 @@ DEBUG = os.getenv('DEBUG', '0') == '1' # default false (0)
 ALLOWED_HOSTS_STR = os.getenv('ALLOWED_HOSTS', '')
 ALLOWED_HOSTS = [host.strip() for host in ALLOWED_HOSTS_STR.split(',') if host]
 
-NEO4J_URI = os.getenv('NEO4J_URI', 'bolt://neo4j:7687')
 NEO4J_USERNAME = os.getenv('NEO4J_USERNAME', 'neo4j')
 NEO4J_PASSWORD = os.getenv('NEO4J_PASSWORD')
-config.DATABASE_URL = f'{NEO4J_URI}'
+NEO4J_HOST = os.getenv('NEO4J_HOST', 'localhost')
+NEO4J_PORT = os.getenv('NEO4J_PORT', '7687')
+
+config.DATABASE_URL = f'bolt://{NEO4J_USERNAME}:{NEO4J_PASSWORD}@{NEO4J_HOST}:{NEO4J_PORT}'
 
 CSRF_TRUSTED_ORIGINS = [f"https://{host}" for host in ALLOWED_HOSTS if host]
 
@@ -178,9 +180,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Email configuration for Gmail with 2FA
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 465
-EMAIL_USE_SSL = True 
-EMAIL_USE_TLS = False
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
 EMAIL_HOST_USER = 'infotemupaper@gmail.com'  # Replace with your Gmail address
 EMAIL_HOST_PASSWORD = 'eetaaajiecqdtbdp'  # Replace with the 16-character App Password generated
 DEFAULT_FROM_EMAIL = 'infotemupaper@gmail.com'  # Replace with your Gmail address
