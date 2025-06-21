@@ -180,12 +180,19 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Email configuration for Gmail with 2FA
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_USE_SSL = False
+EMAIL_PORT = 465
+EMAIL_USE_TLS = False
+EMAIL_USE_SSL = True
 EMAIL_HOST_USER = 'infotemupaper@gmail.com'  # Replace with your Gmail address
 EMAIL_HOST_PASSWORD = 'eetaaajiecqdtbdp'  # Replace with the 16-character App Password generated
 DEFAULT_FROM_EMAIL = 'infotemupaper@gmail.com'  # Replace with your Gmail address
+
+# Brevo Email Configuration
+# EMAIL_BACKEND = 'anymail.backends.sendinblue.EmailBackend'
+# ANYMAIL = {
+#     "SENDINBLUE_API_KEY": os.getenv("SENDINBLUE_API_KEY"),
+# }
+# DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL")
 
 LOGGING = {
     'version': 1,
