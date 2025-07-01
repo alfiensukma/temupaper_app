@@ -23,7 +23,7 @@ def get_recommendation(paper_id):
             result = session.run(
                 """
                 MATCH (p:Paper {paperId: $paperId})-[r:SIMILAR]->(s:Paper)
-                OPTIONAL MATCH (p)-[:AUTHORED_BY]->(author:Author)
+                OPTIONAL MATCH (s)-[:AUTHORED_BY]->(author:Author)
                 RETURN 
                     s.title AS title,
                     s.paperId AS paperId,

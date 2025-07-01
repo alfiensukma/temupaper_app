@@ -60,25 +60,30 @@ def edit_profile(request):
     user_id = request.session.get('user_id')
     
     if request.method == 'POST':
-        name = request.POST.get('name')
+        name = request.POST.get('name', '').strip()
         institution_id = request.POST.get('institution')
+        
+        if not name:
+            messages.error(request, 'Nama Lengkap harus diisi.')
+            return redirect('profile_view')
+        
+        if not institution_id:
+            messages.error(request, 'Institusi harus dipilih.')
+            return redirect('profile_view')
         
         try:
             user = User.nodes.get(userId=user_id)
 
-            if name:
-                user.name = name
-                request.session['user_name'] = name
+            user.name = name
+            request.session['user_name'] = name
 
             if institution_id:
-
                 current_institution = None
                 for rel in user.affiliated_with:
                     current_institution = rel
                     break
                 
                 if not current_institution or current_institution.institutionId != institution_id:
-
                     if current_institution:
                         user.affiliated_with.disconnect(current_institution)
 
@@ -99,19 +104,36 @@ def edit_profile(request):
     
     return redirect('profile_view')
 
+
 def reset_password(request):
     if request.method == 'POST':
-        password = request.POST.get('password')
-        password_confirmation = request.POST.get('password_confirmation')
-        
-        if not password or not password_confirmation:
+        password = request.POST.get('password', '').strip()
+        password_confirmation = request.POST.get('password_confirmation', '').strip()
+
+        if not password and not password_confirmation:
             messages.error(request, 'Kedua field password harus diisi.')
             return render(request, "base.html", {
                 "content_template": "auth/reset-password.html",
                 "body_class": "bg-gradient-to-br from-[#c8dcf8] from-5% to-white to-90%",
                 "show_search_form": False
             })
-        
+
+        if not password:
+            messages.error(request, 'Password Baru harus diisi.')
+            return render(request, "base.html", {
+                "content_template": "auth/reset-password.html",
+                "body_class": "bg-gradient-to-br from-[#c8dcf8] from-5% to-white to-90%",
+                "show_search_form": False
+            })
+
+        if not password_confirmation:
+            messages.error(request, 'Konfirmasi Password harus diisi.')
+            return render(request, "base.html", {
+                "content_template": "auth/reset-password.html",
+                "body_class": "bg-gradient-to-br from-[#c8dcf8] from-5% to-white to-90%",
+                "show_search_form": False
+            })
+
         if password != password_confirmation:
             messages.error(request, 'Password tidak cocok.')
             return render(request, "base.html", {
@@ -119,26 +141,25 @@ def reset_password(request):
                 "body_class": "bg-gradient-to-br from-[#c8dcf8] from-5% to-white to-90%",
                 "show_search_form": False
             })
-        
+
         email = request.session.get('verification_email')
-        
+
         try:
             user = User.nodes.get(email=email)
 
             user.set_password(password)
             user.save()
-            
+
             messages.success(request, 'Password berhasil diubah.')
 
             if 'verification_email' in request.session:
                 del request.session['verification_email']
-            
 
             if request.session.get('is_authenticated', False):
                 return redirect('profile_view')
             else:
                 return redirect('login_view')
-                
+
         except User.DoesNotExist:
             messages.error(request, 'Terjadi kesalahan. Pengguna tidak ditemukan.')
             return redirect('login_view')

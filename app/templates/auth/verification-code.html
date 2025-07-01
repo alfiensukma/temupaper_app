@@ -162,24 +162,6 @@
             otpInputs[0].focus();
         }, 500);
         
-        // Handle form submission
-        form.addEventListener('submit', function(e) {
-            // Validate if all inputs are filled
-            let isComplete = true;
-            otpInputs.forEach(input => {
-                if (!input.value) {
-                    isComplete = false;
-                }
-            });
-            
-            if (!isComplete) {
-                e.preventDefault();
-                alert('Mohon masukkan kode verifikasi secara lengkap');
-                return false;
-            }
-            
-            updateVerificationCode();
-        });
         
         // Function to show status message
         function showStatus(message, isSuccess) {

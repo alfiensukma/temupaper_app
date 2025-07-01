@@ -118,16 +118,16 @@
         
         <div class="h-[600px] overflow-y-auto p-6 scroll-smooth bg-gradient-to-b from-blue-50 to-white" style="scrollbar-width: thin; scrollbar-color: #4787FA #F3F4F6;">
             <div class="grid gap-5">                
-                {% for paper in paper_recommendation %}
+                {% for papers in paper_recommendation %}
                     <div class="bg-white p-5 rounded-xl transition-all duration-300 border border-gray-100 hover:border-blue-300 hover:shadow-md group">
                         <div class="flex flex-col">
-                            <a href="{% url 'paper_detail' paper.paperId %}" class="font-bold text-gray-800 text-lg group-hover:text-blue-600 transition-colors">{{ paper.title }}</a>
+                            <a href="{% url 'paper_detail' papers.paperId %}" class="font-bold text-gray-800 text-lg group-hover:text-blue-600 transition-colors">{{ paper.title }}</a>
                             <p class="text-sm text-gray-500 mt-4 mb-4 border-b border-gray-100 pb-2">
-                                {% for author in paper.authors|slice:":3" %}
+                                {% for author in papers.authors|slice:":3" %}
                                     <span class="px-2 py-1.5 bg-blue-50 text-[#4787FA] rounded-full text-sm md:text-base font-medium hover:bg-blue-100 transition-colors inline-block mb-2 mr-2">{{ author }}</span>
                                 {% endfor %}
                                 
-                                {% if paper.authors|length > 3 %}
+                                {% if papers.authors|length > 3 %}
                                     <span class="px-2 py-1.5 bg-blue-50 text-[#4787FA] rounded-full text-sm md:text-base font-medium hover:bg-blue-100 transition-colors inline-block mb-2">+ {{ paper.authors|length|add:"-3" }} lainnya</span>
                                 {% endif %} 
                             </p>

@@ -41,7 +41,10 @@ def register_view(request):
         if not institution_id:
             messages.error(request, 'Institusi harus dipilih.')
             errors = True
-        if password != password_confirmation:
+        if not password_confirmation:
+            messages.error(request, 'Konfirmasi Password harus diisi.')
+            errors = True
+        if password and password_confirmation and password != password_confirmation:
             messages.error(request, 'Password dan konfirmasi password tidak cocok.')
             errors = True
         if email and '@' not in email:

@@ -13,17 +13,34 @@ def generate_verification_code(length=6):
     return ''.join(random.choices(string.digits, k=length))
 
 def verification_email(request):
+    form_data = {}  
+
+    def render_verification_email():
+        return render(request, "base.html", {
+            "content_template": "auth/verification-email.html",
+            "body_class": "bg-gradient-to-br from-[#c8dcf8] from-5% to-white to-90%",
+            "show_search_form": False,
+            "form_data": form_data
+        })
+
     if request.method == "POST":
-        email = request.POST.get('verification_email')
-        
+        email = request.POST.get('verification_email', '').strip()
+        form_data = {
+            'email': email
+        }
+
+        if not email:
+            messages.error(request, "Email harus diisi.")
+            return render_verification_email()
+
         try:
             user = User.nodes.get(email=email)
-            
+
             verification_code = generate_verification_code()
-            
+
             user.email_verification = verification_code
             user.save()
-            
+
             try:
                 send_mail(
                     'Verifikasi Akun Anda',
@@ -33,21 +50,25 @@ def verification_email(request):
                     fail_silently=False,
                 )
                 messages.success(request, f"Kode verifikasi telah dikirim ke {email}")
-                
+
                 request.session['verification_email'] = email
-                
+                request.session['pending_verification_email'] = email
+
                 return redirect('verification_codes')
             except Exception as e:
                 print(f"Failed to send verification email: {str(e)}")
                 messages.error(request, "Gagal mengirim email verifikasi. Silakan coba lagi.")
         except User.DoesNotExist:
             messages.error(request, "Email tidak terdaftar dalam sistem kami.")
-    
+
+        return render_verification_email()
+
     return render(request, "base.html", {
         "content_template": "auth/verification-email.html",
         "body_class": "bg-gradient-to-br from-[#c8dcf8] from-5% to-white to-90%",
         "show_search_form": False
     })
+
 
 def verification_codes(request):
     email = request.session.get('verification_email')
