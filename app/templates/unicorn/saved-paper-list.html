@@ -1,0 +1,152 @@
+{% load static %}
+
+<div id="saved-paper-list">
+    
+<div id="date-range-picker" date-rangepicker class="flex items-center">
+  <div class="relative">
+    <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+         <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
+        </svg>
+    </div>
+    <input id="datepicker-range-start" name="start" type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Select date start">
+  </div>
+  <span class="mx-4 text-gray-500">to</span>
+  <div class="relative">
+    <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+         <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
+        </svg>
+    </div>
+    <input id="datepicker-range-end" name="end" type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Select date end">
+</div>
+</div>
+
+    <form method="GET" action="{% url 'save_paper_list' %}" class="flex justify-between items-center gap-4 mt-4 mb-6">
+        <div class="flex gap-4 w-full md:w-auto">
+            <div class="relative w-full">
+                <input 
+                    type="text" 
+                    id="start-date"
+                    name="start_date"
+                    value="{{ start_date }}"
+                    placeholder="Tanggal Awal" 
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-[#4787FA] focus:outline-none focus:border-[#4787FA]"
+                    readonly
+                >
+                <svg class="absolute right-2 top-3 w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+            </div>
+            <div class="relative w-full">
+                <input 
+                    type="text" 
+                    id="end-date"
+                    name="end_date"
+                    value="{{ end_date }}"
+                    placeholder="Tanggal Akhir" 
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-[#4787FA] focus:outline-none focus:border-[#4787FA]"
+                    readonly
+                >
+                <svg class="absolute right-2 top-3 w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+            </div>
+        </div>
+        <div class="w-1/2">
+            <div class="relative">
+                <input 
+                    type="text" 
+                    id="search-input"
+                    name="search_query"
+                    value="{{ search_query }}"
+                    placeholder="Cari di karya ilmiah tersimpan..." 
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg transition-all duration-100 focus:ring-1 focus:ring-[#4787FA] focus:ring-offset-0 focus:outline-none focus:border-[#4787FA]"
+                >
+                <button type="submit" class="absolute right-2 top-2 text-gray-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </form>
+    
+    {% if error %}
+        <div class="bg-red-100 p-4 rounded-lg text-red-700">{{ error }}</div>
+    {% elif total_paper_count == 0 %}
+        <div class="bg-white rounded-lg shadow-md p-8 text-center mt-6">
+            <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
+            <h3 class="text-lg font-medium text-gray-900 mb-2">Belum ada karya ilmiah tersimpan</h3>
+            <p class="text-gray-600">Simpan karya ilmiah untuk membacanya nanti atau merujuknya kembali.</p>
+            <a href="/" class="mt-4 inline-block px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
+                Jelajahi Karya Ilmiah
+            </a>
+        </div>
+    {% elif results_count == 0 %}
+        <div class="bg-white rounded-lg shadow-md p-8 text-center mt-6">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+            </svg>
+            <h3 class="text-lg font-medium text-gray-900 mb-2">Tidak ada hasil ditemukan</h3>
+            <p class="text-gray-600">Coba ubah kata kunci pencarian atau rentang tanggal filter Anda.</p>
+        </div>
+    {% else %}
+        <div class="timeline-container" id="papers-container">
+            {% for date_group in papers_by_date %}
+                <div class="mb-8">
+                    <h2 class="text-xl font-bold text-gray-700 border-b-2 border-gray-200 pb-2 mb-4">
+                        {{ date_group.grouper }}
+                    </h2>
+                    <div class="grid gap-6">
+                        {% for paper in date_group.list %}
+                            <div class="timeline-item pl-4 border-l-2 border-blue-500 relative group">
+                                {% include "paper-item.html" with paper_id=paper.paperId title=paper.title authors=paper.authors date=paper.formatted_publication_date year=paper.year abstract=paper.abstract %}
+                                <button onclick="removePaper('{{ paper.paperId }}')"
+                                        class="absolute top-4 right-4 p-2 bg-white rounded-full text-gray-400 hover:bg-red-50 hover:text-red-600 opacity-0 group-hover:opacity-100 transition-opacity"
+                                        title="Hapus dari simpanan">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                    </svg>
+                                </button>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        {% if pagination_data and pagination_data.num_pages > 1 %}
+            {% include "unicorn/pagination.html" with paginator=pagination_data %}
+        {% endif %}
+    {% endif %}
+
+    <script>
+        function removePaper(paperId) {
+            fetch('{% url "remove_paper" %}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                },
+                body: JSON.stringify({ paperId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.reload();
+                } else {
+                    alert(data.error || 'Gagal menghapus karya ilmiah.');
+                }
+            })
+            .catch(error => {
+                console.error('Error removing paper:', error);
+                alert('Gagal menghapus karya ilmiah.');
+            });
+        }
+    </script>
+    <script src="https://unpkg.com/litepicker/dist/litepicker.js"></script>
+    <script src="{% static 'app/js/saved-paper-list.js' %}"></script>
+</div>
+{% csrf_token %}

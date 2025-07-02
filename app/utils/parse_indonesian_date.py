@@ -3,27 +3,32 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-INDONESIAN_MONTHS = {
-    'Januari': '01', 'Februari': '02', 'Maret': '03', 'April': '04',
-    'Mei': '05', 'Juni': '06', 'Juli': '07', 'Agustus': '08',
-    'September': '09', 'Oktober': '10', 'November': '11', 'Desember': '12'
-}
+def format_date_to_indonesian(date_str: str, fallback_year: str = "N/A") -> str:
+    if not date_str:
+        return fallback_year
 
-def parse_indonesian_date(date_str):
     try:
-        parts = date_str.split(' ')
-        if len(parts) != 3:
-            raise ValueError(f"Invalid date format: {date_str}")
-            
-        day, month, year = parts
+        # format YYYY-MM-DD
+        if '-' in date_str:
+            dt_object = datetime.strptime(date_str.split()[0], "%Y-%m-%d")
+        # format M/D/YYYY
+        elif '/' in date_str:
+            dt_object = datetime.strptime(date_str.split()[0], "%m/%d/%Y")
+        # if does not match any known format
+        else:
+            return fallback_year
 
-        month_num = INDONESIAN_MONTHS.get(month)
-        if not month_num:
-            raise ValueError(f"Invalid month: {month}")
-            
-        formatted_date = f"{year}-{month_num}-{day.zfill(2)}"
+        indonesian_months = {
+            1: "Januari", 2: "Februari", 3: "Maret", 4: "April", 5: "Mei", 6: "Juni", 
+            7: "Juli", 8: "Agustus", 9: "September", 10: "Oktober", 11: "November", 12: "Desember"
+        }
         
-        return datetime.strptime(formatted_date, "%Y-%m-%d")
-    except Exception as e:
-        logger.error(f"Error parsing date '{date_str}': {e}")
-        raise
+        day = dt_object.day
+        month = indonesian_months[dt_object.month]
+        year = dt_object.year
+        
+        return f"{day} {month} {year}"
+
+    except (ValueError, TypeError) as e:
+        logger.warning(f"Gagal memformat tanggal '{date_str}': {e}. Menggunakan tahun sebagai fallback.")
+        return fallback_year

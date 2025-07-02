@@ -44,7 +44,13 @@ document.addEventListener('DOMContentLoaded', function() {
     startBtn.addEventListener('click', async function() {
         const selectedValues = $('#topics').val();
         if (!selectedValues || selectedValues.length === 0) {
-            alert('Pilih minimal satu topik!');
+            Swal.fire({
+                title: 'Peringatan!',
+                text: 'Pilih minimal satu topik!',
+                icon: 'warning',
+                confirmButtonText: 'Ok',
+                confirmButtonColor: '#3085d6'
+            });
             return;
         }
         
@@ -161,9 +167,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
     downloadBtn.addEventListener('click', async function() {
         if (!currentTimestamp) {
-            alert('Tidak ada data untuk diunduh.');
-            return;
-        }
+        Swal.fire({
+            title: 'Peringatan!',
+            text: 'Tidak ada data untuk diunduh.',
+            icon: 'warning',
+            confirmButtonText: 'Ok',
+            confirmButtonColor: '#3085d6'
+        });
+        return;
+    }
         
         try {
             scrapingLog.innerHTML += `<li class="list-group-item">[${new Date().toLocaleTimeString('en-GB', { hour12: false })}] Mengunduh hasil scraping...</li>`;

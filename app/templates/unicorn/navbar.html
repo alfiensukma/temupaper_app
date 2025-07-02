@@ -21,8 +21,7 @@
                     <input 
                         type="search" 
                         name="query"
-                        x-init="$el.value = localStorage.getItem('searchQuery') || ''"
-                        @input="localStorage.setItem('searchQuery', $event.target.value)"
+                        value="{{ search_query }}"
                         unicorn:model.defer="search_query"
                         class="flex-grow px-4 py-2 text-sm md:text-base font-medium text-gray-900 bg-[#f4f4f4] outline-none focus:ring-2 focus:ring-[#4787FA] focus:ring-opacity-50" 
                         placeholder="Cari judul, kata kunci, atau lainnya..." 

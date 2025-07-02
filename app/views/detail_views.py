@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 import logging
 from datetime import datetime
 from app.models import User, Paper
+from app.utils.parse_indonesian_date import format_date_to_indonesian
 
 
 logging.basicConfig(level=logging.INFO)
@@ -12,14 +13,12 @@ logger = logging.getLogger(__name__)
 load_dotenv()
 
 def get_recommendation(paper_id):
-    paper_recommendation = []  # Inisialisasi list di awal
     
     try:
         neo4j_connection = Neo4jConnection()
         driver = neo4j_connection.get_driver()  
         
         with driver.session() as session:
-            # Ambil paper yang mirip
             result = session.run(
                 """
                 MATCH (p:Paper {paperId: $paperId})-[r:SIMILAR]->(s:Paper)
@@ -39,38 +38,21 @@ def get_recommendation(paper_id):
                 paperId=paper_id
             )
 
-            papers = [{
-                "paperId": record["paperId"],
-                "title": record["title"],
-                "date": record["date"],
-                "abstract": record["abstract"],
-                "authors": record["authors"],
-                "year": record["year"]
-            } for record in result]
-
-            for paper in papers:
-                if paper["date"]:
-                    try:
-                        date_str = paper["date"]
-                        # Format "m/d/yyyy 0:00" atau "m/d/yyyy"
-                        if '/' in date_str:
-                            date_str = date_str.split()[0]
-                            month, day, year = map(int, date_str.split('/'))
-                            dt = datetime(year, month, day)
-                            paper["date"] = dt.strftime("%d %B %Y")
-                        # Format "yyyy-mm-dd"
-                        elif '-' in date_str:
-                            dt = datetime.strptime(date_str.split()[0], "%Y-%m-%d")
-                            paper["date"] = dt.strftime("%d %B %Y")
-                        else:
-                            paper["date"] = paper["year"]
-                    except Exception as e:
-                        logger.error(f"Error formatting date '{paper['date']}': {str(e)}")
-                        paper["date"] = paper["date"]
+            papers_raw = list(result)
+            
+        processed_papers = []
+        for record in papers_raw:
+            paper = dict(record)
+                
+            paper["date"] = format_date_to_indonesian(
+                paper.get("date"), 
+                fallback_year=paper.get("year", "N/A")
+            )
+            processed_papers.append(paper)
 
         if driver:
             driver.close()   
-        return papers
+        return processed_papers
         
     
     except Exception as e:
@@ -82,17 +64,9 @@ def get_recommendation(paper_id):
             driver.close()
 
 def get_detail_paper(request, paper_id):
-    if not paper_id:
-        return JsonResponse({'error': 'Missing paper_id'}, status=400)
-
     try:
         paper = Paper.nodes.get(paperId=paper_id)
-
-        authors = []
-        for author in paper.authored_by.all():
-            authors.append({
-                "name": author.name
-            })
+        authors = [{"name": author.name} for author in paper.authored_by.all()]
 
         data_paper = {
             "paperId": paper.paperId,
@@ -105,44 +79,32 @@ def get_detail_paper(request, paper_id):
             "authors": authors
         }
 
-        if data_paper["date"]:
-            try:
-                date_str = data_paper["date"]
-                # Format "m/d/yyyy 0:00" atau "m/d/yyyy"
-                if '/' in date_str:
-                    date_str = date_str.split()[0]
-                    month, day, year = map(int, date_str.split('/'))
-                    dt = datetime(year, month, day)
-                    data_paper["date"] = dt.strftime("%d %B %Y")
-                # Format "yyyy-mm-dd"
-                elif '-' in date_str:
-                    dt = datetime.strptime(date_str.split()[0], "%Y-%m-%d")
-                    data_paper["date"] = dt.strftime("%d %B %Y")
-                else:
-                    data_paper["date"] = data_paper["year"]
-            except Exception as e:
-                logger.error(f"Error formatting date '{paper['date']}': {str(e)}")
-                data_paper["date"] = data_paper["date"]
-
-        # Dapatkan rekomendasi paper
+        raw_date_string = data_paper.get("date")
+        fallback_year = data_paper.get("year", "N/A")
+        formatted_date = format_date_to_indonesian(raw_date_string, fallback_year)
+        data_paper["date"] = formatted_date
         paper_recommendation = get_recommendation(paper_id)
+        query = request.GET.get('query', '') or request.session.get('last_search_query', '')
 
-        return render(request, "base.html", {
+        context = {
             "content_template": "detail-paper/index.html",
             "body_class": "bg-gray-100",
-            "show_search_form": True,
             "paper": data_paper,
-            "paper_recommendation": paper_recommendation
-        })
+            "query": query,
+            "paper_recommendation": paper_recommendation,
+        }
+        return render(request, "base.html", context)
 
+    except Paper.DoesNotExist:
+        logger.error(f"Paper with id {paper_id} does not exist.")
+        return redirect('index') 
     except Exception as e:
-        logger.error(f"Error getting paper detail: {str(e)}")
-        return render(request, "base.html", {
+        logger.error(f"Error getting paper detail for {paper_id}: {e}", exc_info=True)
+        context = {
             "content_template": "detail-paper/index.html",
-            "body_class": "bg-gray-100",
-            "show_search_form": True,
-            "error": f"An error occurred: {str(e)}"
-        })
+            "error": "Terjadi kesalahan saat memuat detail karya ilmiah."
+        }
+        return render(request, "base.html", context)
 
 
 def record_paper_read(request):

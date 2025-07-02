@@ -13,13 +13,11 @@
     <style>
         [x-cloak] { display: none !important; }
     </style>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.14.9/cdn.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <link rel="stylesheet" href="{% static 'app/css/style.css' %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/litepicker/dist/css/litepicker.css"/>
     {% unicorn_scripts %}
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <link rel="stylesheet" href="{% static 'app/css/style.css' %}">
 </head>
 <body class="{{ body_class|default:'bg-[#f8f9fa]' }} min-h-screen items-center justify-center font-inter">
     {% csrf_token %}
@@ -27,6 +25,7 @@
 
     <main class="container mx-auto px-6 py-10 md:px-10 lg:px-16">
         <div id="content">
+            {% csrf_token %}
             {% if content_template %}
                 {% include content_template %}
             {% else %}
@@ -34,6 +33,9 @@
             {% endif %}
         </div>
     </main>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.14.9/cdn.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="{% static 'app/node_modules/flowbite/dist/flowbite.min.js' %}"></script>
 </body>
 </html>

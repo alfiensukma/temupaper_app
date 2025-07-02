@@ -12,41 +12,37 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 import os
+from dotenv import load_dotenv
+from neomodel import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
+load_dotenv(os.path.join(BASE_DIR, '.env'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-cmib4a_*z35=m*&u($4v%+kuhim7w35$tah$^x+xl052!l2ptj'
+# Production settings
+SECRET_KEY = os.getenv('SECRET_KEY')
+DEBUG = os.getenv('DEBUG', '0') == '1' # default false (0)
+ALLOWED_HOSTS_STR = os.getenv('ALLOWED_HOSTS', '')
+ALLOWED_HOSTS = [host.strip() for host in ALLOWED_HOSTS_STR.split(',') if host]
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+NEO4J_USERNAME = os.getenv('NEO4J_USERNAME', 'neo4j')
+NEO4J_PASSWORD = os.getenv('NEO4J_PASSWORD')
+NEO4J_HOST = os.getenv('NEO4J_HOST', 'localhost')
+NEO4J_PORT = os.getenv('NEO4J_PORT', '7687')
 
-ALLOWED_HOSTS = ['*']
+config.DATABASE_URL = f'bolt://{NEO4J_USERNAME}:{NEO4J_PASSWORD}@{NEO4J_HOST}:{NEO4J_PORT}'
 
-NEO4J_URI = os.environ.get('NEO4J_URI', 'bolt://localhost:7687').replace('bolt://', '')
-NEO4J_USERNAME = os.environ.get('NEO4J_USERNAME', 'neo4j')
-NEO4J_PASSWORD = os.environ.get('NEO4J_PASSWORD', '12345678')
-NEOMODEL_NEO4J_BOLT_URL = f"bolt://{NEO4J_USERNAME}:{NEO4J_PASSWORD}@{os.environ.get('NEO4J_HOST', 'localhost')}:7687"
-
-# production settings
-# NEO4J_URI = os.environ.get('NEO4J_URI', 'bolt://34.46.35.127:7687').replace('bolt://', '')
-# NEO4J_USERNAME = os.environ.get('NEO4J_USERNAME', 'neo4j')
-# NEO4J_PASSWORD = os.environ.get('NEO4J_PASSWORD', 'my-password')
-# NEOMODEL_NEO4J_BOLT_URL = f"bolt://{NEO4J_USERNAME}:{NEO4J_PASSWORD}@{os.environ.get('NEO4J_HOST', '34.46.35.127')}:7687"
+CSRF_TRUSTED_ORIGINS = [f"https://{host}" for host in ALLOWED_HOSTS if host]
+SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
 
 NEOMODEL_SIGNALS = True
 NEOMODEL_FORCE_TIMEZONE = False
 NEOMODEL_MAX_CONNECTION_POOL_SIZE = 50
-
-CSRF_TRUSTED_ORIGINS = [
-    'https://temupaper-app-753404274294.us-central1.run.app',
-    'http://localhost:8000'
-]
 
 # Media files (Uploads)
 MEDIA_URL = '/media/'
@@ -62,7 +58,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_neomodel',
-    'app',
+    'app.apps.AppConfig',
     'admin_app',
     'django_unicorn',
     'django_browser_reload',
@@ -156,7 +152,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = 'static'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 STATICFILES_DIRS = [
@@ -189,18 +184,25 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 465
-EMAIL_USE_SSL = True 
 EMAIL_USE_TLS = False
+EMAIL_USE_SSL = True
 EMAIL_HOST_USER = 'infotemupaper@gmail.com'  # Replace with your Gmail address
 EMAIL_HOST_PASSWORD = 'eetaaajiecqdtbdp'  # Replace with the 16-character App Password generated
 DEFAULT_FROM_EMAIL = 'infotemupaper@gmail.com'  # Replace with your Gmail address
+
+# Brevo Email Configuration
+# EMAIL_BACKEND = 'anymail.backends.sendinblue.EmailBackend'
+# ANYMAIL = {
+#     "SENDINBLUE_API_KEY": os.getenv("SENDINBLUE_API_KEY"),
+# }
+# DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL")
 
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'formatters': {
         'verbose': {
-            'format': '{levelname} {asctime} {module} {message}',
+            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
             'style': '{',
         },
     },
@@ -209,16 +211,25 @@ LOGGING = {
             'class': 'logging.StreamHandler',
             'formatter': 'verbose',
         },
-        'file': {
-            'class': 'logging.FileHandler',
-            'filename': 'debug.log',
-            'formatter': 'verbose',
-        },
     },
     'loggers': {
-        '': {  # Root logger
-            'handlers': ['console', 'file'],
+        'django': {
+            'handlers': ['console'],
             'level': 'INFO',
+            'propagate': False,
         },
+        'app': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'neo4j': {
+            'handlers': ['console'],
+            'level': 'WARNING',
+        }
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'INFO',
     },
 }

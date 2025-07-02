@@ -12,8 +12,12 @@ class NavbarView(UnicornView):
         self.current_path = self.request.path.rstrip('/')
 
         url_query = self.request.GET.get('query', '')
+        session_query = self.request.session.get('last_search_query', '')
         if url_query:
             self.search_query = url_query
+            self.request.session['last_search_query'] = url_query
+        elif session_query and 'papers/detail' in self.current_path:
+            self.search_query = session_query
 
         is_authenticated = self.request.session.get('is_authenticated', False)
         

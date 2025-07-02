@@ -7,10 +7,28 @@ import zipfile
 import traceback
 import shutil
 from semanticscholar import SemanticScholar
+from semanticscholar.Paper import Paper
 from django.http import JsonResponse, FileResponse
 from django.views.decorators.csrf import csrf_exempt
 from datetime import datetime
 from app.utils.neo4j_connection import Neo4jConnection
+from django.conf import settings
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+original_paper_init = Paper.__init__
+def patched_paper_init(self, data):
+    if data.get('references') is None:
+        data['references'] = []
+    
+    if data.get('citations') is None:
+        data['citations'] = []
+
+    original_paper_init(self, data)
+
+Paper.__init__ = patched_paper_init
+logger.info("Monkey patch applied to semanticscholar.Paper to handle None for references/citations.")
 
 # init
 sch = SemanticScholar()
@@ -18,9 +36,6 @@ CSV_PATH = "app/data-csv"
 PAPERS_PATH = os.path.join(CSV_PATH, "papers.csv")
 PAPER_REFERENCES_PATH = os.path.join(CSV_PATH, "paper-references.csv")
 REFERENCES_PATH = os.path.join(CSV_PATH, "references.csv")
-
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
 
 if not os.path.exists(CSV_PATH):
     os.makedirs(CSV_PATH)
@@ -39,75 +54,88 @@ def save_to_csv(file_path, data, fieldnames, mode='w'):
             
 # Helper function to create paper info dictionary
 def create_paper_info(paper, include_references=False, reference_limit=None):
-    s2_fields = [f"{field['category']}" for field in (paper.s2FieldsOfStudy or []) if 'category' in field] if hasattr(paper, 's2FieldsOfStudy') else []
-    
-    authors_data = [
-        {"authorId": str(author.authorId), "name": str(author.name).strip()}
-        for author in (paper.authors or []) if hasattr(author, 'authorId') and author.authorId
-    ]
-    
-    paper_info = {
-        "paperId": str(paper.paperId or ""),
-        "corpusId": str(paper.corpusId or ""),
-        "externalIds": str(paper.externalIds or ""),
-        "authors": json.dumps(authors_data),
-        "title": str(paper.title or ""),
-        "year": str(paper.year or ""),
-        "abstract": str(paper.abstract or ""),
-        "url": str(paper.url or ""),
-        "publicationDate": str(paper.publicationDate or ""),
-        "fieldsOfStudy": ";".join(paper.fieldsOfStudy or []),
-        "s2FieldsOfStudy": ";".join(s2_fields),
-        "venue": str(paper.venue or ""),
-        "publicationVenue": str(paper.publicationVenue or ""),
-        "citationCount": str(paper.citationCount or 0),
-        "influentialCitationCount": str(paper.influentialCitationCount or 0),
-        "publicationTypes": ";".join(paper.publicationTypes or []),
-        "journal": str(paper.journal or ""),
-        "citationStyles": str(paper.citationStyles or ""),
-        "embedding": json.dumps(paper.embedding['vector'] if paper.embedding and 'vector' in paper.embedding else []),
-        "referenceCount": str(paper.referenceCount or 0),
-    }
-    if include_references and hasattr(paper, 'references'):
-        refs = paper.references or []
-        ref_ids = [ref.paperId for ref in refs if ref.paperId]
-        paper_info["reference_id"] = ref_ids[:reference_limit] if reference_limit is not None and reference_limit >= 0 else ref_ids
-    return paper_info
-
-# Get current paper count and update topic in Neo4j
-def manage_topic(topic_id, topic_name, papers_found=0, update=False):
     try:
-        neo4j_conn = Neo4jConnection().get_driver()
-        with neo4j_conn.session() as session:
-            if not update:
-                result = session.run("""
-                    MATCH (t:Topic {topicId: $topic_id}) 
-                    RETURN t.paperCount as currentCount
-                """, topic_id=topic_id)
-                
-                record = result.single()
-                return record["currentCount"] if record and "currentCount" in record else 0
-            else:
-                result = session.run("""
-                    MATCH (t:Topic {topicId: $topic_id})
-                    SET t.paperCount = COALESCE(t.paperCount, 0) + $papers_found,
-                        t.lastUpdated = $timestamp
-                    RETURN t.paperCount as newCount
-                """, topic_id=topic_id, papers_found=papers_found, timestamp=datetime.now().isoformat())
-                
-                record = result.single()
-                return record["newCount"] if record and "newCount" in record else papers_found
-    except Exception as e:
-        logger.error(f"Error managing topic: {str(e)}")
-        return 0 if not update else papers_found
-    finally:
-        if 'neo4j_conn' in locals() and neo4j_conn:
-            neo4j_conn.close()
+        s2_fields = []
+        if hasattr(paper, 's2FieldsOfStudy') and paper.s2FieldsOfStudy:
+            s2_fields = [f"{field['category']}" for field in paper.s2FieldsOfStudy if isinstance(field, dict) and 'category' in field]
+        
+        authors_data = []
+        if hasattr(paper, 'authors') and paper.authors:
+            authors_data = [
+                {"authorId": str(author.authorId), "name": str(author.name).strip()}
+                for author in paper.authors 
+                if hasattr(author, 'authorId') and author.authorId
+            ]
+        
+        paper_info = {
+            "paperId": str(getattr(paper, 'paperId', '') or ''),
+            "corpusId": str(getattr(paper, 'corpusId', '') or ''),
+            "externalIds": str(getattr(paper, 'externalIds', '') or ''),
+            "authors": json.dumps(authors_data),
+            "title": str(getattr(paper, 'title', '') or ''),
+            "year": str(getattr(paper, 'year', '') or ''),
+            "abstract": str(getattr(paper, 'abstract', '') or ''),
+            "url": str(getattr(paper, 'url', '') or ''),
+            "publicationDate": str(getattr(paper, 'publicationDate', '') or ''),
+            "fieldsOfStudy": ";".join(getattr(paper, 'fieldsOfStudy', []) or []),
+            "s2FieldsOfStudy": ";".join(s2_fields),
+            "venue": str(getattr(paper, 'venue', '') or ''),
+            "publicationVenue": str(getattr(paper, 'publicationVenue', '') or ''),
+            "citationCount": str(getattr(paper, 'citationCount', 0) or 0),
+            "influentialCitationCount": str(getattr(paper, 'influentialCitationCount', 0) or 0),
+            "publicationTypes": ";".join(getattr(paper, 'publicationTypes', []) or []),
+            "journal": str(getattr(paper, 'journal', '') or ''),
+            "citationStyles": str(getattr(paper, 'citationStyles', '') or ''),
+            "embedding": json.dumps(paper.embedding.get('vector', []) if getattr(paper, 'embedding', None) else []),
+            "referenceCount": str(getattr(paper, 'referenceCount', 0) or 0),
+        }
+        
+        if include_references:
+            refs = []
+            try:
+                if hasattr(paper, 'references') and paper.references:
+                    refs = [
+                        ref.paperId 
+                        for ref in paper.references 
+                        if ref and hasattr(ref, 'paperId') and ref.paperId
+                    ]
+                    logger.debug(f"Found {len(refs)} valid references for paper {paper.paperId}")
+            except Exception as ref_error:
+                logger.warning(f"Error processing references for paper {paper.paperId}: {str(ref_error)}")
+                refs = []
+            
+            paper_info["reference_id"] = refs[:reference_limit] if reference_limit is not None else refs
 
-@csrf_exempt
+        return paper_info
+    except Exception as e:
+        logger.error(f"Error creating paper info: {str(e)}")
+        return None
+
+def manage_topic(session, topic_id, topic_name, papers_found=0, update=False):
+    try:
+        if not update:
+            result = session.run("MATCH (t:Topic {topicId: $topic_id}) RETURN t.paperCount as currentCount", topic_id=topic_id)
+            record = result.single()
+            current_count = record["currentCount"] if record else 0
+            return current_count
+        else:
+            result = session.run(
+                """
+                MATCH (t:Topic {topicId: $topic_id})
+                SET t.paperCount = COALESCE(t.paperCount, 0) + $papers_found, t.lastUpdated = $timestamp
+                RETURN t.paperCount as newCount
+                """,
+                topic_id=topic_id, papers_found=papers_found, timestamp=datetime.now().isoformat()
+            )
+            record = result.single()
+            return record["newCount"] if record else papers_found
+    except Exception as e:
+        logger.error(f"Error in manage_topic for topic '{topic_name}': {e}")
+        raise
+
 def scrape_topic(request):
     folder_path = None
-    
+    conn = None
     try:
         if request.method != "GET":
             return JsonResponse({"error": "Method not allowed"}, status=405)
@@ -143,86 +171,121 @@ def scrape_topic(request):
         ]
         reference_fieldnames = ["source_id", "target_id"]
         
-        current_count = manage_topic(topic_id, topic_name)
+        conn = Neo4jConnection()
+        driver = conn.get_driver()
         
-        # check if limit is exceeded
-        if current_count >= 1000:
+        with driver.session() as session:
+            current_count = manage_topic(session, topic_id, topic_name)
+            
+            # check if limit is exceeded
+            if current_count >= 1000:
+                return JsonResponse({
+                    "error": f"Batas maksimum 1000 paper untuk topik '{topic_name}' telah tercapai. Silakan coba topik lain."
+                }, status=400)
+            
+            logger.info(f"Fetching papers for topic '{query}' with current count {current_count}")
+            
+            # decide how many pages to skip
+            pages_to_skip = current_count // limit
+            
+            sch = SemanticScholar()
+            results = sch.search_paper(
+                query=topic_name, 
+                year=f"{min_year}-", 
+                limit=limit, 
+                fields_of_study=[fields_of_study], 
+                fields=[
+                    'paperId', 'corpusId', 'externalIds', 'authors', 'title', 
+                    'year', 'abstract', 'url', 'publicationDate', 
+                    'fieldsOfStudy', 's2FieldsOfStudy', 'venue', 
+                    'publicationVenue', 'citationCount', 'influentialCitationCount',
+                    'publicationTypes', 'journal', 'citationStyles', 'embedding', 
+                    'references', 'referenceCount'
+                ]
+            )
+            
+            # .next_page()
+            current_page = 0
+            while current_page < pages_to_skip and hasattr(results, 'next_page') and callable(results.next_page):
+                results = results.next_page()
+                current_page += 1
+                logger.info(f"Skipped page {current_page} for topic '{topic_name}'")
+            
+            papers_result = results.items if results else []
+            
+            if not papers_result:
+                return JsonResponse({
+                    "status": "empty",
+                    "message": "Tidak ada paper baru yang ditemukan untuk topik ini."
+                })
+
+            # Filter
+            paper_data = []
+            logger.info(f"Processing {len(papers_result)} papers from API...")
+            for paper in papers_result:
+                try:
+                    required_fields = {
+                        'title': getattr(paper, 'title', None),
+                        'abstract': getattr(paper, 'abstract', None),
+                        'embedding': getattr(paper, 'embedding', None)
+                    }
+
+                    has_references = False
+                    try:
+                        if hasattr(paper, 'references') and paper.references is not None:
+                            has_references = True
+                    except Exception as ref_error:
+                        logger.warning(f"Error checking references for paper: {str(ref_error)}")
+
+                    if not all(required_fields.values()):
+                        logger.info(f"Skipping paper '{required_fields['title'] or 'Untitled'}': Missing required fields")
+                        logger.debug(f"Missing fields: {[k for k,v in required_fields.items() if not v]}")
+                        continue
+
+                    paper_info = create_paper_info(paper, include_references=has_references, reference_limit=reference_limit)
+                    if paper_info:
+                        paper_data.append(paper_info)
+                        
+                except Exception as e:
+                    logger.warning(f"Error processing paper: {str(e)}")
+                    continue
+
+            paper_data = paper_data[:limit]
+
+            if not paper_data:
+                return JsonResponse({
+                    "status": "empty",
+                    "topic": topic_name,
+                    "count": 0,
+                    "message": "No papers found after filtering",
+                    "timestamp": timestamp
+                })
+
+            references_list = [
+                {"source_id": paper["paperId"], "target_id": ref_id}
+                for paper in paper_data for ref_id in paper.get("reference_id", [])
+            ]
+
+            # Save to CSV mode append ('a') if file exists, else write ('w')
+            papers_mode = 'w' if not os.path.exists(papers_path) else 'a'
+            references_mode = 'w' if not os.path.exists(references_path) else 'a'
+            
+            save_to_csv(papers_path, paper_data, paper_fieldnames, mode=papers_mode)
+            save_to_csv(references_path, references_list, reference_fieldnames, mode=references_mode)
+            
+            papers_found = len(paper_data)
+            
+            new_count = manage_topic(session, topic_id, topic_name, papers_found, update=True)
+            
             return JsonResponse({
-                "error": f"Batas maksimum 1000 paper untuk topik '{topic_name}' telah tercapai. Silakan coba topik lain."
-            }, status=400)
-        
-        logger.info(f"Fetching papers for topic '{query}' with current count {current_count}")
-        
-        # decide how many pages to skip
-        pages_to_skip = current_count // limit
-        
-        paginated_results = sch.search_paper(
-            query, year=f"{min_year}-", limit=limit,
-            fields_of_study=[fields_of_study],
-            fields=['paperId', 'corpusId', 'externalIds', 'authors', 'title', 'year', 'abstract', 'url', 'publicationDate', 'fieldsOfStudy', 's2FieldsOfStudy', 'venue', 'publicationVenue', 'citationCount', 'influentialCitationCount', 'publicationTypes', 'journal', 'citationStyles', 'embedding', 'references', 'referenceCount']
-        )
-        
-        results = paginated_results
-        current_page = 0
-        
-        # Semantic Scholar next_page() method
-        while current_page < pages_to_skip and hasattr(results, 'next_page') and callable(results.next_page):
-            results = results.next_page()
-            current_page += 1
-            logger.info(f"Skipped page {current_page} for topic '{query}'")
-        
-        papers_result = list(results) if results else []
-        
-        if not papers_result:
-            return JsonResponse({
-                "status": "empty",
+                "status": "success",
                 "topic": topic_name,
-                "count": 0,
-                "message": "No papers found",
+                "count": papers_found,
+                "current_count": current_count,
+                "new_count": new_count,
+                "message": f"Berhasil mendapatkan {papers_found} paper",
                 "timestamp": timestamp
             })
-
-        # Filter
-        paper_data = [
-            create_paper_info(paper, include_references=True, reference_limit=reference_limit)
-            for paper in papers_result
-            if paper.year and paper.year >= min_year and paper.abstract and paper.fieldsOfStudy and paper.embedding
-        ][:limit]
-
-        if not paper_data:
-            return JsonResponse({
-                "status": "empty",
-                "topic": topic_name,
-                "count": 0,
-                "message": "No papers found after filtering",
-                "timestamp": timestamp
-            })
-
-        references_list = [
-            {"source_id": paper["paperId"], "target_id": ref_id}
-            for paper in paper_data for ref_id in paper.get("reference_id", [])
-        ]
-
-        # Save to CSV mode append ('a') if file exists, else write ('w')
-        papers_mode = 'w' if not os.path.exists(papers_path) else 'a'
-        references_mode = 'w' if not os.path.exists(references_path) else 'a'
-        
-        save_to_csv(papers_path, paper_data, paper_fieldnames, mode=papers_mode)
-        save_to_csv(references_path, references_list, reference_fieldnames, mode=references_mode)
-        
-        papers_found = len(paper_data)
-        
-        new_count = manage_topic(topic_id, topic_name, papers_found, update=True)
-        
-        return JsonResponse({
-            "status": "success",
-            "topic": topic_name,
-            "count": papers_found,
-            "current_count": current_count,
-            "new_count": new_count,
-            "message": f"Berhasil mendapatkan {papers_found} paper",
-            "timestamp": timestamp
-        })
 
     except Exception as e:
         logger.error(f"Error in scrape_topic: {str(e)}\n{traceback.format_exc()}")
@@ -242,6 +305,9 @@ def scrape_topic(request):
             logger.error(f"Error cleaning up folder: {cleanup_error}")
         
         return JsonResponse({"error": str(e)}, status=500)
+    finally:
+        if conn:
+            conn.close()
 
 @csrf_exempt
 def download_results(request):
@@ -276,10 +342,24 @@ def download_results(request):
         
         response = FileResponse(zip_buffer, content_type='application/zip')
         response['Content-Disposition'] = f'attachment; filename="scraping_{timestamp}.zip"'
+
+        # Delete the folder
+        try:
+            shutil.rmtree(folder_path)
+            logger.info(f"Successfully deleted folder: {folder_path}")
+        except Exception as cleanup_error:
+            logger.warning(f"Error deleting folder {folder_path}: {cleanup_error}")
+
         return response
 
     except Exception as e:
         logger.error(f"Error in download_results: {str(e)}\n{traceback.format_exc()}")
+        if folder_path and os.path.exists(folder_path):
+            try:
+                shutil.rmtree(folder_path)
+                logger.info(f"Cleaned up folder after error: {folder_path}")
+            except Exception as cleanup_error:
+                logger.error(f"Error cleaning up folder: {cleanup_error}")
         return JsonResponse({"error": str(e)}, status=500)
 
 @csrf_exempt

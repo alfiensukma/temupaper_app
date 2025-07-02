@@ -9,6 +9,7 @@ class PaperItemView(UnicornView):
     authors: list = []
     date: str = ""
     abstract: str = ""
+    year: str = ""
 
     def mount(self):
         pass

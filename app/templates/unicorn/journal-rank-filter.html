@@ -1,0 +1,51 @@
+{% load unicorn %}
+
+<div class="relative" x-data="{ isOpen: false }">
+    <button 
+        type="button"
+        @click.stop="isOpen = !isOpen"
+        class="text-center text-base text-blue-600 border border-blue-600 rounded-2xl px-6 py-2 hover:bg-blue-600 hover:text-white w-auto flex justify-between items-center focus:ring-2 focus:ring-[#4787FA]"
+    >
+        <span unicorn:model="selected_rank">
+            {{ selected_rank }}
+        </span>
+        <svg 
+            class="w-4 h-4 inline ml-2 transition-transform" 
+            :class="{ 'rotate-180': isOpen }"
+            fill="none" 
+            stroke="currentColor" 
+            viewBox="0 0 24 24"
+        >
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+        </svg>
+    </button>
+
+    <div
+        x-show="isOpen"
+        class="absolute mt-2 w-full p-4 bg-white border border-gray-200 rounded-lg shadow-lg z-40"
+        @click.outside="isOpen = false"
+        x-cloak
+    >
+        <div class="flex flex-col space-y-1">
+            <button 
+                type="button"
+                unicorn:click="clear_filter"
+                @click="isOpen = false"
+                class="w-full text-left px-4 py-2 text-sm text-gray-700 rounded-md hover:bg-[#4787FA] hover:text-white focus:ring-2 focus:ring-[#4787FA]"
+            >
+                Semua Peringkat
+            </button>
+
+            {% for rank in ranks %}
+                <button 
+                    type="button"
+                    unicorn:click="set_rank('{{ rank }}')"
+                    @click="isOpen = false"
+                    class="w-full text-left px-4 py-2 text-sm text-gray-700 rounded-md hover:bg-[#4787FA] hover:text-white focus:ring-2 focus:ring-[#4787FA]"
+                >
+                    {{ rank }}
+                </button>
+            {% endfor %}
+        </div>
+    </div>
+</div>

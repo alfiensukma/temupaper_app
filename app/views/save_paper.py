@@ -1,161 +1,100 @@
-from django.shortcuts import render, redirect, HttpResponse
+from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
-from app.models import User, Paper, SavesPaperRel
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
 from datetime import datetime
+from itertools import groupby
+from app.models import User, Paper
+from app.utils.parse_indonesian_date import format_date_to_indonesian
 import logging
-from neomodel import db
 import json
 
 logger = logging.getLogger(__name__)
 
+INDONESIAN_MONTHS = {
+    1: 'Januari', 2: 'Februari', 3: 'Maret', 4: 'April', 5: 'Mei', 6: 'Juni',
+    7: 'Juli', 8: 'Agustus', 9: 'September', 10: 'Oktober', 11: 'November', 12: 'Desember'
+}
+
 def save_paper_list(request):
-    if not request.session.get('user_id'):
-        return redirect('login')
+    user_id = request.session.get('user_id')
+    if not user_id:
+        return render(request, 'base.html', {
+            'content_template': 'save-paper/index.html',
+            'error': 'Sesi pengguna tidak valid. Silakan login kembali.'
+        })
 
     try:
-        search_query = request.GET.get('q', '')
-        page_number = int(request.GET.get('page', 1))
-
-        user_id = request.session.get('user_id')
         user = User.nodes.get(userId=user_id)
+        all_saved_papers = user.saves_papers.all()
 
-        fix_missing_timestamps(user_id)
-
-        id_months = {
-            1: 'Januari', 2: 'Februari', 3: 'Maret', 4: 'April',
-            5: 'Mei', 6: 'Juni', 7: 'Juli', 8: 'Agustus',
-            9: 'September', 10: 'Oktober', 11: 'November', 12: 'Desember'
-        }
-
-        all_papers = list(user.saves_papers.all())
-        saved_papers_data = []
-
-        for paper in all_papers:
-            try:
-                rel = user.saves_papers.relationship(paper)
-                saved_at = rel.saved_at if hasattr(rel, 'saved_at') else None
-
-                if saved_at:
-                    if isinstance(saved_at, float):
-                        saved_at = datetime.fromtimestamp(saved_at)
-                else:
-                    saved_at = datetime.now()
-                    try:
-                        user.saves_papers.reconnect(paper, {'saved_at': saved_at})
-                    except Exception as e:
-                        logger.error(f"Error updating timestamp: {str(e)}")
-
-                formatted_date = f"{saved_at.day} {id_months[saved_at.month]} {saved_at.year}"
-
-                author_names = []
-                try:
-                    authors = list(paper.authored_by.all())
-                    author_names = [author.name for author in authors]
-                except Exception as e:
-                    logger.error(f"Error getting authors for paper {paper.paperId}: {str(e)}")
-
-                pub_date = paper.publicationDate
-                
-                try:
-                    if isinstance(pub_date, str):
-                        pub_date = datetime.strptime(pub_date, "%Y-%m-%d %H:%M:%S")
-                    formatted_publication_date = f"{pub_date.day} {id_months[pub_date.month]} {pub_date.year}"
-                except Exception:
-                    formatted_publication_date = None
-
-                saved_papers_data.append({
-                    'paper': paper,
-                    'paper_id': paper.paperId,
-                    'title': paper.title or "Untitled Paper",
-                    'abstract': paper.abstract,
-                    'year': paper.year,
-                    'doi': paper.doi,
-                    'venue': paper.venue,
-                    'saved_at': saved_at,
-                    'formatted_date': formatted_date,
-                    'date': pub_date,
-                    'formatted_publication_date': formatted_publication_date,
-                    'authors': author_names
-                })
-            except Exception as e:
-                logger.error(f"Error processing paper {paper.paperId}: {str(e)}")
-
-        saved_papers_data.sort(key=lambda x: x['saved_at'], reverse=True)
-
-        paginator = Paginator(saved_papers_data, 10)
-        page_obj = paginator.get_page(page_number)
-
-        context = {
-            "content_template": "save-paper/index.html",
-            "body_class": "bg-gray-100",
-            "show_search_form": False,
-            "papers": page_obj.object_list,
-            "page_obj": page_obj,
-            "search_query": search_query,
-        }
-
-        return render(request, "base.html", context)
-
-    except Exception as e:
-        logger.error(f"Error loading saved papers: {str(e)}")
-        context = {
-            "content_template": "save-paper/index.html",
-            "body_class": "bg-gray-100",
-            "show_search_form": False,
-            "error": "Terjadi kesalahan saat memuat karya ilmiah tersimpan."
-        }
-        return render(request, "base.html", context)
-
-
-def remove_saved_paper(request, paper_id):
-    if not request.session.get('user_id'):
-        return redirect('login')
-        
-    if request.method == 'POST':
-        try:
-            user_id = request.session.get('user_id')
-            user = User.nodes.get(userId=user_id)
-            paper = Paper.nodes.get(paperId=str(paper_id))
-
-            user.saves_papers.disconnect(paper)
-       
-            request.session['message'] = "Karya ilmiah berhasil dihapus dari simpanan"
+        processed_papers = []
+        for paper in all_saved_papers:
+            rel = user.saves_papers.relationship(paper)
+            saved_at = rel.saved_at if hasattr(rel, 'saved_at') else datetime.now()
             
-        except Exception as e:
-            logger.error(f"Error removing saved paper: {str(e)}")
-            request.session['error'] = "Gagal menghapus karya ilmiah dari simpanan"
- 
-    search_query = request.GET.get('q', '')
-    page = request.GET.get('page', 1)
-    redirect_url = f"/save-paper-list/?page={page}"
-    if search_query:
-        redirect_url += f"&q={search_query}"
-    
-    return redirect(redirect_url)
+            if isinstance(saved_at, float):
+                saved_at = datetime.fromtimestamp(saved_at)
+            elif isinstance(saved_at, str):
+                try:
+                    saved_at = datetime.strptime(saved_at, "%Y-%m-%d %H:%M:%S")
+                except ValueError:
+                    saved_at = datetime.now()
+            saved_at_str = saved_at.strftime("%Y-%m-%d %H:%M:%S")
 
+            paper_data = {
+                "paperId": paper.paperId,
+                "title": paper.title or "Judul Tidak Tersedia",
+                "abstract": paper.abstract or "",
+                "year": paper.year,
+                "authors": [author.name for author in paper.authored_by.all()],
+                "saved_at": saved_at_str,
+                "publicationDate": paper.publicationDate,
+                "formatted_publication_date": format_date_to_indonesian(paper.publicationDate, paper.year)
+            }
+            processed_papers.append(paper_data)
 
-def fix_missing_timestamps(user_id=None):
-    """Fix missing timestamps in SAVES_PAPER relationships"""
-    try:
-        if user_id:
-            query = """
-            MATCH (u:User {userId: $userId})-[r:SAVES_PAPER]->(p:Paper)
-            WHERE r.saved_at IS NULL
-            SET r.saved_at = timestamp() / 1000.0
-            RETURN count(r) as updated_count
-            """
-            results, _ = db.cypher_query(query, {"userId": user_id})
-        else:
-            query = """
-            MATCH (u:User)-[r:SAVES_PAPER]->(p:Paper)
-            WHERE r.saved_at IS NULL
-            SET r.saved_at = timestamp() / 1000.0
-            RETURN count(r) as updated_count
-            """
-            results, _ = db.cypher_query(query)
-        
-        updated_count = results[0][0]
-        return updated_count
+        all_papers = sorted(processed_papers, key=lambda x: datetime.strptime(x['saved_at'], '%Y-%m-%d %H:%M:%S'), reverse=True)
+        total_paper_count = len(all_papers)
+
+        search_query = request.GET.get('search_query', '')
+        start_date = request.GET.get('start_date', '')
+        end_date = request.GET.get('end_date', '')
+
+        context = {
+            'papers_json': json.dumps(all_papers),
+            'total_paper_count': total_paper_count,
+            'search_query': search_query,
+            'start_date': start_date,
+            'end_date': end_date,
+            'current_path': request.path,
+        }
+
+        return render(request, 'base.html', {
+            'content_template': 'save-paper/index.html',
+            **context
+        })
+
     except Exception as e:
-        logger.error(f"Error fixing timestamps: {str(e)}")
-        return -1
+        logger.error(f'Error in saved_paper_list view: {e}', exc_info=True)
+        return render(request, 'base.html', {
+            'content_template': 'save-paper/index.html',
+            'error': 'Gagal memuat daftar karya ilmiah tersimpan.'
+        })
+
+@require_POST
+def remove_paper(request):
+    try:
+        data = json.loads(request.body)
+        paper_id = data.get('paperId')
+        user_id = request.session.get('user_id')
+        if not user_id or not paper_id:
+            return JsonResponse({'success': False, 'error': 'Sesi pengguna atau ID kertas tidak valid.'}, status=400)
+
+        user = User.nodes.get(userId=user_id)
+        paper = Paper.nodes.get(paperId=paper_id)
+        user.saves_papers.disconnect(paper)
+        return JsonResponse({'success': True})
+    except Exception as e:
+        logger.error(f"Error removing saved paper: {e}", exc_info=True)
+        return JsonResponse({'success': False, 'error': 'Gagal menghapus karya ilmiah.'}, status=500)

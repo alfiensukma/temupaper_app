@@ -1,21 +1,31 @@
 from neo4j import GraphDatabase
-from dotenv import load_dotenv
+from neo4j.exceptions import ServiceUnavailable, AuthError
 import os
+import logging
+
+logger = logging.getLogger(__name__)
 
 class Neo4jConnection:
     def __init__(self):
-        load_dotenv()
-        self.uri = os.getenv("NEO4J_URI", "bolt://localhost:7687")
-        self.user = os.getenv("NEO4J_USERNAME", "neo4j")
-        self.password = os.getenv("NEO4J_PASSWORD", "my-password")
-        self.driver = None
-        self._connect()
+        uri = os.getenv("NEO4J_URI", "bolt://localhost:7687")
+        user = os.getenv("NEO4J_USERNAME", "neo4j")
+        password = os.getenv("NEO4J_PASSWORD")
 
-    def _connect(self):
+        if not password:
+            raise ValueError("Password Neo4j (NEO4J_PASSWORD) tidak ditemukan di file .env")
+
+        self.driver = None
         try:
-            self.driver = GraphDatabase.driver(self.uri, auth=(self.user, self.password))
+            self.driver = GraphDatabase.driver(uri, auth=(user, password))
+            self.driver.verify_connectivity()
+            logger.info("Koneksi Neo4j berhasil dibuat dan diverifikasi.")
+
+        except (ServiceUnavailable, AuthError, ValueError) as e:
+            logger.error(f"Gagal membuat koneksi Neo4j: {e}")
+            raise
         except Exception as e:
-            raise Exception(f"Failed to connect to Neo4j: {str(e)}")
+            logger.error(f"Error tak terduga saat koneksi Neo4j: {e}")
+            raise
 
     def get_driver(self):
         return self.driver
@@ -23,4 +33,3 @@ class Neo4jConnection:
     def close(self):
         if self.driver:
             self.driver.close()
-            self.driver = None

@@ -2,7 +2,7 @@ from django.urls import path, include
 from .views.retrieve_paper_views import fetch_papers, scrape_topic, download_results
 from .views.graph_views import generate_knowledge_graph, import_topic, import_institution, import_journal
 from .views.detail_views import get_recommendation, get_detail_paper, record_paper_read
-from .views.search_views import index, search, apply_date_filter, load_page
+from .views.search_views import index, search, test_search_process, search_api
 from .views.peer_institution_recommendation_views import peer_institution
 from .views.similarity_access_recommendation_views import similarity_access
 from .views.access_history_recommendation_views import access_history
@@ -12,7 +12,7 @@ from .views.verification_code_views import verification_code, resend_verificatio
 from .views.verification_email_views import verification_email, verification_codes
 from .views.profile_views import reset_password, profile_view, edit_profile
 from .views.logout_view import logout_view
-from .views.save_paper import save_paper_list
+from .views.save_paper import save_paper_list, remove_paper
 from .views.embedding_views import EmbeddingView
 from .views.preprocessing_views import create_similar_paper_relation, create_page_rank
 
@@ -29,9 +29,9 @@ urlpatterns = [
     path('import-institution/', import_institution, name='import_institution'),
     path('import-journal/', import_journal, name='import_journal'),
 
+    path('test-search/', test_search_process, name='test_search_process'),
     path('search/', search, name='search'),
-    path('apply-date-filter/', apply_date_filter, name='apply_date_filter'),
-    path('load-page/', load_page, name='load_page'),
+    path('search-api/', search_api, name='search_api'),
     path('papers/detail/<str:paper_id>/', get_detail_paper, name='paper_detail'),
     path('peer-institution-recommendation/', peer_institution, name='peer_institution'),
     path('similarity-access-recommendation/', similarity_access, name='similarity_access'),
@@ -46,6 +46,7 @@ urlpatterns = [
     path('logout/', logout_view, name='logout'),
     path('edit-profile/', edit_profile, name='edit_profile'),
     path('save-paper-list/', save_paper_list, name='save_paper_list'),
+    path('remove-paper/', remove_paper, name='remove_paper'),
     path('resend-verification-code/', resend_verification_code, name='resend_verification_code'),
     path('record-paper-read/', record_paper_read, name='record_paper_read'),
     path('create-search-embedding/', EmbeddingView.as_view(), name='create_search_embedding'),

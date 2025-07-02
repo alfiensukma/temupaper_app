@@ -43,3 +43,46 @@
   .animate-pulse {
     animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   }
+  
+.litepicker-subcontainer {
+    width: 100%;
+    min-height: 220px;
+    max-width: 300px; /* Batasi lebar agar sesuai dalam dropdown 650px */
+    box-sizing: border-box;
+}
+
+.litepicker {
+    font-size: 14px;
+    width: 100%;
+    min-height: 220px;
+    max-width: 300px; /* Sama dengan litepicker-subcontainer */
+    box-sizing: border-box;
+    padding: 8px;
+    margin: 0 auto; /* Pusatkan kalender */
+}
+
+.litepicker .container__days {
+    width: 100%;
+    height: auto;
+    box-sizing: border-box;
+}
+
+.litepicker .container__days .day-item {
+    padding: 6px;
+    font-size: 13px;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.litepicker .container__months {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+#date-range-text {
+    display: inline-block;
+    max-width: 220px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

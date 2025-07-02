@@ -1,109 +1,78 @@
 {% load unicorn %}
-{% load static %}
-
-<div unicorn:id="date-range-picker" class="relative" x-data="{ isOpen: false }">
-    <button 
-        type="button" 
-        id="date-range-toggle" 
-        @click.stop="isOpen = !isOpen"
-        class="text-center text-base text-blue-600 border border-blue-600 rounded-2xl px-6 py-2 hover:bg-blue-600 hover:text-white"
-    >
-        <span id="date-range-display">
-            {{ start_date|default:"" }} {% if start_date and end_date %}-{% endif %} {{ end_date|default:"" }}
-            {% if not start_date and not end_date %}Pilih Rentang Tahun{% endif %}
-        </span>
-        <svg 
-            class="w-4 h-4 inline ml-2 transition-transform" 
-            :class="{ 'rotate-180': isOpen }"
-            fill="none" 
-            stroke="currentColor" 
-            viewBox="0 0 24 24"
-        >
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-        </svg>
-    </button>
-
-    <div 
-        id="date-range-dropdown" 
-        x-show="isOpen"
-        @click.away="isOpen = false"
-        class="absolute z-50 mt-2 w-[300px] p-4 bg-white rounded-lg shadow-lg"
-        style="display: none;"
-    >
-        <div class="grid grid-cols-2 gap-4 mb-4">
-            <div class="relative">
-                <select 
-                    id="start-year" 
-                    unicorn:model.defer="start_date"
-                    @change="console.log('Start year selected:', this.value)"
-                    class="appearance-none w-full p-2 pr-8 bg-white border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-[#4787FA]"
-                >
-                    <option value="">Pilih Tahun</option>
-                    {% for year in years %}
-                        <option value="{{ year }}" {% if year|stringformat:"s" == start_date %}selected{% endif %}>{{ year }}</option>
-                    {% endfor %}
-                </select>
-                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2">
-                    <svg 
-                        class="w-4 h-4 text-gray-400 transition-transform"
-                        :class="{ 'rotate-180': isOpen }"
-                        fill="none" 
-                        stroke="currentColor" 
-                        viewBox="0 0 24 24"
-                    >
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                    </svg>
-                </div>
-            </div>
-
-            <div class="relative">
-                <select 
-                    id="end-year" 
-                    unicorn:model.defer="end_date"
-                    @change="console.log('End year selected:', this.value)"
-                    class="appearance-none w-full p-2 pr-8 bg-white border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-[#4787FA]"
-                >
-                    <option value="">Pilih Tahun</option>
-                    {% for year in years %}
-                        <option value="{{ year }}" {% if year|stringformat:"s" == end_date %}selected{% endif %}>{{ year }}</option>
-                    {% endfor %}
-                </select>
-                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2">
-                    <svg 
-                        class="w-4 h-4 text-gray-400 transition-transform"
-                        :class="{ 'rotate-180': isOpen }"
-                        fill="none" 
-                        stroke="currentColor" 
-                        viewBox="0 0 24 24"
-                    >
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                    </svg>
-                </div>
-            </div>
+<div>
+    <div class="flex gap-4">
+        <div class="relative w-full">
+            <input 
+                type="text" 
+                unicorn:model="start_date"
+                placeholder="Tanggal Awal" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg transition-all duration-100 focus:ring-1 focus:ring-[#4787FA] focus:outline-none focus:border-[#4787FA]"
+                data-litepicker-start
+                data-component-id="{{ unicorn.id }}"
+                readonly
+            >
+            <svg class="absolute right-2 top-3 w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+            </svg>
         </div>
-
-        <!-- Error Message -->
-        {% if error_message %}
-            <div class="text-red-600 text-sm mb-4">{{ error_message }}</div>
-        {% endif %}
-
-        <div class="flex gap-2">
-            <button 
-                type="button"
-                unicorn:click="clear_date_filter"
-                @click="isOpen = false; setTimeout(() => window.location.reload(), 400)"
-                class="flex-1 py-2 rounded-md text-[#4787FA] border border-[#4787FA] bg-transparent hover:bg-blue-50"
+        <div class="relative w-full">
+            <input 
+                type="text" 
+                unicorn:model="end_date"
+                placeholder="Tanggal Akhir" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg transition-all duration-100 focus:ring-1 focus:ring-[#4787FA] focus:outline-none focus:border-[#4787FA]"
+                data-litepicker-end
+                data-component-id="{{ unicorn.id }}"
+                readonly
             >
-                Reset
-            </button>
-            <button 
-                type="button"
-                unicorn:click="apply_filter"
-                @click="isOpen = false; setTimeout(() => window.location.reload(), 400)"
-                class="flex-1 bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed"
-            >
-                Terapkan
-            </button>
+            <svg class="absolute right-2 top-3 w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+            </svg>
         </div>
     </div>
+
+    <script>
+        function initializeDatePickers() {
+            const startPicker = document.querySelector('[data-litepicker-start]');
+            if (startPicker && !startPicker.litepickerInstance) {
+                startPicker.litepickerInstance = new Litepicker({
+                    element: startPicker,
+                    singleMode: true,
+                    format: 'YYYY-MM-DD',
+                    autoApply: true,
+                    setup: (picker) => {
+                        picker.on('selected', (date) => {
+                            const componentId = startPicker.getAttribute('data-component-id');
+                            if (window.Unicorn) {
+                                console.log('Calling update_start_date with:', date.format('YYYY-MM-DD'));
+                                window.Unicorn.call(componentId, 'update_start_date', date.format('YYYY-MM-DD'));
+                            }
+                        });
+                    }
+                });
+            }
+
+            const endPicker = document.querySelector('[data-litepicker-end]');
+            if (endPicker && !endPicker.litepickerInstance) {
+                endPicker.litepickerInstance = new Litepicker({
+                    element: endPicker,
+                    singleMode: true,
+                    format: 'YYYY-MM-DD',
+                    autoApply: true,
+                    setup: (picker) => {
+                        picker.on('selected', (date) => {
+                            const componentId = endPicker.getAttribute('data-component-id');
+                            if (window.Unicorn) {
+                                console.log('Calling update_end_date with:', date.format('YYYY-MM-DD'));
+                                window.Unicorn.call(componentId, 'update_end_date', date.format('YYYY-MM-DD'));
+                            }
+                        });
+                    }
+                });
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', initializeDatePickers);
+        document.addEventListener('unicorn:updated', initializeDatePickers);
+    </script>
 </div>

@@ -1,23 +1,43 @@
+from django.apps import apps
 from neo4j_graphrag.embeddings.sentence_transformers import SentenceTransformerEmbeddings
+from neo4j import GraphDatabase
+from neo4j.exceptions import ServiceUnavailable
 import logging
 import uuid
+import os
+from django.apps import apps
 
 logger = logging.getLogger(__name__)
 
 class Neo4jHandler:
     def __init__(self):
-        from app.utils.neo4j_connection import Neo4jConnection
-        self.connection = Neo4jConnection()
-        self.driver = self.connection.get_driver()
+        self.driver = None
+        self.embedder = None
         self.graph_name = None
-        self._embedder = None
 
-    @property
-    def embedder(self):
-        if self._embedder is None:
-            logger.info("Loading SentenceTransformer model...")
-            self._embedder = SentenceTransformerEmbeddings(model="all-mpnet-base-v2")
-        return self._embedder
+        try:
+            uri = os.getenv("NEO4J_URI", "bolt://localhost:7687")
+            user = os.getenv("NEO4J_USERNAME", "neo4j")
+            password = os.getenv("NEO4J_PASSWORD")
+            
+            if not password:
+                raise ValueError("Password Neo4j (NEO4J_PASSWORD) tidak ditemukan.")
+
+            self.driver = GraphDatabase.driver(uri, auth=(user, password))
+            self.driver.verify_connectivity()
+            
+            self.embedder = apps.get_app_config('app').embedder_wrapper
+            if not self.embedder:
+                raise Exception("Embedder Wrapper tidak tersedia dari AppConfig.")
+
+            logger.info("Neo4jHandler berhasil diinisialisasi.")
+        except (ServiceUnavailable, ValueError, Exception) as e:
+            logger.error(f"Gagal saat inisialisasi Neo4jHandler: {e}")
+            self.close() 
+            raise
+        
+    def get_driver(self):
+        return self.driver
 
     def create_search_node(self, query):
         try:
@@ -49,6 +69,18 @@ class Neo4jHandler:
         try:
             self.graph_name = f"search_graph_{uuid.uuid4().hex}"
             with self.driver.session() as session:
+                session.run("""
+                    CALL gds.graph.exists($graph_name) YIELD exists
+                    WITH exists
+                    CALL apoc.do.when(
+                        exists,
+                        'CALL gds.graph.drop($graph_name) YIELD graphName RETURN graphName',
+                        'RETURN null as graphName',
+                        {graph_name: $graph_name}
+                    ) YIELD value
+                    RETURN value
+                """, graph_name=self.graph_name)
+                
                 session.run("""
                     CALL gds.graph.project($graph_name,
                         'Paper',
@@ -99,8 +131,15 @@ class Neo4jHandler:
                         deltaThreshold: 0.1
                     })
                     YIELD node1, node2, similarity
-                    WHERE gds.util.asNode(node1).paperId = $paperId
-                    RETURN gds.util.asNode(node2).paperId AS paperId, similarity
+                    WHERE 
+                        gds.util.asNode(node1).paperId = $paperId
+                        AND gds.util.asNode(node2).paperId <> $paperId
+                        AND similarity > 0.65
+                        AND NOT gds.util.asNode(node2).paperId STARTS WITH 'query-'
+                    RETURN 
+                        gds.util.asNode(node2).paperId AS paperId,
+                        similarity,
+                        gds.util.asNode(node2).title as title
                     ORDER BY similarity DESC
                     LIMIT 1
                 """, paperId=paper_id, graph_name=self.graph_name)
@@ -119,6 +158,7 @@ class Neo4jHandler:
                     UNWIND $paperIds AS knnPaperId
                     MATCH (paper:Paper {paperId: knnPaperId})
                     OPTIONAL MATCH (paper)-[:AUTHORED_BY]->(author:Author)
+                    OPTIONAL MATCH (paper)-[:IN_JOURNAL]->(journal:Journal)
                     RETURN 
                         paper.paperId AS paperId,
                         paper.title AS title, 
@@ -127,7 +167,8 @@ class Neo4jHandler:
                         paper.year AS year,
                         paper.citationCount AS citation_count,
                         1.0 AS similarity_score,
-                        collect(DISTINCT author.name) AS authors
+                        collect(DISTINCT author.name) AS authors, 
+                        COALESCE(journal.rank, '') AS rank
                 """, paperIds=seed_paper_ids)
                 knn_records = list(knn_details)
                 
@@ -136,6 +177,7 @@ class Neo4jHandler:
                     MATCH (top:Paper {paperId: topPaperId})
                     OPTIONAL MATCH (top)-[r:SIMILAR]->(paper:Paper)
                     OPTIONAL MATCH (paper)-[:AUTHORED_BY]->(author:Author)
+                    OPTIONAL MATCH (paper)-[:IN_JOURNAL]->(journal:Journal)
                     RETURN 
                         paper.paperId AS paperId,
                         paper.title AS title, 
@@ -145,11 +187,13 @@ class Neo4jHandler:
                         paper.citationCount AS citation_count,
                         paper.pageRank AS pageRank,
                         r.score AS similarity_score,
-                        collect(DISTINCT author.name) AS authors
+                        collect(DISTINCT author.name) AS authors,
+                        COALESCE(journal.rank, '') AS rank
                     ORDER BY similarity_score DESC, pageRank DESC
                     LIMIT 49
                 """, paperIds=seed_paper_ids)
                 similar_records = list(similar_results)
+                
                 return knn_records, similar_records
         except Exception as e:
             logger.error(f"Error finding similar papers: {str(e)}")
@@ -158,11 +202,5 @@ class Neo4jHandler:
             self.drop_graph()
 
     def close(self):
-        try:
-            self.drop_graph()
-        finally:
-            if self.driver:
-                self.driver.close()
-            if self._embedder is not None:
-                self._embedder = None
-                logger.info("SentenceTransformer model unloaded.")
+        if self.driver:
+            self.driver.close()
