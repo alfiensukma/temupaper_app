@@ -145,7 +145,7 @@ function showDeleteConfirmation(paperId, paperTitle) {
                     
                     <div class="text-center">
                         <p class="text-base md:text-lg text-gray-700 mb-4">
-                            Apakah Anda yakin ingin menghapus karya ilmiah berikut dari daftar simpanan?
+                            Apakah Anda yakin ingin menghapus artikel ilmiah berikut dari daftar simpanan?
                         </p>
                         <p class="text-sm md:text-base font-medium text-gray-900 bg-gray-200 p-3 rounded-xl">
                             "${paperTitle}"
@@ -167,7 +167,7 @@ function showDeleteConfirmation(paperId, paperTitle) {
                         id="confirm-delete-btn"
                         data-paper-id="${paperId}"
                         class="flex-1 px-6 py-3 text-white bg-red-600 hover:bg-red-700 font-medium rounded-xl text-base transition-colors">
-                        Hapus Karya Ilmiah
+                        Hapus Artikel Ilmiah
                     </button>
                 </div>
 
@@ -295,7 +295,7 @@ function renderPapers(papers) {
             html += `
                 <div class="timeline-item pl-4 border-l-2 border-blue-500 relative group">
                     <div class="p-6 bg-color rounded-xl">
-                        <a href="/papers/detail/${paper.paperId}>" class="paper-title line-clamp-2 md:line-clamp-3 text-justify font-semibold text-[#4787FA] no-underline hover:underline hover:cursor-pointer">${paper.title}</a>
+                        <a href="/papers/detail/${paper.paperId}" class="paper-title line-clamp-2 md:line-clamp-3 text-justify font-semibold text-[#4787FA] no-underline hover:underline hover:cursor-pointer">${paper.title}</a>
                         <div class="flex items-center gap-2 mt-2 mb-1">
                             ${displayedAuthors.map(author => `
                                 <span class="paper-authors max-w-[10ch] line-clamp-1 md:line-clamp-2 md:max-w-full px-3 py-1 text-[#4787FA] rounded-md bg-color-author">${author}</span>
