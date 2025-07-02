@@ -90,7 +90,7 @@ def index(request):
         "topics": topics
     })
 
-def search(request):
+def get_papers(request):
     query = request.GET.get('query', request.session.get('last_search_query', '')).strip()
     if not query:
         return redirect('index')

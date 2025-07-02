@@ -19,7 +19,9 @@ class PeerInstitutionView(UnicornView):
         if not user_id:
             self.error = "Sesi pengguna tidak valid. Silakan login kembali."
             return
-        
+        self.get_peer_recommendations(user_id)
+
+    def get_peer_recommendations(self, user_id):
         try:
             current_user = User.nodes.get(userId=user_id)
             institution_node = current_user.affiliated_with.get_or_none()
@@ -32,15 +34,15 @@ class PeerInstitutionView(UnicornView):
             query = """
                 MATCH (pt:Institution {institutionId: $institutionId})<-[:AFFILIATED_WITH]-(u:User)-[:HAS_READ]->(p:Paper)
                 WHERE NOT EXISTS {
-                MATCH (currentUser:User {userId: $userId})-[:HAS_READ]->(p)
+                  MATCH (currentUser:User {userId: $userId})-[:HAS_READ]->(p)
                 }
                 WITH p, count(u) AS jumlahPembaca,
                     CASE
-                    WHEN p.publicationDate IS NOT NULL AND p.publicationDate CONTAINS '-' 
+                      WHEN p.publicationDate IS NOT NULL AND p.publicationDate CONTAINS '-' 
                         THEN date(left(p.publicationDate, 10))
-                    WHEN p.publicationDate IS NOT NULL AND p.publicationDate CONTAINS '/' 
+                      WHEN p.publicationDate IS NOT NULL AND p.publicationDate CONTAINS '/' 
                         THEN date(datetime({epochMillis: apoc.date.parse(split(p.publicationDate, ' ')[0], 'ms', 'M/d/yyyy')}))
-                    ELSE null
+                      ELSE null
                     END AS normalizedDate
                 ORDER BY jumlahPembaca DESC, normalizedDate DESC, p.year DESC
                 LIMIT 30
@@ -61,12 +63,12 @@ class PeerInstitutionView(UnicornView):
             
             processed_papers = []
             for record in papers_raw:
-                paper = record
-                paper["date"] = format_date_to_indonesian(
-                    paper.get("date"), 
-                    fallback_year=paper.get("year", "N/A")
+                record["date"] = format_date_to_indonesian(
+                    record.get("date"), 
+                    fallback_year=record.get("year", "N/A")
                 )
-                processed_papers.append(paper)
+                processed_papers.append(record)
+                
             self._all_papers = processed_papers
             self.paginate()
 

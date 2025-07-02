@@ -12,7 +12,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 load_dotenv()
 
-def get_recommendation(paper_id):
+def get_recommendation_by_paper(paper_id):
     
     try:
         neo4j_connection = Neo4jConnection()
@@ -63,7 +63,7 @@ def get_recommendation(paper_id):
         if 'driver' in locals() and driver is not None:
             driver.close()
 
-def get_detail_paper(request, paper_id):
+def get_paper(request, paper_id):
     try:
         paper = Paper.nodes.get(paperId=paper_id)
         authors = [{"name": author.name} for author in paper.authored_by.all()]
@@ -83,7 +83,7 @@ def get_detail_paper(request, paper_id):
         fallback_year = data_paper.get("year", "N/A")
         formatted_date = format_date_to_indonesian(raw_date_string, fallback_year)
         data_paper["date"] = formatted_date
-        paper_recommendation = get_recommendation(paper_id)
+        paper_recommendation = get_recommendation_by_paper(paper_id)
         query = request.GET.get('query', '') or request.session.get('last_search_query', '')
 
         context = {

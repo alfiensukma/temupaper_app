@@ -1,8 +1,8 @@
 from django.urls import path, include
 from .views.retrieve_paper_views import fetch_papers, scrape_topic, download_results
 from .views.graph_views import generate_knowledge_graph, import_topic, import_institution, import_journal
-from .views.detail_views import get_recommendation, get_detail_paper, record_paper_read
-from .views.search_views import index, search, test_search_process, search_api
+from .views.detail_views import get_recommendation_by_paper, get_paper, record_paper_read
+from .views.search_views import index, get_papers, test_search_process, search_api
 from .views.peer_institution_recommendation_views import peer_institution
 from .views.similarity_access_recommendation_views import similarity_access
 from .views.access_history_recommendation_views import access_history
@@ -22,17 +22,17 @@ urlpatterns = [
     path("fetch-papers/", fetch_papers, name="get_paper"),
     path('scrape-topic/', scrape_topic, name='scrape_topic'),
     path('download-results/', download_results, name='download_results'),
-    path("paper/detail/", get_detail_paper, name="get_detail"),
-    path("paper/detail/recommendation", get_recommendation, name="get_recommendation"),
+    path("paper/detail/", get_paper, name="get_detail"),
+    path("paper/detail/recommendation", get_recommendation_by_paper, name="get_recommendation"),
     path("generate-knowledge-graph/", generate_knowledge_graph, name="generate_knowledge_graph"),
     path('import-topic/', import_topic, name='import_topic'),
     path('import-institution/', import_institution, name='import_institution'),
     path('import-journal/', import_journal, name='import_journal'),
 
     path('test-search/', test_search_process, name='test_search_process'),
-    path('search/', search, name='search'),
+    path('search/', get_papers, name='search'),
     path('search-api/', search_api, name='search_api'),
-    path('papers/detail/<str:paper_id>/', get_detail_paper, name='paper_detail'),
+    path('papers/detail/<str:paper_id>/', get_paper, name='paper_detail'),
     path('peer-institution-recommendation/', peer_institution, name='peer_institution'),
     path('similarity-access-recommendation/', similarity_access, name='similarity_access'),
     path('access-history-recommendation/', access_history, name='access_history'),

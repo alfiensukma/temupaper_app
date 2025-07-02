@@ -16,9 +16,12 @@ class AccessHistoryView(UnicornView):
     def mount(self):
         user_id = self.request.session.get('user_id')
         if not user_id:
-            self.error = "Sesi pengguna tidak valid."
+            self.error = "Sesi pengguna tidak valid. Silakan login kembali."
             return
         
+        self.get_recommendation_by_access(user_id)
+
+    def get_recommendation_by_access(self, user_id):
         try:
             query = """
                 MATCH (u:User {userId: $userId})-[r_read:HAS_READ]->(:Paper)-[r_sim:HIGHEST_SIMILAR]->(p:Paper)
