@@ -3,9 +3,9 @@ from .views.retrieve_paper_views import fetch_papers, scrape_topic, download_res
 from .views.graph_views import generate_knowledge_graph, import_topic, import_institution, import_journal
 from .views.detail_views import get_recommendation_by_paper, get_paper, record_paper_read, get_recommendation_by_paper_api
 from .views.search_views import index, get_papers, test_search_process, search_api
-from .views.peer_institution_recommendation_views import peer_institution
+from .views.peer_institution_recommendation_views import peer_institution, peer_recommendation_api
 from .views.similarity_access_recommendation_views import similarity_access
-from .views.access_history_recommendation_views import access_history
+from .views.access_history_recommendation_views import access_history, recommendation_by_access_api
 from .views.login_views import login_view
 from .views.register_views import register_view
 from .views.verification_code_views import verification_code, resend_verification_code
@@ -35,8 +35,10 @@ urlpatterns = [
     path('search-api/', search_api, name='search_api'),
     path('papers/detail/<str:paper_id>/', get_paper, name='paper_detail'),
     path('peer-institution-recommendation/', peer_institution, name='peer_institution'),
+    path('peer-institution-recommendation-api/', peer_recommendation_api, name='peer_recommendation_api'),
     path('similarity-access-recommendation/', similarity_access, name='similarity_access'),
     path('access-history-recommendation/', access_history, name='access_history'),
+    path('access-history-recommendation-api/', recommendation_by_access_api, name='recommendation_by_access_api'),
     path('login/', login_view, name='login_view'),
     path('register/', register_view, name='register_view'),
     path('verification-code/', verification_code, name='verification_code'),

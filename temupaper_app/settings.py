@@ -35,8 +35,13 @@ NEO4J_PORT = os.getenv('NEO4J_PORT', '7687')
 
 config.DATABASE_URL = f'bolt://{NEO4J_USERNAME}:{NEO4J_PASSWORD}@{NEO4J_HOST}:{NEO4J_PORT}'
 
-#CSRF_TRUSTED_ORIGINS = [f"https://{host}" for host in ALLOWED_HOSTS if host]
+# local
 CSRF_TRUSTED_ORIGINS = ['http://localhost', 'http://127.0.0.1']
+
+#production
+# CSRF_TRUSTED_ORIGINS_STR = os.getenv('CSRF_TRUSTED_ORIGINS', '')
+# CSRF_TRUSTED_ORIGINS = [origin.strip() for origin in CSRF_TRUSTED_ORIGINS_STR.split(',') if origin]
+
 SECURE_SSL_REDIRECT = False
 
 NEOMODEL_SIGNALS = True
