@@ -3,7 +3,7 @@
     <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
         <div class="flex items-center gap-3">
             <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5"></path></svg>
-            <h2 class="text-2xl font-bold text-gray-800">Karya yang Mensitasi</h2>
+            <h2 class="text-2xl font-bold text-gray-800">Artikel yang Mensitasi</h2>
             <span class="ml-auto bg-green-50 text-green-600 text-sm font-medium px-3 py-1 rounded-full">
                 {{ results_count }} sitasi
             </span>
@@ -40,7 +40,7 @@
                 </a>
             {% empty %}
                  <div class="text-center py-16 col-span-full">
-                    <p class="text-gray-500 text-xl mt-4 font-medium">{% if search_query %}Tidak ada sitasi yang cocok.{% else %}Tidak ada karya yang mensitasi.{% endif %}</p>
+                    <p class="text-gray-500 text-xl mt-4 font-medium">{% if search_query %}Tidak ada sitasi yang cocok.{% else %}Tidak ada artikel yang mensitasi.{% endif %}</p>
                 </div>
             {% endfor %}
         </div>

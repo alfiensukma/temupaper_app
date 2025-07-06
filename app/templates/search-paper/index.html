@@ -61,7 +61,7 @@
 <div class="flex items-center justify-center h-[400px] md:h-[600px] text-center px-4">
   <div class="animate-slide-up">
     <h1 class="text-4xl md:text-5xl lg:text-[80px] font-bold leading-tight">
-      Eksplorasi <span class="text-blue-500">Karya Ilmiah</span><br>
+      Eksplorasi <span class="text-blue-500">Artikel Ilmiah</span><br>
       Pada Ilmu Komputer
     </h1>
 
@@ -207,7 +207,7 @@
         </svg>
         <div>
           <h3 class="text-sky-800 font-medium mb-1">Bagaimana rekomendasi ini dihasilkan?</h3>
-          <p class="text-sky-700 text-sm">Rekomendasi diberikan berdasarkan karya ilmiah yang paling banyak diakses oleh pengguna dari institusi Anda, namun belum Anda baca</p>
+          <p class="text-sky-700 text-sm">Rekomendasi diberikan berdasarkan artikel ilmiah yang paling banyak diakses oleh pengguna dari institusi Anda, namun belum Anda baca</p>
         </div>
       </div>
     </div>
@@ -406,14 +406,13 @@ class Carousel {
     if (this.maxIndex <= 0) return;
 
     for (let i = 0; i <= this.maxIndex; i++) {
-      const dot = document.createElement('button');
-      dot.classList.add('w-2', 'h-2', 'bg-gray-300', 'rounded-full', 'transition-colors', 'duration-300', 'hover:bg-gray-400');
-      if (i === this.currentIndex) {
-        dot.classList.remove('bg-gray-300');
-        dot.classList.add('bg-blue-500');
-      }
-      dot.addEventListener('click', () => this.goToSlide(i));
-      this.dotsContainer.appendChild(dot);
+        const dot = document.createElement('button');
+        dot.classList.add('dot');
+        if (i === this.currentIndex) {
+            dot.classList.add('active');
+        }
+        dot.addEventListener('click', () => this.goToSlide(i));
+        this.dotsContainer.appendChild(dot);
     }
   }
 
@@ -428,13 +427,9 @@ class Carousel {
     this.nextBtn.disabled = this.currentIndex >= this.maxIndex;
     this.nextBtn.classList.toggle('opacity-50', this.currentIndex >= this.maxIndex);
     
-    const dots = this.dotsContainer.querySelectorAll('button');
+    const dots = this.dotsContainer.querySelectorAll('.dot');
     dots.forEach((dot, index) => {
-      dot.classList.remove('bg-blue-500');
-      dot.classList.add('bg-gray-300');
-      if (index === this.currentIndex) {
-        dot.classList.add('bg-blue-500');
-      }
+        dot.classList.toggle('active', index === this.currentIndex);
     });
   }
 
