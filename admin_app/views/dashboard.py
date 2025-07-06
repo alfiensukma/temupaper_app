@@ -25,7 +25,7 @@ def admin_dashboard(request):
             paper_result = session.run("MATCH (p:Paper) RETURN count(p) AS count")
             context['paper_count'] = paper_result.single()["count"]
             
-            user_result = session.run("MATCH (u:User) WHERE u.role_id <> 1 RETURN count(u) AS count")
+            user_result = session.run("MATCH (u:User)-[:HAS_ROLE]->(r:Role {nama: 'User'}) RETURN count(u) AS count")
             context['user_count'] = user_result.single()["count"]
 
             import_result = session.run("""

@@ -31,7 +31,7 @@ Paper.__init__ = patched_paper_init
 logger.info("Monkey patch applied to semanticscholar.Paper to handle None for references/citations.")
 
 # init
-sch = SemanticScholar()
+sch = SemanticScholar(timeout=30)  # Set explicit timeout
 CSV_PATH = "app/data-csv"
 PAPERS_PATH = os.path.join(CSV_PATH, "papers.csv")
 PAPER_REFERENCES_PATH = os.path.join(CSV_PATH, "paper-references.csv")
@@ -119,16 +119,21 @@ def manage_topic(session, topic_id, topic_name, papers_found=0, update=False):
             current_count = record["currentCount"] if record else 0
             return current_count
         else:
+            # Reset paperCount to 0 if it reaches or exceeds 1000
+            new_count = papers_found if record and record["currentCount"] < 1000 else papers_found
+            if record and record["currentCount"] >= 1000:
+                logger.info(f"Resetting paperCount for topic '{topic_name}' to 0 as it reached {record['currentCount']}")
+            
             result = session.run(
                 """
                 MATCH (t:Topic {topicId: $topic_id})
-                SET t.paperCount = COALESCE(t.paperCount, 0) + $papers_found, t.lastUpdated = $timestamp
+                SET t.paperCount = $new_count, t.lastUpdated = $timestamp
                 RETURN t.paperCount as newCount
                 """,
-                topic_id=topic_id, papers_found=papers_found, timestamp=datetime.now().isoformat()
+                topic_id=topic_id, new_count=new_count, timestamp=datetime.now().isoformat()
             )
             record = result.single()
-            return record["newCount"] if record else papers_found
+            return record["newCount"] if record else new_count
     except Exception as e:
         logger.error(f"Error in manage_topic for topic '{topic_name}': {e}")
         raise
@@ -149,8 +154,8 @@ def scrape_topic(request):
         query = topic_name
         min_year = int(request.GET.get('min_year', 2020))
         fields_of_study = request.GET.get('fields_of_study', 'Computer Science')
-        reference_limit = request.GET.get('reference_limit', 100)
-        limit = int(request.GET.get('limit', 100))
+        reference_limit = int(request.GET.get('reference_limit', 100))
+        limit = 100  # Fixed limit for relevance search
         csv_timestamp = request.GET.get('csv_timestamp', datetime.now().strftime("%Y%m%d_%H%M%S"))
 
         timestamp = csv_timestamp
@@ -177,18 +182,23 @@ def scrape_topic(request):
         with driver.session() as session:
             current_count = manage_topic(session, topic_id, topic_name)
             
-            # check if limit is exceeded
+            # Reset paper_count if it reaches or exceeds 1000
             if current_count >= 1000:
-                return JsonResponse({
-                    "error": f"Batas maksimum 1000 paper untuk topik '{topic_name}' telah tercapai. Silakan coba topik lain."
-                }, status=400)
+                logger.info(f"Current count {current_count} for topic '{topic_name}' reached 1000, resetting for next scrape")
+                current_count = 0
             
             logger.info(f"Fetching papers for topic '{query}' with current count {current_count}")
             
-            # decide how many pages to skip
+            # Calculate pages to skip based on current_count
             pages_to_skip = current_count // limit
+            effective_offset = pages_to_skip * limit
+            if effective_offset + limit > 1000:
+                return JsonResponse({
+                    "error": f"Effective offset ({effective_offset}) dan limit ({limit}) melebihi batas 1000 untuk pencarian relevansi",
+                    "timestamp": timestamp
+                }, status=400)
             
-            sch = SemanticScholar()
+            sch = SemanticScholar(timeout=30)
             results = sch.search_paper(
                 query=topic_name, 
                 year=f"{min_year}-", 
@@ -204,22 +214,35 @@ def scrape_topic(request):
                 ]
             )
             
-            # .next_page()
+            # Skip pages to reach the desired offset
             current_page = 0
-            while current_page < pages_to_skip and hasattr(results, 'next_page') and callable(results.next_page):
-                results = results.next_page()
-                current_page += 1
-                logger.info(f"Skipped page {current_page} for topic '{topic_name}'")
+            while current_page < pages_to_skip and hasattr(results, 'next') and results.next is not None:
+                try:
+                    results.next_page()
+                    current_page += 1
+                    logger.info(f"Skipped page {current_page} for topic '{topic_name}', current offset: {results.offset}")
+                except Exception as page_error:
+                    logger.error(f"Error skipping page {current_page + 1}: {str(page_error)}")
+                    break
             
             papers_result = results.items if results else []
-            
+            total_results = getattr(results, 'total', 0)
+            current_offset = getattr(results, 'offset', effective_offset)
+            next_offset = getattr(results, 'next', None)
+            logger.info(f"API returned {total_results} total results, offset={current_offset}, limit={limit}, next={next_offset}")
+
             if not papers_result:
                 return JsonResponse({
                     "status": "empty",
-                    "message": "Tidak ada paper baru yang ditemukan untuk topik ini."
+                    "message": "Tidak ada paper baru yang ditemukan untuk topik ini.",
+                    "timestamp": timestamp
                 })
 
-            # Filter
+            # Log warning if total results exceed limit for relevance search
+            if total_results > 1000:
+                logger.warning(f"Total results ({total_results}) exceed 1000 for relevance search. Only first 1000 will be processed.")
+
+            # Filter papers
             paper_data = []
             logger.info(f"Processing {len(papers_result)} papers from API...")
             for paper in papers_result:
@@ -266,6 +289,10 @@ def scrape_topic(request):
                 for paper in paper_data for ref_id in paper.get("reference_id", [])
             ]
 
+            # Log data before saving
+            logger.debug(f"Paper data: {len(paper_data)} papers")
+            logger.debug(f"References list: {len(references_list)} references")
+
             # Save to CSV mode append ('a') if file exists, else write ('w')
             papers_mode = 'w' if not os.path.exists(papers_path) else 'a'
             references_mode = 'w' if not os.path.exists(references_path) else 'a'
@@ -283,6 +310,9 @@ def scrape_topic(request):
                 "count": papers_found,
                 "current_count": current_count,
                 "new_count": new_count,
+                "total_results": total_results,
+                "offset": current_offset,
+                "next_offset": next_offset,
                 "message": f"Berhasil mendapatkan {papers_found} paper",
                 "timestamp": timestamp
             })
@@ -295,7 +325,6 @@ def scrape_topic(request):
                     f.endswith('.csv') for f in os.listdir(folder_path)
                 )
                 
-                # if folder_path and is_first_topic:
                 if is_first_topic:
                     logger.info(f"Deleting folder due to error: {folder_path}")
                     shutil.rmtree(folder_path)
@@ -330,7 +359,7 @@ def download_results(request):
         if not os.path.exists(papers_path) or not os.path.exists(references_path):
             return JsonResponse({"error": "CSV files not found"}, status=404)
         
-        # zip
+        # Create ZIP file
         zip_buffer = io.BytesIO()
         with zipfile.ZipFile(zip_buffer, 'w', zipfile.ZIP_DEFLATED) as zip_file:
             with open(papers_path, 'r', encoding='utf-8') as f:
@@ -343,33 +372,30 @@ def download_results(request):
         response = FileResponse(zip_buffer, content_type='application/zip')
         response['Content-Disposition'] = f'attachment; filename="scraping_{timestamp}.zip"'
 
-        # Delete the folder
-        try:
-            shutil.rmtree(folder_path)
-            logger.info(f"Successfully deleted folder: {folder_path}")
-        except Exception as cleanup_error:
-            logger.warning(f"Error deleting folder {folder_path}: {cleanup_error}")
-
         return response
 
     except Exception as e:
         logger.error(f"Error in download_results: {str(e)}\n{traceback.format_exc()}")
+        return JsonResponse({"error": str(e)}, status=500)
+    finally:
+        # Always delete folder after download attempt
         if folder_path and os.path.exists(folder_path):
             try:
                 shutil.rmtree(folder_path)
-                logger.info(f"Cleaned up folder after error: {folder_path}")
+                logger.info(f"Successfully deleted folder: {folder_path}")
             except Exception as cleanup_error:
-                logger.error(f"Error cleaning up folder: {cleanup_error}")
-        return JsonResponse({"error": str(e)}, status=500)
+                logger.warning(f"Error deleting folder {folder_path}: {cleanup_error}")
 
 @csrf_exempt
 def fetch_papers(request):
+    folder_path = None
     try:
         response = scrape_topic(request)
         if response.status_code == 200:
             data = json.loads(response.content)
             timestamp = data.get("timestamp")
             if timestamp:
+                folder_path = os.path.join("app", "data-csv", timestamp)
                 download_request = request.__class__()
                 download_request.method = "GET"
                 download_request.GET = {"timestamp": timestamp}
@@ -378,3 +404,11 @@ def fetch_papers(request):
     except Exception as e:
         logger.error(f"Error in fetch_papers: {str(e)}\n{traceback.format_exc()}")
         return JsonResponse({"error": str(e)}, status=500)
+    finally:
+        # Clean up folder if it exists
+        if folder_path and os.path.exists(folder_path):
+            try:
+                shutil.rmtree(folder_path)
+                logger.info(f"Successfully deleted folder in fetch_papers: {folder_path}")
+            except Exception as cleanup_error:
+                logger.error(f"Error cleaning up folder in fetch_papers: {cleanup_error}")

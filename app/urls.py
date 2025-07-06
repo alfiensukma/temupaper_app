@@ -1,7 +1,7 @@
 from django.urls import path, include
 from .views.retrieve_paper_views import fetch_papers, scrape_topic, download_results
 from .views.graph_views import generate_knowledge_graph, import_topic, import_institution, import_journal
-from .views.detail_views import get_recommendation_by_paper, get_paper, record_paper_read
+from .views.detail_views import get_recommendation_by_paper, get_paper, record_paper_read, get_recommendation_by_paper_api
 from .views.search_views import index, get_papers, test_search_process, search_api
 from .views.peer_institution_recommendation_views import peer_institution
 from .views.similarity_access_recommendation_views import similarity_access
@@ -24,6 +24,7 @@ urlpatterns = [
     path('download-results/', download_results, name='download_results'),
     path("paper/detail/", get_paper, name="get_detail"),
     path("paper/detail/recommendation", get_recommendation_by_paper, name="get_recommendation"),
+    path("paper/detail/recommendation-api/", get_recommendation_by_paper_api, name="get_recommendation_api"),
     path("generate-knowledge-graph/", generate_knowledge_graph, name="generate_knowledge_graph"),
     path('import-topic/', import_topic, name='import_topic'),
     path('import-institution/', import_institution, name='import_institution'),

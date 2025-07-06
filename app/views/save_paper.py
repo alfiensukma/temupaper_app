@@ -79,7 +79,7 @@ def save_paper_list(request):
         logger.error(f'Error in saved_paper_list view: {e}', exc_info=True)
         return render(request, 'base.html', {
             'content_template': 'save-paper/index.html',
-            'error': 'Gagal memuat daftar karya ilmiah tersimpan.'
+            'error': 'Gagal memuat daftar artikel ilmiah tersimpan.'
         })
 
 @require_POST
@@ -97,4 +97,4 @@ def remove_paper(request):
         return JsonResponse({'success': True})
     except Exception as e:
         logger.error(f"Error removing saved paper: {e}", exc_info=True)
-        return JsonResponse({'success': False, 'error': 'Gagal menghapus karya ilmiah.'}, status=500)
+        return JsonResponse({'success': False, 'error': 'Gagal menghapus artikel ilmiah.'}, status=500)

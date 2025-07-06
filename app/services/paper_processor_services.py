@@ -16,7 +16,7 @@ class PaperProcessor:
             "date": record["date"],
             "year": record["year"],
             "is_seed": is_seed,
-            "rank": record.get("rank", '')
+            "rank": record.get("rank", "Tidak Teridentifikasi")
         }
 
         raw_date = paper_data.get("date")
@@ -36,11 +36,13 @@ class PaperProcessor:
 
         filtered_papers = []
         for paper in papers:
-            paper_rank = paper.get('rank', '')
+            paper_rank = paper.get('rank', 'Tidak Teridentifikasi')
+            effective_rank = 'Tidak Teridentifikasi' if not paper_rank or paper_rank in ['-', ''] else paper_rank
+
             if quartile == "Tidak Teridentifikasi":
-                if paper_rank == '':
+                if effective_rank == 'Tidak Teridentifikasi':
                     filtered_papers.append(paper)
-            elif paper_rank == quartile:
+            elif effective_rank == quartile:
                 filtered_papers.append(paper)
 
         logger.info(f"Filtered {len(papers)} papers to {len(filtered_papers)} for quartile: {quartile}")

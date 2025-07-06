@@ -150,9 +150,6 @@ function showDeleteConfirmation(paperId, paperTitle) {
                         <p class="text-sm md:text-base font-medium text-gray-900 bg-gray-200 p-3 rounded-xl">
                             "${paperTitle}"
                         </p>
-                        <p class="text-sm text-gray-600 mt-3">
-                            Tindakan ini tidak dapat dibatalkan.
-                        </p>
                     </div>
                 </div>
 
@@ -298,10 +295,10 @@ function renderPapers(papers) {
                         <a href="/papers/detail/${paper.paperId}" class="paper-title line-clamp-2 md:line-clamp-3 text-justify font-semibold text-[#4787FA] no-underline hover:underline hover:cursor-pointer">${paper.title}</a>
                         <div class="flex items-center gap-2 mt-2 mb-1">
                             ${displayedAuthors.map(author => `
-                                <span class="paper-authors max-w-[10ch] line-clamp-1 md:line-clamp-2 md:max-w-full px-3 py-1 text-[#4787FA] rounded-md bg-color-author">${author}</span>
+                                <span class="paper-authors max-w-[10ch] line-clamp-1 md:line-clamp-2 md:max-w-full px-3 py-0.5 text-[#4787FA] rounded-xl bg-blue-50">${author}</span>
                             `).join('')}
                             ${remainingAuthors > 0 ? `
-                                <span class="paper-authors px-3 py-1 ${currentPath === '/access-history-recommendation/' ? 'bg-white' : 'bg-gray-100'} text-[#4787FA] rounded-md">
+                                <span class="paper-authors px-3 py-0.5 text-[#4787FA] rounded-xl bg-blue-50">
                                     <span class="md:hidden">+${remainingAuthors}</span>
                                     <span class="hidden md:inline">+${remainingAuthors} penulis</span>
                                 </span>
@@ -414,11 +411,11 @@ function removePaper(paperId) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            showNotification('Karya ilmiah berhasil dihapus', 'success');
+            showNotification('Artikel ilmiah berhasil dihapus', 'success');
             allPapers = allPapers.filter(paper => paper.paperId !== paperId);
             filterPapers();
         } else {
-            showNotification(data.error || 'Gagal menghapus karya ilmiah', 'error');
+            showNotification(data.error || 'Gagal menghapus artikel ilmiah', 'error');
         }
     })
     .catch(error => {

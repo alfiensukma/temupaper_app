@@ -1,16 +1,13 @@
 import json
-from django.shortcuts import render, redirect
-from django.http import JsonResponse
+import time
+from django.shortcuts import render
+from django.http import JsonResponse, HttpResponseRedirect
 from django.views.decorators.csrf import csrf_protect, csrf_exempt
-from django.utils.decorators import method_decorator
 from django.views.decorators.http import require_GET
-from app.components.search_result import Neo4jHandler, PaperProcessor
+from app.services.search_recommendation_services import Neo4jHandler
 from neo4j.exceptions import ServiceUnavailable
 from app.models import User
 import logging
-from django.core.paginator import Paginator
-
-logger = logging.getLogger(__name__)
 
 logger = logging.getLogger(__name__)
 
@@ -90,90 +87,179 @@ def index(request):
         "topics": topics
     })
 
+def clear_old_sessions(request, current_query):
+    last_query = request.session.get('last_search_query', '')
+    if last_query and last_query != current_query:
+        session_keys = [key for key in request.session.keys() if key.startswith('pure_search_') or key.startswith('search_status_')]
+        for key in session_keys:
+            logger.debug(f"Menghapus sesi lama: {key}")
+            del request.session[key]
+        request.session.modified = True
+        request.session.save()
+
 def get_papers(request):
-    query = request.GET.get('query', request.session.get('last_search_query', '')).strip()
+    query = request.GET.get('query', '').strip()
     if not query:
-        return redirect('index')
+        return HttpResponseRedirect('index')
+    
+    clear_old_sessions(request, query)
+    
     request.session['last_search_query'] = query
     request.session[f"search_status_{query}"] = "pending"
-    logger.debug(f"Rendering search-result.html with query: '{query}'")
     
-    handler = Neo4jHandler()
-    try:
-        paper_id = handler.create_search_node(query.lower())
-        handler.create_graph_projection()
-        seed_paper_ids = handler.find_seed_papers(paper_id)
-        papers_data = []
-        if seed_paper_ids:
-            knn_details, similar_results = handler.find_similar_papers(seed_paper_ids)
-            papers_data = PaperProcessor.process_search_results(knn_details, similar_results)
-        request.session[f"pure_search_{query}"] = papers_data
-        
-        # pagination
-        paginator = Paginator(papers_data, 10)
-        page_number = request.GET.get('page', 1)
-        page_obj = paginator.get_page(page_number)
-        
-        return render(request, "base.html", {
-            "content_template": "search-paper/search-result.html",
-            "body_class": "bg-gray-100",
-            "show_search_form": True,
-            "query": query,
-            "years": range(2025, 2019, -1),
-            "ranks": ["Q1", "Q2", "Q3", "Q4", "Tidak Teridentifikasi"],
-            "pagination_data": paginator,
-            "papers": page_obj.object_list
-        })
-    except Exception as e:
-        logger.error(f"Error in search view: {str(e)}")
-        return render(request, "base.html", {
-            "content_template": "search-paper/search-result.html",
-            "body_class": "bg-gray-100",
-            "show_search_form": True,
-            "query": query,
-            "years": range(2025, 2019, -1),
-            "ranks": ["Q1", "Q2", "Q3", "Q4", "Tidak Teridentifikasi"],
-            "error": f"Terjadi kesalahan: {str(e)}"
-        })
-    finally:
-        if 'handler' in locals():
-            if 'paper_id' in locals():
-                handler.delete_query_node(paper_id)
-            if hasattr(handler, 'graph_name') and handler.graph_name:
-                handler.drop_graph()
-            handler.close()
+    start_year = request.session.get('start_year', '')
+    end_year = request.session.get('end_year', '')
+    rank = request.session.get('rank', '')
+    
+    return render(request, "base.html", {
+        "content_template": "search-paper/search-result.html",
+        "body_class": "bg-gray-100",
+        "show_search_form": True,
+        "query": query,
+        "years": [],
+        "ranks": [],
+        "papers": [],
+        "start_year": start_year,
+        "end_year": end_year,
+        "selected_rank": rank
+    })
 
 @csrf_protect
 @require_GET
 def search_api(request):
-    logger.debug(f"search_api called with GET: {request.GET}")
     query = request.GET.get('query', '').strip()
-    logger.debug(f"Query received: '{query}'")
+    start_year = request.GET.get('start_year', '').strip()
+    end_year = request.GET.get('end_year', '').strip()
+    rank = request.GET.get('rank', '').strip()
+    
     if not query:
         logger.warning("Empty query received in search_api")
         return JsonResponse({"error": "Kueri tidak boleh kosong"}, status=400)
-    try:
+    
+    if start_year:
+        request.session['start_year'] = start_year
+    else:
+        request.session.pop('start_year', None)
+    if end_year:
+        request.session['end_year'] = end_year
+    else:
+        request.session.pop('end_year', None)
+    if rank:
+        request.session['rank'] = rank
+    else:
+        request.session.pop('rank', None)
+    
+    session_key = f"pure_search_{query}"
+    last_query = request.session.get('last_search_query', '')
+    if session_key in request.session and last_query != query:
+        del request.session[session_key]
+    
+    clear_old_sessions(request, query)
+    
+    if session_key in request.session:
+        papers_data = request.session[session_key]
+        time_with_session = 0.0
+        time_without_session = 0.0
+    else:
         handler = Neo4jHandler()
-        papers_data = []
-        paper_id = handler.create_search_node(query.lower())
-        handler.create_graph_projection()
-        seed_paper_ids = handler.find_seed_papers(paper_id)
-        if seed_paper_ids:
-            knn_details, similar_results = handler.find_similar_papers(seed_paper_ids)
-            papers_data = PaperProcessor.process_search_results(knn_details, similar_results)
-        request.session[f"pure_search_{query}"] = papers_data
-        return JsonResponse({"papers": papers_data}, safe=False)
-    except Exception as e:
-        logger.error(f"Error in search_api: {str(e)}")
-        return JsonResponse({"error": f"Terjadi kesalahan: {str(e)}"}, status=500)
-    finally:
-        if 'handler' in locals():
-            if 'paper_id' in locals():
-                handler.delete_query_node(paper_id)
-            if hasattr(handler, 'graph_name') and handler.graph_name:
-                handler.drop_graph()
+        try:
+            start_time = time.time()
+            papers_data, paper_id = handler.perform_search(query)
+            time_with_session = (time.time() - start_time) * 1000
+            logger.debug(f"Waktu pencarian dengan session untuk query '{query}': {time_with_session:.2f} ms")
+
+            start_time = time.time()
+            time_without_session = (time.time() - start_time) * 1000
+            logger.debug(f"Waktu pencarian tanpa session untuk query '{query}': {time_without_session:.2f} ms")
+
+            if not papers_data:
+                logger.warning(f"No papers found in Neo4j for query: '{query}'")
+                return JsonResponse({
+                    "papers": [],
+                    "years": [],
+                    "ranks": ['Semua Peringkat'],
+                    "message": f"Kueri pencarian '{query}' tidak menghasilkan artikel ilmiah apapun"
+                }, status=200)
+            request.session[session_key] = papers_data
+            request.session['last_search_query'] = query
+            request.session.modified = True
+            request.session.save()
+        except Exception as e:
+            logger.error(f"Error in search_api: {str(e)}")
+            return JsonResponse({
+                "error": f"Terjadi kesalahan: {str(e)}"
+            }, status=500)
+        finally:
             handler.close()
-            
+    
+    years = set()
+    ranks = set()
+    for paper in papers_data:
+        if paper.get('year'):
+            try:
+                years.add(int(paper['year']))
+            except (ValueError, TypeError):
+                pass
+        elif paper.get('date'):
+            date_str = paper['date']
+            try:
+                for part in date_str.split():
+                    if part.isdigit() and len(part) == 4:
+                        years.add(int(part))
+                        break
+                if not years and '-' in date_str:
+                    years.add(int(date_str.split('-')[0]))
+                if not years and '/' in date_str:
+                    parts = date_str.split('/')
+                    if len(parts) == 3:
+                        years.add(int(parts[2]))
+            except (ValueError, TypeError, IndexError):
+                pass
+        rank_value = paper.get('rank', 'Tidak Teridentifikasi')
+        ranks.add('Tidak Teridentifikasi' if not rank_value or rank_value in ['-', '', None] else rank_value)
+    
+    years = sorted(list(years), reverse=True)
+    ranks = sorted(list(ranks), key=lambda x: x if x != 'Tidak Teridentifikasi' else 'Z')
+    if 'Semua Peringkat' not in ranks:
+        ranks = ranks
+    
+    filtered_papers = papers_data
+    if start_year and end_year:
+        try:
+            start_year = int(start_year)
+            end_year = int(end_year)
+            filtered_papers = [
+                paper for paper in filtered_papers
+                if paper.get('year') and start_year <= int(paper['year']) <= end_year
+            ]
+        except ValueError:
+            logger.warning("Invalid year filter values")
+            filtered_papers = papers_data
+    
+    if rank and rank != 'Semua Peringkat':
+        filtered_papers = [
+            paper for paper in filtered_papers
+            if (
+                (rank == 'Tidak Teridentifikasi' and (paper.get('rank') in [None, '', '-'] or not paper.get('rank')))
+                or (paper.get('rank') == rank)
+            )
+        ]
+    
+    if not filtered_papers and papers_data:
+        logger.debug(f"No papers match filters for query: '{query}', start_year: '{start_year}', end_year: '{end_year}', rank: '{rank}'")
+        return JsonResponse({
+            "papers": [],
+            "years": years,
+            "ranks": ranks,
+            "message": "Tidak ada paper yang sesuai dengan filter yang dipilih"
+        }, status=200)
+    
+    return JsonResponse({
+        "papers": filtered_papers,
+        "years": years,
+        "ranks": ranks
+    }, safe=False)
+
 @csrf_exempt
 def test_search_process(request):
     if request.method != 'POST':

@@ -34,8 +34,8 @@
     {% else %}
         <div class="my-8 flex flex-col gap-10 md:grid md:grid-cols-3 md:gap-12">
             <div class="bg-white rounded-2xl p-6 shadow-md md:col-span-2">
-                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 mb-4">
-                    <span class="text-sm md:text-base text-gray-700 font-medium">
+                <div class="flex flex-col sm:flex-row sm:justify-between gap-2 mb-4">
+                    <span class="text-sm md:text-base text-gray-700 font-medium self-start">
                         DOI: 
                         {% if paper.doi %}
                             <a href="https://doi.org/{{ paper.doi }}" target="_blank" class="text-[#4787FA] hover:underline" 
@@ -46,9 +46,14 @@
                             <span class="text-gray-500">-</span>
                         {% endif %}
                     </span>
-                    <span class="text-sm md:text-base text-gray-700 font-bold bg-blue-50 px-3 py-1 rounded-full">
-                        Terbit pada {{ paper.date|default:paper.year }}
-                    </span>
+                    <div class="flex flex-col gap-2">
+                        <span class="text-sm md:text-base text-gray-700 font-bold bg-blue-50 px-3 py-1 rounded-full">
+                            Terbit pada {{ paper.date|default:paper.year }}
+                        </span>
+                        <span class="text-sm md:text-base text-gray-700 bg-blue-50 px-3 py-1 rounded-full">
+                            Pada <span class="font-bold">{{ paper.venue|default:"-" }}</span>
+                        </span>
+                    </div>
                 </div>
             
                 <h1 class="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-800 my-5 leading-tight">{{ paper.title }}</h1>
@@ -90,7 +95,7 @@
                 </div>
             </div>
 
-            <!-- karya ilmiah terkait -->
+            <!-- artikel ilmiah terkait -->
             <div class="h-[700px] bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100">
                 <div class="bg-gradient-to-r from-blue-600 to-indigo-700 px-6 py-4 text-white relative overflow-hidden">
                     <div class="absolute right-0 top-0 opacity-10">
@@ -99,7 +104,7 @@
                         </svg>
                     </div>
                     <h2 class="text-2xl font-bold flex items-center justify-center gap-2">
-                        <span>Karya Ilmiah</span>
+                        <span>Artikel Ilmiah</span>
                         <span class="font-extrabold bg-white bg-opacity-20 px-3 py-1 rounded-full text-blue-600">Terkait</span>
                     </h2>
                 </div>
@@ -128,7 +133,7 @@
                                 <svg class="w-16 h-16 mx-auto text-blue-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
                                 </svg>
-                                <p class="text-gray-500 text-xl mt-4 font-medium">Tidak ada karya ilmiah terkait.</p>
+                                <p class="text-gray-500 text-xl mt-4 font-medium">Tidak ada artikel ilmiah terkait.</p>
                                 <p class="text-gray-400 mt-2">Coba cari dengan kata kunci yang berbeda</p>
                             </div>
                         {% endfor %}

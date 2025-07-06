@@ -63,6 +63,33 @@ def get_recommendation_by_paper(paper_id):
         if 'driver' in locals() and driver is not None:
             driver.close()
 
+def get_recommendation_by_paper_api(request):
+    try:
+        paper_id = request.GET.get('paper_id')
+        if not paper_id:
+            return JsonResponse({
+                "error": "Parameter paperId diperlukan"
+            }, status=400)
+
+        papers = get_recommendation_by_paper(paper_id)
+        
+        if not papers:
+            logger.warning(f"Tidak ada rekomendasi untuk paperId: {paper_id}")
+            return JsonResponse({
+                "papers": [],
+                "message": f"Tidak ada rekomendasi untuk paperId: {paper_id}"
+            }, status=200)
+
+        return JsonResponse({
+            "papers": papers
+        }, status=200)
+        
+    except Exception as e:
+        logger.error(f"Error in recommendation_api: {str(e)}")
+        return JsonResponse({
+            "error": f"Terjadi kesalahan: {str(e)}"
+        }, status=500)
+
 def get_paper(request, paper_id):
     try:
         paper = Paper.nodes.get(paperId=paper_id)
@@ -76,6 +103,7 @@ def get_paper(request, paper_id):
             "doi": paper.doi,
             "url": paper.url,
             "year": paper.year,
+            "venue": paper.venue,
             "authors": authors
         }
 
@@ -102,7 +130,7 @@ def get_paper(request, paper_id):
         logger.error(f"Error getting paper detail for {paper_id}: {e}", exc_info=True)
         context = {
             "content_template": "detail-paper/index.html",
-            "error": "Terjadi kesalahan saat memuat detail karya ilmiah."
+            "error": "Terjadi kesalahan saat memuat detail artikel ilmiah."
         }
         return render(request, "base.html", context)
 

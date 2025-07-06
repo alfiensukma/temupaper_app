@@ -2,8 +2,10 @@
 
 <nav class="sticky top-0 z-50 bg-white shadow-sm">
     <div class="container flex flex-wrap items-center justify-between px-6 py-3 mx-auto md:px-10 lg:px-16">
-
-        <a href="/" class="flex items-center space-x-2 rtl:space-x-reverse" unicorn:click="navigate('home', 'search-paper/index.html')">
+        <a href="/" 
+           class="flex items-center space-x-2 rtl:space-x-reverse" 
+           unicorn:click="navigate('home', 'search-paper/index.html')"
+           @click.stop="isOpenMenu = false">
             <div class="self-center text-2xl md:text-3xl font-bold font-jakarta text-black">
                 <span>Tem<span class="text-[#4787FA]">uP</span>aper</span>
             </div>
@@ -38,11 +40,8 @@
                         </svg> 
                         <span class="hidden sm:inline">Cari</span>
                     </button>
-                
                 </div>
             </form>
-            
-            
             {% endif %}
         </div>
 
@@ -55,33 +54,39 @@
         <div class="hidden w-full md:block md:w-auto md:order-3" id="navbar-menu">
             <ul class="flex flex-col py-3 font-medium md:flex-row md:space-x-4 lg:space-x-6 md:py-0 md:items-center">
                 <li>
-                    <a href="/" unicorn:click="navigate('home', 'search-paper/index.html')"
-                        class="block py-2 px-3 text-sm md:text-base rounded-sm md:bg-transparent 
-                        {% if request.path != '/' %}text-[#A6A6A6] hover:text-[#4787FA] {% else %}text-[#4787FA] hover:text-blue-600 {% endif %}
-                        md:p-0" aria-current="page">Home</a>
+                    <a href="/" 
+                       unicorn:click="navigate('home', 'search-paper/index.html')"
+                       @click.stop="isOpenMenu = false"
+                       class="block py-2 px-3 text-sm md:text-base rounded-sm md:bg-transparent 
+                       {% if request.path != '/' %}text-[#A6A6A6] hover:text-[#4787FA] {% else %}text-[#4787FA] hover:text-blue-600 {% endif %}
+                       md:p-0" aria-current="page">Home</a>
                 </li>
                 {% if user.is_authenticated %}
-                <li class="relative">
-                    <button id="rekomendasi-dropdown-btn" 
-                        unicorn:click="toggle_dropdown"
+                <li class="relative" x-data="{ isOpenMenu: false }">
+                    <button 
+                        @click.stop="isOpenMenu = !isOpenMenu"
                         class="flex items-center justify-between w-full py-2 px-3 text-sm md:text-base rounded-md
-                        {% if current_path in active_paths or is_dropdown_open %}
-                            text-[#4787FA] hover:text-blue-600
-                        {% else %}
-                            text-[#A6A6A6] hover:text-[#4787FA] 
-                        {% endif %}
-                        ">
-                        Rekomendasi
-                        <svg class="w-3 h-3 ml-1 transition-transform duration-200" id="rekomendasi-icon" fill="none" viewBox="0 0 20 20" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                            {% if current_path in active_paths %} text-[#4787FA] font-semibold {% else %} text-[#A6A6A6] hover:text-blue-600 {% endif %}"
+                    >
+                        <span>Rekomendasi</span>
+                        <svg class="w-4 h-4 inline ml-2 transition-transform" :class="{ 'rotate-180': isOpenMenu }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                         </svg>
                     </button>
-                    <div id="rekomendasi-dropdown" class="dropdown-menu {% if is_dropdown_open %}dropdown-active{% else %}hidden{% endif %} absolute z-50 mt-1 w-40 bg-white rounded-md shadow-lg border border-gray-100">
-                        <ul class="py-1 text-sm text-gray-700 font-normal">
+                    <div 
+                        x-show="isOpenMenu"
+                        @click.outside="isOpenMenu = false"
+                        x-cloak
+                        class="absolute z-50 mt-2 w-56 rounded-xl overflow-hidden shadow-lg border border-gray-100 bg-white"
+                    >
+                        <ul class="text-sm text-black font-normal">
                             {% for item in dropdown_items %}
                             <li>
-                                <a href="{{ item.url }}" unicorn:click="navigate('{{ item.name|lower }}', '{{ item.template }}')"
-                                   class="block px-4 py-2 hover:bg-[#4787FA] hover:text-white transition-colors duration-150">
+                                <a href="{{ item.url }}" 
+                                   unicorn:click="navigate('{{ item.name|lower }}', '{{ item.template }}')"
+                                   @click="isOpenMenu = false"
+                                   class="block px-4 py-3 hover:bg-blue-500 hover:text-white transition-colors"
+                                >
                                     {{ item.name }}
                                 </a>
                             </li>
@@ -89,11 +94,12 @@
                         </ul>
                     </div>
                 </li>
-`               {% endif %}
+                {% endif %}
                 {% if user.is_authenticated %}
                 <li class="relative mt-2 md:mt-0">
-                    <button id="user-dropdown-btn" onclick="toggleUserDropdown()" 
-                        class="flex items-center space-x-2 px-4 py-2 rounded-full bg-[#4787FA] text-white text-base font-semibold shadow-md focus:outline-none">
+                    <button id="user-dropdown-btn" 
+                            @click.stop="toggleUserDropdown()" 
+                            class="flex items-center space-x-2 px-4 py-2 rounded-full bg-[#4787FA] text-white text-base font-semibold shadow-md focus:outline-none">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A9.953 9.953 0 0112 15c2.386 0 4.578.835 6.242 2.224M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                         </svg>
@@ -102,8 +108,8 @@
 
                     <div id="user-dropdown" class="dropdown-menu hidden absolute right-0 z-50 mt-2 w-56 rounded-xl overflow-hidden shadow-lg border border-gray-100">
                         <ul class="text-sm font-medium">
-                            <li><a href="{% url 'profile_view' %}" class="block px-4 py-3 bg-white hover:bg-[#4787FA] text-black hover:text-white">Profile</a></li>
-                            <li><a href="{% url 'save_paper_list' %}" class="block px-4 py-3 bg-white hover:bg-[#4787FA] text-black hover:text-white">Simpan Karya Ilmiah</a></li>
+                            <li><a href="{% url 'profile_view' %}" class="block px-4 py-3 bg-white hover:bg-[#4787FA] text-black hover:text-white">Profil</a></li>
+                            <li><a href="{% url 'save_paper_list' %}" class="block px-4 py-3 bg-white hover:bg-[#4787FA] text-black hover:text-white">Simpan Artikel Ilmiah</a></li>
                             <li><a href="{% url 'logout' %}" class="block px-4 py-3 bg-white hover:bg-red-50 text-red-600">Keluar</a></li>
                         </ul>
                     </div>
@@ -141,9 +147,11 @@
     
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const rekomendasiBtn = document.getElementById('rekomendasi-dropdown-btn');
-            const rekomendasiDropdown = document.getElementById('rekomendasi-dropdown');
-            const rekomendasiIcon = document.getElementById('rekomendasi-icon');
+            window.toggleUserDropdown = function() {
+                const userDropdown = document.getElementById('user-dropdown');
+                const isCurrentlyOpen = !userDropdown.classList.contains('hidden');
+                toggleDropdownAnimation(userDropdown, !isCurrentlyOpen);
+            };
             
             function toggleDropdownAnimation(dropdown, isOpen) {
                 if (isOpen) {
@@ -159,28 +167,6 @@
                 }
             }
             
-            if (rekomendasiBtn && rekomendasiDropdown) {
-                rekomendasiBtn.addEventListener('click', function(e) {
-                    const isCurrentlyOpen = !rekomendasiDropdown.classList.contains('hidden');
-
-                    if (!isCurrentlyOpen) {
-                        rekomendasiIcon.style.transform = 'rotate(180deg)';
-                    } else {
-                        rekomendasiIcon.style.transform = 'rotate(0deg)';
-                    }
-
-                    toggleDropdownAnimation(rekomendasiDropdown, !isCurrentlyOpen);
-                    
-                    e.stopPropagation();
-                });
-            }
-            
-            window.toggleUserDropdown = function() {
-                const userDropdown = document.getElementById('user-dropdown');
-                const isCurrentlyOpen = !userDropdown.classList.contains('hidden');
-                toggleDropdownAnimation(userDropdown, !isCurrentlyOpen);
-            };
-            
             document.addEventListener('click', function(e) {
                 const userDropdown = document.getElementById('user-dropdown');
                 if (userDropdown && !userDropdown.classList.contains('hidden') && 
@@ -189,23 +175,15 @@
                     toggleDropdownAnimation(userDropdown, false);
                 }
                 
-                if (rekomendasiDropdown && 
-                    !rekomendasiDropdown.classList.contains('hidden') && 
+                // Handle click outside for Rekomendasi dropdown
+                const rekomendasiDropdown = document.querySelector('[x-show="isOpenMenu"]');
+                const rekomendasiButton = document.querySelector('[x-data="{ isOpenMenu: false }"] button');
+                if (rekomendasiDropdown && rekomendasiDropdown.style.display !== 'none' && 
                     !rekomendasiDropdown.contains(e.target) && 
-                    !e.target.closest('#rekomendasi-dropdown-btn')) {
-                    if (rekomendasiIcon) {
-                        rekomendasiIcon.style.transform = 'rotate(0deg)';
-                    }
-                    toggleDropdownAnimation(rekomendasiDropdown, false);
+                    !e.target.closest('[x-data="{ isOpenMenu: false }"] button')) {
+                    Alpine.store('rekomendasi', { isOpenMenu: false });
                 }
             });
-            
-            if (rekomendasiDropdown && !rekomendasiDropdown.classList.contains('hidden')) {
-                rekomendasiDropdown.classList.add('dropdown-active');
-                if (rekomendasiIcon) {
-                    rekomendasiIcon.style.transform = 'rotate(180deg)';
-                }
-            }
         });
     </script>
 </nav>

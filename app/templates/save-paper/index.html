@@ -1,8 +1,8 @@
 {% load static %}
 
 <div class="mb-8">
-    <h1 class="text-3xl font-bold text-gray-800">Karya Ilmiah Tersimpan</h1>
-    <p class="text-gray-600 mt-2">Daftar karya ilmiah yang Anda simpan</p>
+    <h1 class="text-3xl font-bold text-gray-800">Artikel Ilmiah Tersimpan</h1>
+    <p class="text-gray-600 mt-2">Daftar artikel ilmiah yang Anda simpan</p>
 </div>
 
 <div id="saved-paper-list">
@@ -58,7 +58,7 @@
                     id="search-input"
                     name="search_query"
                     value="{{ search_query }}"
-                    placeholder="Cari di karya ilmiah tersimpan..." 
+                    placeholder="Cari di artikel ilmiah tersimpan..." 
                     class="w-full px-4 py-2 border border-gray-300 rounded-lg transition-all duration-100 focus:ring-1 focus:ring-[#4787FA] focus:outline-none focus:border-[#4787FA]"
                 >
                 <button type="submit" class="absolute right-2 top-2 text-gray-500">
@@ -77,10 +77,10 @@
             <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
             </svg>
-            <h3 class="text-lg font-medium text-gray-900 mb-2">Belum ada karya ilmiah tersimpan</h3>
-            <p class="text-gray-600">Simpan karya ilmiah untuk membacanya nanti atau merujuknya kembali.</p>
+            <h3 class="text-lg font-medium text-gray-900 mb-2">Belum ada artikel ilmiah tersimpan</h3>
+            <p class="text-gray-600">Simpan artikel ilmiah untuk membacanya nanti atau merujuknya kembali.</p>
             <a href="/" class="mt-4 inline-block px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
-                Jelajahi Karya Ilmiah
+                Jelajahi Artikel Ilmiah
             </a>
         </div>
     {% else %}

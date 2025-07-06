@@ -2,6 +2,7 @@ from django.apps import apps
 from neo4j_graphrag.embeddings.sentence_transformers import SentenceTransformerEmbeddings
 from neo4j import GraphDatabase
 from neo4j.exceptions import ServiceUnavailable
+from app.services.paper_processor_services import PaperProcessor
 import logging
 import uuid
 import os
@@ -35,6 +36,25 @@ class Neo4jHandler:
             logger.error(f"Gagal saat inisialisasi Neo4jHandler: {e}")
             self.close() 
             raise
+        
+    def perform_search(self, query):
+        try:
+            paper_id = self.create_search_node(query.lower())
+            self.create_graph_projection()
+            seed_paper_ids = self.find_seed_papers(paper_id)
+            papers_data = []
+            if seed_paper_ids:
+                knn_details, similar_results = self.find_similar_papers(seed_paper_ids)
+                papers_data = PaperProcessor.process_search_results(knn_details, similar_results)
+            return papers_data, paper_id
+        except Exception as e:
+            logger.error(f"Error in perform_search: {str(e)}")
+            raise
+        finally:
+            if 'paper_id' in locals():
+                self.delete_query_node(paper_id)
+            if hasattr(self, 'graph_name') and self.graph_name:
+                self.drop_graph()
         
     def get_driver(self):
         return self.driver

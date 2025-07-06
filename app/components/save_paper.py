@@ -61,13 +61,13 @@ class SavePaperView(UnicornView):
             if not self.is_saved:
                 user.saves_papers.connect(paper, {'saved_at': datetime.datetime.now()})
                 self.is_saved = True
-                self.message = "Karya ilmiah berhasil disimpan!"
+                self.message = "Artikel ilmiah berhasil disimpan!"
             else:
                 user.saves_papers.disconnect(paper)
                 self.is_saved = False
-                self.message = "Karya ilmiah batal disimpan!"
+                self.message = "Artikel ilmiah batal disimpan!"
                 self.saved_at = None
                 
         except Exception as e:
             logger.error(f"Error saving paper: {str(e)}")
-            self.message = "Gagal menyimpan karya ilmiah"
+            self.message = "Gagal menyimpan artikel ilmiah"
