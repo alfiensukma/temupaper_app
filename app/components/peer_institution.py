@@ -45,7 +45,7 @@ class PeerInstitutionView(UnicornView):
                       ELSE null
                     END AS normalizedDate
                 ORDER BY jumlahPembaca DESC, normalizedDate DESC, p.year DESC
-                LIMIT 30
+                LIMIT 20
                 OPTIONAL MATCH (p)-[:AUTHORED_BY]->(author:Author)
                 RETURN 
                     p.title AS title,

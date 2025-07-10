@@ -10,8 +10,10 @@ services:
     volumes:
       - ./neo4j/data:/data
     environment:
-      NEO4J_PLUGINS: '["apoc", "graph-data-science"]'
-      NEO4J_AUTH: neo4j/${NEO4J_PASSWORD} # Ambil password dari file .env
+      - NEO4J_PLUGINS=["apoc", "graph-data-science"]
+      - NEO4J_AUTH=neo4j/${NEO4J_PASSWORD}
+      - NEO4J_dbms_memory_heap_initial__size=1g
+      - NEO4J_dbms_memory_heap_max__size=3g
     restart: unless-stopped
 
   app:

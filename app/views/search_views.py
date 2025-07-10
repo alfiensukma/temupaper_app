@@ -6,7 +6,9 @@ from django.views.decorators.csrf import csrf_protect, csrf_exempt
 from django.views.decorators.http import require_GET
 from app.services.search_recommendation_services import Neo4jHandler
 from neo4j.exceptions import ServiceUnavailable
+from app.utils.parse_indonesian_date import format_date_to_indonesian
 from app.models import User
+from neomodel import db
 import logging
 
 logger = logging.getLogger(__name__)
@@ -86,6 +88,84 @@ def index(request):
         "peer_institution_papers": peer_institution_papers,
         "topics": topics
     })
+    
+def recommendation_api(request):
+    try:
+        user_id = request.GET.get('user_id')
+        if not user_id:
+            return JsonResponse({
+                "error": "Parameter userId diperlukan"
+            }, status=400)
+
+        history_access_papers = []
+        peer_institution_papers = []
+
+        # History Access Query
+        history_query = """
+            MATCH (u:User {userId: $userId})-[:HAS_READ]->(:Paper)-[r:HIGHEST_SIMILAR]->(p:Paper)
+            WHERE NOT (u)-[:HAS_READ]->(p)
+            OPTIONAL MATCH (p)-[:AUTHORED_BY]->(author:Author)
+            RETURN p.title AS title, p.paperId as paperId, p.abstract as abstract, 
+                p.publicationDate AS date, p.year AS year, p.pagerank as pagerank, 
+                r.score as score, collect(DISTINCT author.name) AS authors
+            ORDER BY r.score DESC, p.pagerank DESC, p.publicationDate DESC LIMIT 5
+        """
+        history_results, _ = db.cypher_query(history_query, {"userId": user_id})
+        for record in history_results:
+            paper = {
+                "title": record[0],
+                "paperId": record[1],
+                "abstract": record[2],
+                "date": format_date_to_indonesian(record[3], fallback_year=record[4] or "N/A"),
+                "year": record[4],
+                "pagerank": record[5],
+                "score": record[6],
+                "authors": record[7]
+            }
+            history_access_papers.append(paper)
+
+        # Peer Institution Query
+        try:
+            current_user = User.nodes.get(userId=user_id)
+            institution_node = current_user.affiliated_with.get_or_none()
+            if institution_node:
+                institutionId = institution_node.institutionId
+                peer_query = """
+                    MATCH (:Institution {institutionId: $institutionId})<-[:AFFILIATED_WITH]-(u:User)-[:HAS_READ]->(p:Paper)
+                    WHERE NOT EXISTS { MATCH (:User {userId: $userId})-[:HAS_READ]->(p) }
+                    WITH p, count(u) AS jumlahPembaca
+                    OPTIONAL MATCH (p)-[:AUTHORED_BY]->(author:Author)
+                    RETURN p.title AS title, p.paperId as paperId, p.abstract as abstract, 
+                        jumlahPembaca, p.publicationDate AS date, p.year AS year, 
+                        p.pagerank as pagerank, collect(DISTINCT author.name) AS authors
+                    ORDER BY jumlahPembaca DESC, p.pagerank DESC, p.publicationDate DESC, p.year DESC LIMIT 5
+                """
+                peer_results, _ = db.cypher_query(peer_query, {"institutionId": institutionId, "userId": user_id})
+                for record in peer_results:
+                    paper = {
+                        "title": record[0],
+                        "paperId": record[1],
+                        "abstract": record[2],
+                        "jumlahPembaca": record[3],
+                        "date": format_date_to_indonesian(record[4], fallback_year=record[5] or "N/A"),
+                        "year": record[5],
+                        "pagerank": record[6],
+                        "authors": record[7]
+                    }
+                    peer_institution_papers.append(paper)
+        except Exception as e:
+            logger.warning(f"Tidak ada institusi untuk userId {user_id}: {str(e)}")
+
+        return JsonResponse({
+            "history_access_papers": history_access_papers,
+            "peer_institution_papers": peer_institution_papers
+        }, status=200)
+
+    except Exception as e:
+        logger.error(f"Error di recommendation_api: {str(e)}")
+        return JsonResponse({
+            "error": f"Terjadi kesalahan: {str(e)}"
+        }, status=500)
 
 def clear_old_sessions(request, current_query):
     last_query = request.session.get('last_search_query', '')
