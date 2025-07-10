@@ -38,6 +38,7 @@ class AccessHistoryView(UnicornView):
                     p.pagerank as pagerank, 
                     r_sim.score as score,
                     collect(DISTINCT author.name) AS authors
+                LIMIT 20
             """
             results, meta = db.cypher_query(query, {'userId': user_id})
             papers_raw = [dict(zip(meta, row)) for row in results]

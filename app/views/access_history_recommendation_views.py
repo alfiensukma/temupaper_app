@@ -30,6 +30,7 @@ def get_recommendation_by_access(user_id):
                 p.pagerank AS pagerank, 
                 r_sim.score AS score,
                 collect(DISTINCT author.name) AS authors
+            LIMIT 20
         """
         results, meta = db.cypher_query(query, {'userId': user_id})
         papers_raw = [dict(zip(meta, row)) for row in results]
